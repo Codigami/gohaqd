@@ -11,8 +11,7 @@ script:
 after_success:
 - export REPO=apsops/gohaqd
 - export TAG=${TRAVIS_TAG:=latest}
-- docker build -t $REPO:$TRAVIS_COMMIT .
-- docker tag $REPO:$TRAVIS_COMMIT $REPO:$TAG
+- docker build -t $REPO:$TAG .
 - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 - docker push $REPO
 
