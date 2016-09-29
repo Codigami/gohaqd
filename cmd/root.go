@@ -22,7 +22,6 @@ package cmd
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -107,14 +106,9 @@ func pollSQS() {
 }
 
 func sendMessageToURL(msg string) bool {
-	body, err := json.Marshal(msg)
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(msg)))
 
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
-
-	req.Header.Set("User-Agent", "gohaqd")
+	req.Header.Set("User-Agent", "gohaqd/0.2")
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
