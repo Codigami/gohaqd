@@ -1,5 +1,7 @@
 # gohaqd
 
+[![Build Status](https://travis-ci.org/ApsOps/gohaqd.svg?branch=master)](https://travis-ci.org/ApsOps/gohaqd)
+
 `gohaqd` _(pronounced as go-hawk-d)_ is a worker daemon for consuming messages from a queue.
 
 It pulls data off a queue, inserts it into the message body, and sends an HTTP POST request to a user-configurable URL. Currently supports only AWS SQS.
