@@ -36,6 +36,7 @@ import (
 var queueName string
 var url string
 var awsRegion string
+var sqsEndpoint string
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -64,12 +65,18 @@ func init() {
 	RootCmd.PersistentFlags().StringVarP(&queueName, "queue-name", "q", "", "queue name to use")
 	RootCmd.PersistentFlags().StringVarP(&url, "url", "u", "", "endpoint to send an HTTP POST request with contents of queue message in the body")
 	RootCmd.PersistentFlags().StringVar(&awsRegion, "aws-region", "us-east-1", "AWS Region for the SQS queue")
+	RootCmd.PersistentFlags().StringVar(&sqsEndpoint, "sqs-endpoint", "", "SQS Endpoint for using with fake_sqs")
 	RootCmd.MarkPersistentFlagRequired("queuename")
 	RootCmd.MarkPersistentFlagRequired("url")
 }
 
 func pollSQS() {
-	config := aws.NewConfig().WithRegion(awsRegion)
+	var config *aws.Config
+	if sqsEndpoint != "" {
+		config = aws.NewConfig().WithEndpoint(sqsEndpoint).WithRegion(awsRegion)
+	} else {
+		config = aws.NewConfig().WithRegion(awsRegion)
+	}
 	sess := session.New(config)
 	svc := sqs.New(sess)
 
