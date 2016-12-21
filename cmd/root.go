@@ -44,12 +44,7 @@ var RootCmd = &cobra.Command{
 	Short: "gohaqd is a queue consuming worker daemon",
 	Long: `A worker that pulls data off a queue, inserts it into the message body
 and sends an HTTP POST request to a user-configurable URL.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Polling SQS queue '%s' indefinitely..\n", queueName)
-		for {
-			pollSQS()
-		}
-	},
+	Run: startGohaqd,
 }
 
 // Execute adds all child commands to the root command sets flags appropriately.
@@ -70,7 +65,10 @@ func init() {
 	RootCmd.MarkPersistentFlagRequired("url")
 }
 
-func pollSQS() {
+var svc *sqs.SQS
+var msgparams *sqs.ReceiveMessageInput
+
+func startGohaqd(cmd *cobra.Command, args []string) {
 	var config *aws.Config
 	if sqsEndpoint != "" {
 		config = aws.NewConfig().WithEndpoint(sqsEndpoint).WithRegion(awsRegion)
@@ -78,7 +76,7 @@ func pollSQS() {
 		config = aws.NewConfig().WithRegion(awsRegion)
 	}
 	sess := session.New(config)
-	svc := sqs.New(sess)
+	svc = sqs.New(sess)
 
 	qparams := &sqs.CreateQueueInput{
 		QueueName: aws.String(queueName),
@@ -89,11 +87,17 @@ func pollSQS() {
 		log.Fatalf(err.Error())
 	}
 
-	msgparams := &sqs.ReceiveMessageInput{
+	fmt.Printf("Polling SQS queue '%s' indefinitely..\n", queueName)
+	msgparams = &sqs.ReceiveMessageInput{
 		QueueUrl:        q.QueueUrl,
 		WaitTimeSeconds: aws.Int64(20),
 	}
+	for {
+		pollSQS(q.QueueUrl)
+	}
+}
 
+func pollSQS(queueURL *string) {
 	resp, err := svc.ReceiveMessage(msgparams)
 	if err != nil {
 		log.Fatalf(err.Error())
@@ -102,7 +106,7 @@ func pollSQS() {
 	for _, msg := range resp.Messages {
 		if sendMessageToURL(*msg.Body) {
 			_, err := svc.DeleteMessage(&sqs.DeleteMessageInput{
-				QueueUrl:      q.QueueUrl,
+				QueueUrl:      queueURL,
 				ReceiptHandle: msg.ReceiptHandle,
 			})
 			if err != nil {
