@@ -78,11 +78,11 @@ func startGohaqd(cmd *cobra.Command, args []string) {
 	sess := session.New(config)
 	svc = sqs.New(sess)
 
-	qparams := &sqs.CreateQueueInput{
+	qparams := &sqs.GetQueueUrlInput{
 		QueueName: aws.String(queueName),
 	}
 
-	q, err := svc.CreateQueue(qparams)
+	q, err := svc.GetQueueUrl(qparams)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
