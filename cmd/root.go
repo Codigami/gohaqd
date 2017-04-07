@@ -1,4 +1,4 @@
-// Copyright © 2016 Amanpreet Singh <aps.sids@gmail.com>
+// Copyright © 2016 Crowdfire Inc <opensource@crowdfireapp.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
