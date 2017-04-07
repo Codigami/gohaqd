@@ -22,7 +22,7 @@ package cmd
 
 import (
 	"bytes"
-	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -51,7 +51,7 @@ and sends an HTTP POST request to a user-configurable URL.`,
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := RootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		os.Exit(-1)
 	}
 }
@@ -63,10 +63,14 @@ func init() {
 	RootCmd.PersistentFlags().StringVar(&sqsEndpoint, "sqs-endpoint", "", "SQS Endpoint for using with fake_sqs")
 	RootCmd.MarkPersistentFlagRequired("queuename")
 	RootCmd.MarkPersistentFlagRequired("url")
+
+	httpClient = &http.Client{}
+
 }
 
 var svc *sqs.SQS
 var msgparams *sqs.ReceiveMessageInput
+var httpClient *http.Client
 
 func startGohaqd(cmd *cobra.Command, args []string) {
 	var config *aws.Config
@@ -84,10 +88,10 @@ func startGohaqd(cmd *cobra.Command, args []string) {
 
 	q, err := svc.GetQueueUrl(qparams)
 	if err != nil {
-		log.Fatalf(err.Error())
+		log.Fatalf("Error getting the SQS queue URL. Error: %s", err.Error())
 	}
 
-	fmt.Printf("Polling SQS queue '%s' indefinitely..\n", queueName)
+	log.Printf("Polling SQS queue '%s' indefinitely..\n", queueName)
 	msgparams = &sqs.ReceiveMessageInput{
 		QueueUrl:        q.QueueUrl,
 		WaitTimeSeconds: aws.Int64(20),
@@ -122,8 +126,7 @@ func sendMessageToURL(msg string) bool {
 	req.Header.Set("User-Agent", "gohaqd/0.2")
 	req.Header.Set("Content-Type", "application/json")
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		log.Printf(err.Error())
 		return false
@@ -132,7 +135,8 @@ func sendMessageToURL(msg string) bool {
 
 	// return true only if response is 200 OK
 	if resp.StatusCode != 200 {
-		log.Printf("Error: Non OK response. Status Code: '%s' for sent message: '%s'", resp.Status, msg)
+		bodyBytes, _ := ioutil.ReadAll(resp.Body)
+		log.Printf("Error: Non OK response: %s Status Code: '%s' for sent message: '%s'", string(bodyBytes), resp.Status, msg)
 		return false
 	}
 
