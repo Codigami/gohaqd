@@ -51,8 +51,8 @@ func TestSendMessageToURL(t *testing.T) {
 		msg      string
 		expected bool
 	}{
-		{"{\"authUid\": \"123-xy\"}", true},
-		{"{\"authUid\": \"123-xy\"", false},
+		{`{"authUid": "123-xy"}`, true},
+		{`{"authUid": "123-xy"`, false},
 		{"xyz", false},
 	}
 
