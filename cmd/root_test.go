@@ -43,7 +43,7 @@ func init() {
 		}
 	}))
 
-	url = ts.URL
+	endpointURL = ts.URL
 }
 
 func TestSendMessageToURL(t *testing.T) {
@@ -66,36 +66,19 @@ func TestSendMessageToURL(t *testing.T) {
 }
 
 func TestEncodeURL(t *testing.T) {
-	// test 1 - simple url
-	url1 := "https://example.com"
-	expectedEncodedURL1 := "https://example.com"
-	encodedURL1 := encodeURL(url1)
-	if expectedEncodedURL1 != encodedURL1 {
-		t.Errorf("encodeURL(%#v) expected %#v, but got %#v", url1, expectedEncodedURL1, encodedURL1)
+
+	cases := []struct {
+		input, expected string
+	}{
+		{"https://example.com", "https://example.com"},                                                                 // test 1 - simple url
+		{"https://example.com/path", "https://example.com/path"},                                                       // test 2 - simple url with extra path
+		{"https://example.com/path?key1=name&key2=age", "https://example.com/path?key1=name&key2=age"},                 // test 3 - url with query params without special character
+		{"https://example.com/path?key1=name surname&key2=age", "https://example.com/path?key1=name+surname&key2=age"}, // test 4 - url with query params with special character
 	}
 
-	// test 2 - simple url with extra path
-	url2 := "https://example.com/path"
-	expectedEncodedURL2 := "https://example.com/path"
-	encodedURL2 := encodeURL(url2)
-	if expectedEncodedURL2 != encodedURL2 {
-		t.Errorf("encodeURL(%#v) expected %#v, but got %#v", url2, expectedEncodedURL2, encodedURL2)
+	for _, c := range cases {
+		if actual := encodeURL(c.input); actual != c.expected {
+			t.Errorf("sendMessageToURL(%#v) expected %#v, but got %#v", c.input, c.expected, actual)
+		}
 	}
-
-	// test 3 - url with query params without special character
-	url3 := "https://example.com/path?key1=name&key2=age"
-	expectedEncodedURL3 := "https://example.com/path?key1=name&key2=age"
-	encodedURL3 := encodeURL(url3)
-	if expectedEncodedURL3 != encodedURL3 {
-		t.Errorf("encodeURL(%#v) expected %#v, but got %#v", url3, expectedEncodedURL3, encodedURL3)
-	}
-
-	// test 4 - url with query params with special character
-	url4 := "https://example.com/path?key1=name surname&key2=age"
-	expectedEncodedURL4 := "https://example.com/path?key1=name+surname&key2=age"
-	encodedURL4 := encodeURL(url4)
-	if expectedEncodedURL4 != encodedURL4 {
-		t.Errorf("encodeURL(%#v) expected %#v, but got %#v", url4, expectedEncodedURL4, encodedURL4)
-	}
-
 }

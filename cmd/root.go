@@ -25,7 +25,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	URL "net/url"
+	"net/url"
 	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -35,7 +35,7 @@ import (
 )
 
 var queueName string
-var url string
+var endpointURL string
 var awsRegion string
 var sqsEndpoint string
 
@@ -59,13 +59,13 @@ func Execute() {
 
 func init() {
 	RootCmd.PersistentFlags().StringVarP(&queueName, "queue-name", "q", "", "queue name to use")
-	RootCmd.PersistentFlags().StringVarP(&url, "url", "u", "", "endpoint to send an HTTP POST request with contents of queue message in the body")
+	RootCmd.PersistentFlags().StringVarP(&endpointURL, "url", "u", "", "endpoint to send an HTTP POST request with contents of queue message in the body")
 	RootCmd.PersistentFlags().StringVar(&awsRegion, "aws-region", "us-east-1", "AWS Region for the SQS queue")
 	RootCmd.PersistentFlags().StringVar(&sqsEndpoint, "sqs-endpoint", "", "SQS Endpoint for using with fake_sqs")
 	RootCmd.MarkPersistentFlagRequired("queuename")
 	RootCmd.MarkPersistentFlagRequired("url")
 
-	url = encodeURL(url)
+	endpointURL = encodeURL(endpointURL)
 
 	httpClient = &http.Client{}
 
@@ -124,7 +124,7 @@ func pollSQS(queueURL *string) {
 }
 
 func sendMessageToURL(msg string) bool {
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(msg)))
+	req, err := http.NewRequest("POST", endpointURL, bytes.NewBuffer([]byte(msg)))
 
 	req.Header.Set("User-Agent", "gohaqd/0.2")
 	req.Header.Set("Content-Type", "application/json")
@@ -146,10 +146,10 @@ func sendMessageToURL(msg string) bool {
 	return true
 }
 
-// encodeURL function to encode input url
-func encodeURL(url string) string {
-	parsedURL, _ := URL.Parse(url)
-	parsedQuery, _ := URL.ParseQuery(parsedURL.RawQuery)
+// encodeURL function to encode input endpoint URL
+func encodeURL(endpoint string) string {
+	parsedURL, _ := url.Parse(endpoint)
+	parsedQuery, _ := url.ParseQuery(parsedURL.RawQuery)
 	parsedURL.RawQuery = parsedQuery.Encode()
 	return parsedURL.String()
 }
