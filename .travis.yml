@@ -6,10 +6,10 @@ services:
 - docker
 
 script:
-- docker run --rm -v "$PWD":/go/src/github.com/ApsOps/gohaqd -w /go/src/github.com/ApsOps/gohaqd -e 'CGO_ENABLED=0' -e 'GOOS=linux' golang:1.7 /bin/bash -c "go build -a -v -ldflags '-w'"
+- docker run --rm -v "$PWD":/go/src/github.com/Codigami/gohaqd -w /go/src/github.com/Codigami/gohaqd -e 'CGO_ENABLED=0' -e 'GOOS=linux' golang:1.7 /bin/bash -c "go build -a -v -ldflags '-w'"
 
 after_success:
-- export REPO=apsops/gohaqd
+- export REPO=crowdfire/gohaqd
 - export TAG=${TRAVIS_TAG:=latest}
 - docker build -t $REPO:$TAG .
 - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"

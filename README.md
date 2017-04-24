@@ -1,6 +1,6 @@
 # gohaqd
 
-[![Build Status](https://travis-ci.org/ApsOps/gohaqd.svg?branch=master)](https://travis-ci.org/ApsOps/gohaqd)
+[![Build Status](https://travis-ci.org/Codigami/gohaqd.svg?branch=master)](https://travis-ci.org/Codigami/gohaqd)
 
 `gohaqd` _(pronounced as go-hawk-d)_ is a worker daemon for consuming messages from a queue.
 
