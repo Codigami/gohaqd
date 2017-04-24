@@ -25,6 +25,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	URL "net/url"
 	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -63,6 +64,8 @@ func init() {
 	RootCmd.PersistentFlags().StringVar(&sqsEndpoint, "sqs-endpoint", "", "SQS Endpoint for using with fake_sqs")
 	RootCmd.MarkPersistentFlagRequired("queuename")
 	RootCmd.MarkPersistentFlagRequired("url")
+
+	url = encodeURL(url)
 
 	httpClient = &http.Client{}
 
@@ -141,4 +144,12 @@ func sendMessageToURL(msg string) bool {
 	}
 
 	return true
+}
+
+// encodeURL function to encode input url
+func encodeURL(url string) string {
+	parsedURL, _ := URL.Parse(url)
+	parsedQuery, _ := URL.ParseQuery(parsedURL.RawQuery)
+	parsedURL.RawQuery = parsedQuery.Encode()
+	return parsedURL.String()
 }
