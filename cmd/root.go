@@ -65,8 +65,6 @@ func init() {
 	RootCmd.MarkPersistentFlagRequired("queuename")
 	RootCmd.MarkPersistentFlagRequired("url")
 
-	endpointURL = encodeURL(endpointURL)
-
 	httpClient = &http.Client{}
 
 }
@@ -93,7 +91,7 @@ func startGohaqd(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Fatalf("Error getting the SQS queue URL. Error: %s", err.Error())
 	}
-
+	endpointURL = encodeURL(endpointURL)
 	log.Printf("Polling SQS queue '%s' indefinitely..\n", queueName)
 	msgparams = &sqs.ReceiveMessageInput{
 		QueueUrl:        q.QueueUrl,
