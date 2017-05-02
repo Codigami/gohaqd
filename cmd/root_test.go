@@ -43,7 +43,7 @@ func init() {
 		}
 	}))
 
-	url = ts.URL
+	endpointURL = ts.URL
 }
 
 func TestSendMessageToURL(t *testing.T) {
@@ -63,4 +63,22 @@ func TestSendMessageToURL(t *testing.T) {
 	}
 
 	defer ts.Close()
+}
+
+func TestEncodeURL(t *testing.T) {
+
+	cases := []struct {
+		input, expected string
+	}{
+		{"https://example.com", "https://example.com"},                                                                 // test 1 - simple url
+		{"https://example.com/path", "https://example.com/path"},                                                       // test 2 - simple url with extra path
+		{"https://example.com/path?key1=name&key2=age", "https://example.com/path?key1=name&key2=age"},                 // test 3 - url with query params without special character
+		{"https://example.com/path?key1=name surname&key2=age", "https://example.com/path?key1=name+surname&key2=age"}, // test 4 - url with query params with special character
+	}
+
+	for _, c := range cases {
+		if actual := encodeURL(c.input); actual != c.expected {
+			t.Errorf("sendMessageToURL(%#v) expected %#v, but got %#v", c.input, c.expected, actual)
+		}
+	}
 }
