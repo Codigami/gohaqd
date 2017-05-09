@@ -26,6 +26,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -121,15 +122,16 @@ func pollSQS(queueURL *string) {
 }
 
 func sendMessageToURL(msg string) bool {
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(msg)))
+	var resp *http.Response
+	var err error
 
-	req.Header.Set("User-Agent", "gohaqd/0.2")
-	req.Header.Set("Content-Type", "application/json")
-
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		log.Printf(err.Error())
-		return false
+	for {
+		resp, err = httpClient.Post(url, "application/json", bytes.NewBuffer([]byte(msg)))
+		if err == nil {
+			break
+		}
+		log.Printf("Error hitting endpoint, retrying after 1 second... Error: %s", err.Error())
+		time.Sleep(time.Second)
 	}
 	defer resp.Body.Close()
 
