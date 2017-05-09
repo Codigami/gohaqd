@@ -25,4 +25,3 @@ import "github.com/Codigami/gohaqd/cmd"
 func main() {
 	cmd.Execute()
 }
-
