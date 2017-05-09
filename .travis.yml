@@ -11,5 +11,5 @@ script:
 after_success:
 - export REPO=crowdfire/gohaqd
 - export TAG=${TRAVIS_TAG:=latest}
-- test $TRAVIS_BRANCH = "master" && docker build -t $REPO:$TAG . && docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && docker push $REPO
+- test $TRAVIS_PULL_REQUEST = "false" && docker build -t $REPO:$TAG . && docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && docker push $REPO
 
