@@ -100,17 +100,22 @@ func startGohaqd(cmd *cobra.Command, args []string) {
 		QueueUrl:        q.QueueUrl,
 		WaitTimeSeconds: aws.Int64(20),
 	}
+
+	// Create semaphore channel for passing messages to consumers
 	sem = make(chan *sqs.Message)
 
+	// Start multiple goroutines for consumers base on --parallel flag
 	for i := 0; i < parallelRequests; i++ {
 		go startConsumer(q.QueueUrl)
 	}
 
+	// Infinitely poll SQS queue for messages
 	for {
 		pollSQS()
 	}
 }
 
+// Receives messages from SQS queue and adds to semaphore channel
 func pollSQS() {
 	resp, err := svc.ReceiveMessage(msgparams)
 	if err != nil {
@@ -122,6 +127,8 @@ func pollSQS() {
 	}
 }
 
+// Receives messages from semaphore channel and
+// deletes a message from SQS queue is it's consumed successfully
 func startConsumer(queueURL *string) {
 	for msg := range sem {
 		if sendMessageToURL(*msg.Body) {
@@ -136,6 +143,7 @@ func startConsumer(queueURL *string) {
 	}
 }
 
+// Sends a POST request to consumption endpoint with the SQS message as body
 func sendMessageToURL(msg string) bool {
 	var resp *http.Response
 	var err error
