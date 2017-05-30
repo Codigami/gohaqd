@@ -14,6 +14,7 @@ It pulls data off a queue, inserts it into the message body, and sends an HTTP P
 ## Flags:
 ```
       --aws-region string     AWS Region for the SQS queue (default "us-east-1")
+      --parallel int          Number of messages to be consumed in parallel (default 1)
   -q, --queue-name string     queue name to use
       --sqs-endpoint string   SQS Endpoint for using with fake_sqs
   -u, --url string            endpoint to send an HTTP POST request with contents of queue message in the body

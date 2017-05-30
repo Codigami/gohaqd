@@ -1,3 +1,11 @@
+## v1.1 (May 29, 2017)
+
+  * Add option to process messages in parallel ([#2](https://github.com/Codigami/gohaqd/pull/2), [@ApsOps](https://github.com/ApsOps))
+
+## v1.0 (May 9, 2017)
+
+  * Initial stable release
+
 ## v0.3 (December 21, 2016)
 
   * Instantiate SQS object only once ([#5](https://github.com/ApsOps/gohaqd/pull/5), [@ApsOps](https://github.com/ApsOps))
