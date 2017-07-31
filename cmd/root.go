@@ -22,6 +22,7 @@ package cmd
 
 import (
 	"bytes"
+	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -60,12 +61,11 @@ func Execute() {
 
 func init() {
 	RootCmd.PersistentFlags().StringVarP(&queueName, "queue-name", "q", "", "queue name to use")
-	RootCmd.PersistentFlags().StringVarP(&url, "url", "u", "", "endpoint to send an HTTP POST request with contents of queue message in the body")
+	RootCmd.PersistentFlags().StringVarP(&url, "url", "u", "", "endpoint to send an HTTP POST request with contents of queue message in the body. Takes the URL from the message by default")
 	RootCmd.PersistentFlags().StringVar(&awsRegion, "aws-region", "us-east-1", "AWS Region for the SQS queue")
 	RootCmd.PersistentFlags().StringVar(&sqsEndpoint, "sqs-endpoint", "", "SQS Endpoint for using with fake_sqs")
 	RootCmd.PersistentFlags().IntVar(&parallelRequests, "parallel", 1, "Number of messages to be consumed in parallel")
 	RootCmd.MarkPersistentFlagRequired("queuename")
-	RootCmd.MarkPersistentFlagRequired("url")
 
 	httpClient = &http.Client{}
 
@@ -148,8 +148,24 @@ func sendMessageToURL(msg string) bool {
 	var resp *http.Response
 	var err error
 
+	endpoint := url
+
+	if endpoint == "" {
+		m := make(map[string]string)
+		err := json.Unmarshal([]byte(msg), &m)
+		if err != nil {
+			log.Printf("Unable to parse JSON message to get the URL: %s", msg)
+			return false
+		}
+		endpoint = m["url"]
+		if endpoint == "" {
+			log.Printf("No 'url' field found in JSON message: %s", msg)
+			return false
+		}
+	}
+
 	for {
-		resp, err = httpClient.Post(url, "application/json", bytes.NewBuffer([]byte(msg)))
+		resp, err = httpClient.Post(endpoint, "application/json", bytes.NewBuffer([]byte(msg)))
 		if err == nil {
 			break
 		}
