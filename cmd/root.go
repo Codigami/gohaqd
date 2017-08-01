@@ -40,7 +40,7 @@ import (
 
 var parallelRequests int
 
-//configuration of aws metadata and queue endpoints.
+//Config represents the configuration of aws metadata and queue endpoints.
 type Config struct {
 	SqsEndpoint string `yaml:"sqs-endpoint"`
 	AwsRegion string `yaml:"aws-region"`
