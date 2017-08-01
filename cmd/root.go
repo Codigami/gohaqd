@@ -33,14 +33,27 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v2"
+	"fmt"
+	"sync"
 )
 
-var queueName string
-var url string
-var awsRegion string
-var sqsEndpoint string
 var parallelRequests int
 
+//Config represents the configuration of aws metadata and queue endpoints.
+type Config struct {
+	SqsEndpoint string `yaml:"sqs-endpoint"`
+	AwsRegion string `yaml:"aws-region"`
+	Queues []Queue `yaml:"queues"`
+}
+
+// Queue represents the queeuname and url to hit.
+type Queue struct {
+	QueueName string `yaml:"queue"`
+	QueueURL  string `yaml:"url"`
+}
+
+var globalConfig Config
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
 	Use:   "gohaqd",
@@ -60,78 +73,102 @@ func Execute() {
 }
 
 func init() {
+	var sqsEndpoint, awsRegion, url, queueName,config string;
+
 	RootCmd.PersistentFlags().StringVarP(&queueName, "queue-name", "q", "", "queue name to use")
 	RootCmd.PersistentFlags().StringVarP(&url, "url", "u", "", "endpoint to send an HTTP POST request with contents of queue message in the body. Takes the URL from the message by default")
 	RootCmd.PersistentFlags().StringVar(&awsRegion, "aws-region", "us-east-1", "AWS Region for the SQS queue")
 	RootCmd.PersistentFlags().StringVar(&sqsEndpoint, "sqs-endpoint", "", "SQS Endpoint for using with fake_sqs")
 	RootCmd.PersistentFlags().IntVar(&parallelRequests, "parallel", 1, "Number of messages to be consumed in parallel")
+	RootCmd.PersistentFlags().StringVar(&config, "config-file", "", "config file name")
 	RootCmd.MarkPersistentFlagRequired("queuename")
 
+	if config != "" {
+		source, err := ioutil.ReadFile(config)
+		if err != nil {
+			panic(err)
+		}
+		err = yaml.Unmarshal(source, &globalConfig)
+		if err != nil {
+			panic(err)
+		}
+		parallelRequests=1
+	} else {
+		globalConfig = Config{
+			SqsEndpoint: sqsEndpoint,
+			AwsRegion:awsRegion,
+			Queues: []Queue{{QueueURL: url,QueueName: queueName}},
+		}
+	}
+	fmt.Printf("Value: %#v\n", globalConfig.Queues)
 	httpClient = &http.Client{}
-
 }
 
 var svc *sqs.SQS
-var msgparams *sqs.ReceiveMessageInput
+var wg sync.WaitGroup
 var httpClient *http.Client
-var sem chan *sqs.Message
-
+var sem = make(map[string](chan *sqs.Message))
+var msgParmsMap = make(map[string](*sqs.ReceiveMessageInput))
 func startGohaqd(cmd *cobra.Command, args []string) {
 	var config *aws.Config
-	if sqsEndpoint != "" {
-		config = aws.NewConfig().WithEndpoint(sqsEndpoint).WithRegion(awsRegion)
+	if globalConfig.SqsEndpoint != "" {
+		config = aws.NewConfig().WithEndpoint(globalConfig.SqsEndpoint).WithRegion(globalConfig.AwsRegion)
 	} else {
-		config = aws.NewConfig().WithRegion(awsRegion)
+		config = aws.NewConfig().WithRegion(globalConfig.AwsRegion)
 	}
 	sess := session.New(config)
 	svc = sqs.New(sess)
 
-	qparams := &sqs.GetQueueUrlInput{
-		QueueName: aws.String(queueName),
-	}
+	wg.Add(1)
+	for _, eachQueue := range globalConfig.Queues {
+		qparams := &sqs.GetQueueUrlInput{
+			QueueName: aws.String(eachQueue.QueueName),
+		}
 
-	q, err := svc.GetQueueUrl(qparams)
-	if err != nil {
-		log.Fatalf("Error getting the SQS queue URL. Error: %s", err.Error())
-	}
+		q, err := svc.GetQueueUrl(qparams)
+		if err != nil {
+			log.Fatalf("Error getting the SQS queue URL. Error: %s", err.Error())
+		}
 
-	log.Printf("Polling SQS queue '%s' indefinitely..\n", queueName)
-	msgparams = &sqs.ReceiveMessageInput{
-		QueueUrl:        q.QueueUrl,
-		WaitTimeSeconds: aws.Int64(20),
-	}
+		log.Printf("Polling SQS queue '%s' indefinitely..\n", eachQueue.QueueName)
+		msgParmsMap[eachQueue.QueueName] = &sqs.ReceiveMessageInput{
+			QueueUrl:        q.QueueUrl,
+			WaitTimeSeconds: aws.Int64(20),
+		}
+		// Create semaphore channel for passing messages to consumers
+		sem[eachQueue.QueueName] = make(chan *sqs.Message)
+		// Start multiple goroutines for consumers base on --parallel flag
+		for i := 0; i < parallelRequests; i++ {
+			go startConsumer(q.QueueUrl, eachQueue.QueueName, eachQueue.QueueURL)
+		}
 
-	// Create semaphore channel for passing messages to consumers
-	sem = make(chan *sqs.Message)
-
-	// Start multiple goroutines for consumers base on --parallel flag
-	for i := 0; i < parallelRequests; i++ {
-		go startConsumer(q.QueueUrl)
+		go pollSQS(eachQueue.QueueName)
 	}
-
-	// Infinitely poll SQS queue for messages
-	for {
-		pollSQS()
-	}
+	wg.Wait()
 }
 
 // Receives messages from SQS queue and adds to semaphore channel
-func pollSQS() {
-	resp, err := svc.ReceiveMessage(msgparams)
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
+func pollSQS(queueName string) {
+	sem := sem[queueName]
+	msgparams := msgParmsMap[queueName]
+	for {
+		resp, err := svc.ReceiveMessage(msgparams)
+		if err != nil {
+			log.Fatalf(err.Error())
+		}
 
-	for _, msg := range resp.Messages {
-		sem <- msg
+		for _, msg := range resp.Messages {
+			sem <- msg
+		}
 	}
+	defer wg.Done()
 }
 
 // Receives messages from semaphore channel and
 // deletes a message from SQS queue is it's consumed successfully
-func startConsumer(queueURL *string) {
-	for msg := range sem {
-		if sendMessageToURL(*msg.Body) {
+func startConsumer(queueURL *string, queueName , endpoint string ) {
+	for msg := range sem[queueName]  {
+		if sendMessageToURL(*msg.Body, endpoint) {
 			_, err := svc.DeleteMessage(&sqs.DeleteMessageInput{
 				QueueUrl:      queueURL,
 				ReceiptHandle: msg.ReceiptHandle,
@@ -144,11 +181,9 @@ func startConsumer(queueURL *string) {
 }
 
 // Sends a POST request to consumption endpoint with the SQS message as body
-func sendMessageToURL(msg string) bool {
+func sendMessageToURL(msg, endpoint string) bool {
 	var resp *http.Response
 	var err error
-
-	endpoint := url
 
 	if endpoint == "" {
 		m := make(map[string]string)

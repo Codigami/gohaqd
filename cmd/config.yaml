@@ -1,0 +1,7 @@
+sqs-endpoint:
+aws-region:
+queues:
+  goc-refresh-twitter-followers:
+     url: http://localhost:8001
+     queue: goc-refresh-twitter-followers
+
