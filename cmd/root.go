@@ -161,6 +161,7 @@ func pollSQS(queueName string) {
 			sem <- msg
 		}
 	}
+	defer wg.Done()
 }
 
 // Receives messages from semaphore channel and
