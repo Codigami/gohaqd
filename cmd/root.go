@@ -40,15 +40,17 @@ import (
 
 var parallelRequests int
 
+//configuration of aws metadata and queue endpoints.
 type Config struct {
 	SqsEndpoint string `yaml:"sqs-endpoint"`
 	AwsRegion string `yaml:"aws-region"`
 	Queues []Queue `yaml:"queues"`
 }
 
+// Queue represents the queeuname and url to hit.
 type Queue struct {
 	QueueName string `yaml:"queue"`
-	QueueUrl string `yaml:"url"`
+	QueueURL  string `yaml:"url"`
 }
 
 var globalConfig Config
@@ -95,7 +97,7 @@ func init() {
 		globalConfig = Config{
 			SqsEndpoint: sqsEndpoint,
 			AwsRegion:awsRegion,
-			Queues: []Queue{{QueueUrl:url,QueueName:queueName}},
+			Queues: []Queue{{QueueURL: url,QueueName: queueName}},
 		}
 	}
 	fmt.Printf("Value: %#v\n", globalConfig.Queues)
@@ -137,7 +139,7 @@ func startGohaqd(cmd *cobra.Command, args []string) {
 		sem[eachQueue.QueueName] = make(chan *sqs.Message)
 		// Start multiple goroutines for consumers base on --parallel flag
 		for i := 0; i < parallelRequests; i++ {
-			go startConsumer(q.QueueUrl, eachQueue.QueueName, eachQueue.QueueUrl)
+			go startConsumer(q.QueueUrl, eachQueue.QueueName, eachQueue.QueueURL)
 		}
 
 		go pollSQS(eachQueue.QueueName)
