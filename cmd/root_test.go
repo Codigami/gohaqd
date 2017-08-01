@@ -31,6 +31,7 @@ import (
 
 var ts *httptest.Server
 
+var url string
 func init() {
 	ts = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var data map[string]interface{}
@@ -57,7 +58,7 @@ func TestSendMessageToURL(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		if actual := sendMessageToURL(c.msg); actual != c.expected {
+		if actual := sendMessageToURL(c.msg, url); actual != c.expected {
 			t.Errorf("sendMessageToURL(%#v) expected %#v, but got %#v", c.msg, c.expected, actual)
 		}
 	}
