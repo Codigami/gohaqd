@@ -57,7 +57,7 @@ func TestSendMessageToURL(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		if actual := sendMessageToURL(c.msg); actual != c.expected {
+		if actual := sendMessageToURL(c.msg, url); actual != c.expected {
 			t.Errorf("sendMessageToURL(%#v) expected %#v, but got %#v", c.msg, c.expected, actual)
 		}
 	}

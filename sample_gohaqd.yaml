@@ -1,0 +1,7 @@
+---
+queues:
+- name: test
+  url: http://localhost:8080/consume
+- name: test2
+- name: test3
+  parallel: 3

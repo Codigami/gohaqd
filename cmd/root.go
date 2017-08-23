@@ -32,14 +32,33 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v2"
 )
 
+// Queue holds information about each queue from where the messages are consumed
+type Queue struct {
+	Name      string
+	URL       string
+	Parallel  int
+	sem       chan *sqs.Message
+	msgparams *sqs.ReceiveMessageInput
+}
+
+// Config stores the parsed yaml config file
+type Config struct {
+	Queues []Queue
+}
+
+var cfgFile string
 var queueName string
 var url string
 var awsRegion string
 var sqsEndpoint string
 var parallelRequests int
+var svc *sqs.SQS
+var httpClient *http.Client
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -60,80 +79,94 @@ func Execute() {
 }
 
 func init() {
-	RootCmd.PersistentFlags().StringVarP(&queueName, "queue-name", "q", "", "queue name to use")
-	RootCmd.PersistentFlags().StringVarP(&url, "url", "u", "", "endpoint to send an HTTP POST request with contents of queue message in the body. Takes the URL from the message by default")
+	RootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "./gohaqd.yaml", "config file (default is ./gohaqd.yaml)")
+	RootCmd.PersistentFlags().StringVarP(&queueName, "queue-name", "q", "", "queue name. (Used only when --config is not set and default config doesn't exist)")
+	RootCmd.PersistentFlags().StringVarP(&url, "url", "u", "", "HTTP endpoint. Takes the URL from the message by default. (Used only when --config is not set and default config doesn't exist)")
+
 	RootCmd.PersistentFlags().StringVar(&awsRegion, "aws-region", "us-east-1", "AWS Region for the SQS queue")
 	RootCmd.PersistentFlags().StringVar(&sqsEndpoint, "sqs-endpoint", "", "SQS Endpoint for using with fake_sqs")
 	RootCmd.PersistentFlags().IntVar(&parallelRequests, "parallel", 1, "Number of messages to be consumed in parallel")
-	RootCmd.MarkPersistentFlagRequired("queuename")
 
 	httpClient = &http.Client{}
-
 }
 
-var svc *sqs.SQS
-var msgparams *sqs.ReceiveMessageInput
-var httpClient *http.Client
-var sem chan *sqs.Message
-
 func startGohaqd(cmd *cobra.Command, args []string) {
-	var config *aws.Config
-	if sqsEndpoint != "" {
-		config = aws.NewConfig().WithEndpoint(sqsEndpoint).WithRegion(awsRegion)
+	var config Config
+	dat, err := ioutil.ReadFile(cfgFile)
+	if err != nil {
+		log.Println("Error while reading config file: " + err.Error())
+		if os.IsNotExist(err) && queueName != "" {
+			log.Println("config file doesn't exist so using queueName from flag")
+
+			config.Queues = append(config.Queues, Queue{
+				Name:     queueName,
+				URL:      url,
+				Parallel: parallelRequests,
+			})
+		}
 	} else {
-		config = aws.NewConfig().WithRegion(awsRegion)
+		err = yaml.Unmarshal(dat, &config)
+		if err != nil {
+			log.Fatalln("Error while parsing config file: " + err.Error())
+		}
+		log.Printf("%+v\n", config)
 	}
-	sess := session.New(config)
+
+	var awsConfig *aws.Config
+	if sqsEndpoint != "" {
+		awsConfig = aws.NewConfig().WithEndpoint(sqsEndpoint).WithRegion(awsRegion)
+	} else {
+		awsConfig = aws.NewConfig().WithRegion(awsRegion)
+	}
+	sess := session.New(awsConfig)
 	svc = sqs.New(sess)
 
+	for _, q := range config.Queues {
+		initalizeQueue(q)
+	}
+
+	http.Handle("/metrics", promhttp.Handler())
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}
+
+func initalizeQueue(queue Queue) {
 	qparams := &sqs.GetQueueUrlInput{
-		QueueName: aws.String(queueName),
+		QueueName: aws.String(queue.Name),
 	}
 
 	q, err := svc.GetQueueUrl(qparams)
 	if err != nil {
-		log.Fatalf("Error getting the SQS queue URL. Error: %s", err.Error())
+		log.Fatalf("Error getting the SQS queue URL for queue '%s'. Error: %s", queue.Name, err.Error())
 	}
 
-	log.Printf("Polling SQS queue '%s' indefinitely..\n", queueName)
-	msgparams = &sqs.ReceiveMessageInput{
+	log.Printf("Polling SQS queue '%s' indefinitely..\n", queue.Name)
+	queue.msgparams = &sqs.ReceiveMessageInput{
 		QueueUrl:        q.QueueUrl,
 		WaitTimeSeconds: aws.Int64(20),
 	}
 
 	// Create semaphore channel for passing messages to consumers
-	sem = make(chan *sqs.Message)
+	queue.sem = make(chan *sqs.Message)
 
-	// Start multiple goroutines for consumers base on --parallel flag
-	for i := 0; i < parallelRequests; i++ {
-		go startConsumer(q.QueueUrl)
+	// Run at least 1 worker in parallel by default
+	if queue.Parallel == 0 {
+		queue.Parallel = 1
 	}
 
-	// Infinitely poll SQS queue for messages
-	for {
-		pollSQS()
+	// Start multiple goroutines for consumers base on "parallel" config
+	for i := 0; i < queue.Parallel; i++ {
+		go startConsumer(queue)
 	}
-}
-
-// Receives messages from SQS queue and adds to semaphore channel
-func pollSQS() {
-	resp, err := svc.ReceiveMessage(msgparams)
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
-
-	for _, msg := range resp.Messages {
-		sem <- msg
-	}
+	go startPoller(queue)
 }
 
 // Receives messages from semaphore channel and
 // deletes a message from SQS queue is it's consumed successfully
-func startConsumer(queueURL *string) {
-	for msg := range sem {
-		if sendMessageToURL(*msg.Body) {
+func startConsumer(queue Queue) {
+	for msg := range queue.sem {
+		if sendMessageToURL(*msg.Body, queue) {
 			_, err := svc.DeleteMessage(&sqs.DeleteMessageInput{
-				QueueUrl:      queueURL,
+				QueueUrl:      &queue.URL,
 				ReceiptHandle: msg.ReceiptHandle,
 			})
 			if err != nil {
@@ -143,23 +176,42 @@ func startConsumer(queueURL *string) {
 	}
 }
 
+// Polls SQS queue indefinitely
+func startPoller(queue Queue) {
+	for {
+		pollSQS(queue)
+	}
+}
+
+// Receives messages from SQS queue and adds to semaphore channel
+func pollSQS(queue Queue) {
+	resp, err := svc.ReceiveMessage(queue.msgparams)
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+
+	for _, msg := range resp.Messages {
+		queue.sem <- msg
+	}
+}
+
 // Sends a POST request to consumption endpoint with the SQS message as body
-func sendMessageToURL(msg string) bool {
+func sendMessageToURL(msg string, queue Queue) bool {
 	var resp *http.Response
 	var err error
 
-	endpoint := url
+	endpoint := queue.URL
 
 	if endpoint == "" {
 		m := make(map[string]string)
 		err := json.Unmarshal([]byte(msg), &m)
 		if err != nil {
-			log.Printf("Unable to parse JSON message to get the URL: %s", msg)
+			log.Printf("%s: Unable to parse JSON message to get the URL: %s", queue.Name, msg)
 			return false
 		}
 		endpoint = m["url"]
 		if endpoint == "" {
-			log.Printf("No 'url' field found in JSON message: %s", msg)
+			log.Printf("%s: No 'url' field found in JSON message: %s", queue.Name, msg)
 			return false
 		}
 	}
@@ -169,7 +221,7 @@ func sendMessageToURL(msg string) bool {
 		if err == nil {
 			break
 		}
-		log.Printf("Error hitting endpoint, retrying after 1 second... Error: %s", err.Error())
+		log.Printf("%s: Error hitting endpoint with msg '%s', retrying after 1 second... Error: %s", queue.Name, msg, err.Error())
 		time.Sleep(time.Second)
 	}
 	defer resp.Body.Close()
@@ -177,7 +229,7 @@ func sendMessageToURL(msg string) bool {
 	// return true only if response is 200 OK
 	if resp.StatusCode != 200 {
 		bodyBytes, _ := ioutil.ReadAll(resp.Body)
-		log.Printf("Error: Non OK response: %s Status Code: '%s' for sent message: '%s'", string(bodyBytes), resp.Status, msg)
+		log.Printf("%s: Error: Non OK response: %s Status Code: '%s' for sent message: '%s'", queue.Name, string(bodyBytes), resp.Status, msg)
 		return false
 	}
 
