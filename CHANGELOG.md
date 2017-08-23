@@ -1,3 +1,14 @@
+## v2.0 (August 23, 2017)
+
+  * Use config file for multiple queue configuration ([#5](https://github.com/Codigami/gohaqd/pull/5), [@ApsOps](https://github.com/ApsOps))
+  * Add prometheus metrics
+  * Build with Go 1.8
+  * Update vendor packages
+
+## v1.2 (July 31, 2017)
+
+  * Lookup endpoint url inside the message by default ([#3](https://github.com/Codigami/gohaqd/pull/3), [@ApsOps](https://github.com/ApsOps))
+
 ## v1.1 (May 29, 2017)
 
   * Add option to process messages in parallel ([#2](https://github.com/Codigami/gohaqd/pull/2), [@ApsOps](https://github.com/ApsOps))

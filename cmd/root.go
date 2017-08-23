@@ -79,7 +79,7 @@ func Execute() {
 }
 
 func init() {
-	RootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "./gohaqd.yaml", "config file (default is ./gohaqd.yaml)")
+	RootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "./gohaqd.yaml", "config file")
 	RootCmd.PersistentFlags().StringVarP(&queueName, "queue-name", "q", "", "queue name. (Used only when --config is not set and default config doesn't exist)")
 	RootCmd.PersistentFlags().StringVarP(&url, "url", "u", "", "HTTP endpoint. Takes the URL from the message by default. (Used only when --config is not set and default config doesn't exist)")
 
