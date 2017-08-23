@@ -122,14 +122,14 @@ func startGohaqd(cmd *cobra.Command, args []string) {
 	svc = sqs.New(sess)
 
 	for _, q := range config.Queues {
-		initalizeQueue(q)
+		initializeQueue(q)
 	}
 
 	http.Handle("/metrics", promhttp.Handler())
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-func initalizeQueue(queue Queue) {
+func initializeQueue(queue Queue) {
 	qparams := &sqs.GetQueueUrlInput{
 		QueueName: aws.String(queue.Name),
 	}
