@@ -1,8 +1,8 @@
-hash: 628e5d260da9dba2fd1fd1265d08343e844e3cf099fb771b95a3330dcfc8f790
-updated: 2016-09-22T16:43:13.214991568+05:30
+hash: 944a58b0e1a1b171d7f6a47e0c003502a3a1c3f6631f05da2c4affdf09cee22c
+updated: 2017-08-23T15:13:49.678690407+05:30
 imports:
 - name: github.com/aws/aws-sdk-go
-  version: 7a81396c57134038e554b2ac86be4653018b20f9
+  version: 6c577e9e7b08a6d10bad1c9703227cd0403a8dd7
   subpackages:
   - aws
   - aws/awserr
@@ -27,14 +27,47 @@ imports:
   - private/protocol/xml/xmlutil
   - service/sqs
   - service/sts
+- name: github.com/beorn7/perks
+  version: 4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9
+  subpackages:
+  - quantile
 - name: github.com/go-ini/ini
-  version: 6e4869b434bd001f6983749881c7ead3545887d8
+  version: 2ba15ac2dc9cdf88c110ec2dc0ced7fa45f5678c
+- name: github.com/golang/protobuf
+  version: 2402d76f3d41f928c7902a765dfc872356dd3aad
+  subpackages:
+  - proto
 - name: github.com/inconshreveable/mousetrap
   version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
 - name: github.com/jmespath/go-jmespath
   version: bd40a432e4c76585ef6b72d3fd96fb9b6dc7b68d
+- name: github.com/matttproud/golang_protobuf_extensions
+  version: c12348ce28de40eed0136aa2b644d0ee0650e56c
+  subpackages:
+  - pbutil
+- name: github.com/prometheus/client_golang
+  version: c5b7fccd204277076155f10851dad72b76a49317
+  subpackages:
+  - prometheus
+  - prometheus/promhttp
+- name: github.com/prometheus/client_model
+  version: 6f3806018612930941127f2a7c6c453ba2c527d2
+  subpackages:
+  - go
+- name: github.com/prometheus/common
+  version: 61f87aac8082fa8c3c5655c7608d7478d46ac2ad
+  subpackages:
+  - expfmt
+  - internal/bitbucket.org/ww/goautoneg
+  - model
+- name: github.com/prometheus/procfs
+  version: e645f4e5aaa8506fc71d6edbc5c4ff02c04c46f2
+  subpackages:
+  - xfs
 - name: github.com/spf13/cobra
-  version: 9c28e4bbd74e5c3ed7aacbc552b2cab7cfdfe744
+  version: 2df9a531813370438a4d79bfc33e21f58063ed87
 - name: github.com/spf13/pflag
-  version: c7e63cf4530bcd3ba943729cee0efeff2ebea63f
+  version: e57e3eeb33f795204c1ca35f56c44f83227c6e66
+- name: gopkg.in/yaml.v2
+  version: e4d366fc3c7938e2958e662b4258c7a89e1f0e3e
 testImports: []

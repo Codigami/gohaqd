@@ -20,6 +20,8 @@ const opAddPermission = "AddPermission"
 // value can be used to capture response data after the request's "Send" method
 // is called.
 //
+// See AddPermission for usage and error information.
+//
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
 // access properties on the request object before or after sending the request. If
@@ -54,6 +56,8 @@ func (c *Lambda) AddPermissionRequest(input *AddPermissionInput) (req *request.R
 	return
 }
 
+// AddPermission API operation for AWS Lambda.
+//
 // Adds a permission to the resource policy associated with the specified AWS
 // Lambda function. You use resource policies to grant permissions to event
 // sources that use push model. In a push model, event sources (such as Amazon
@@ -69,6 +73,36 @@ func (c *Lambda) AddPermissionRequest(input *AddPermissionInput) (req *request.R
 // Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
 //
 // This operation requires permission for the lambda:AddPermission action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation AddPermission for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * ResourceConflictException
+//   The resource already exists.
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
+//   * PolicyLengthExceededException
+//   Lambda function access policy is limited to 20 KB.
+//
+//   * TooManyRequestsException
+
+//
 func (c *Lambda) AddPermission(input *AddPermissionInput) (*AddPermissionOutput, error) {
 	req, out := c.AddPermissionRequest(input)
 	err := req.Send()
@@ -81,6 +115,8 @@ const opCreateAlias = "CreateAlias"
 // client's request for the CreateAlias operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See CreateAlias for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -116,11 +152,40 @@ func (c *Lambda) CreateAliasRequest(input *CreateAliasInput) (req *request.Reque
 	return
 }
 
+// CreateAlias API operation for AWS Lambda.
+//
 // Creates an alias that points to the specified Lambda function version. For
 // more information, see Introduction to AWS Lambda Aliases (http://docs.aws.amazon.com/lambda/latest/dg/aliases-intro.html).
 //
 // Alias names are unique for a given function. This requires permission for
 // the lambda:CreateAlias action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation CreateAlias for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * ResourceConflictException
+//   The resource already exists.
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
+//   * TooManyRequestsException
+
+//
 func (c *Lambda) CreateAlias(input *CreateAliasInput) (*AliasConfiguration, error) {
 	req, out := c.CreateAliasRequest(input)
 	err := req.Send()
@@ -133,6 +198,8 @@ const opCreateEventSourceMapping = "CreateEventSourceMapping"
 // client's request for the CreateEventSourceMapping operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See CreateEventSourceMapping for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -168,6 +235,8 @@ func (c *Lambda) CreateEventSourceMappingRequest(input *CreateEventSourceMapping
 	return
 }
 
+// CreateEventSourceMapping API operation for AWS Lambda.
+//
 // Identifies a stream as an event source for a Lambda function. It can be either
 // an Amazon Kinesis stream or an Amazon DynamoDB stream. AWS Lambda invokes
 // the specified function when records are posted to the stream.
@@ -180,8 +249,8 @@ func (c *Lambda) CreateEventSourceMappingRequest(input *CreateEventSourceMapping
 // How it Works (http://docs.aws.amazon.com/lambda/latest/dg/lambda-introduction.html)
 // in the AWS Lambda Developer Guide.
 //
-//  You provide mapping information (for example, which stream to read from
-// and which Lambda function to invoke) in the request body.
+// You provide mapping information (for example, which stream to read from and
+// which Lambda function to invoke) in the request body.
 //
 // Each event source, such as an Amazon Kinesis or a DynamoDB stream, can be
 // associated with multiple AWS Lambda function. A given Lambda function can
@@ -193,6 +262,33 @@ func (c *Lambda) CreateEventSourceMappingRequest(input *CreateEventSourceMapping
 //
 // This operation requires permission for the lambda:CreateEventSourceMapping
 // action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation CreateEventSourceMapping for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
+//   * ResourceConflictException
+//   The resource already exists.
+//
+//   * TooManyRequestsException
+
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
 func (c *Lambda) CreateEventSourceMapping(input *CreateEventSourceMappingInput) (*EventSourceMappingConfiguration, error) {
 	req, out := c.CreateEventSourceMappingRequest(input)
 	err := req.Send()
@@ -205,6 +301,8 @@ const opCreateFunction = "CreateFunction"
 // client's request for the CreateFunction operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See CreateFunction for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -240,16 +338,48 @@ func (c *Lambda) CreateFunctionRequest(input *CreateFunctionInput) (req *request
 	return
 }
 
+// CreateFunction API operation for AWS Lambda.
+//
 // Creates a new Lambda function. The function metadata is created from the
 // request parameters, and the code for the function is provided by a .zip file
 // in the request body. If the function name already exists, the operation will
 // fail. Note that the function name is case-sensitive.
 //
-//  If you are using versioning, you can also publish a version of the Lambda
+// If you are using versioning, you can also publish a version of the Lambda
 // function you are creating using the Publish parameter. For more information
 // about versioning, see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
 //
 // This operation requires permission for the lambda:CreateFunction action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation CreateFunction for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * ResourceConflictException
+//   The resource already exists.
+//
+//   * TooManyRequestsException
+
+//
+//   * CodeStorageExceededException
+//   You have exceeded your maximum total code size per account. Limits (http://docs.aws.amazon.com/lambda/latest/dg/limits.html)
+//
 func (c *Lambda) CreateFunction(input *CreateFunctionInput) (*FunctionConfiguration, error) {
 	req, out := c.CreateFunctionRequest(input)
 	err := req.Send()
@@ -262,6 +392,8 @@ const opDeleteAlias = "DeleteAlias"
 // client's request for the DeleteAlias operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See DeleteAlias for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -299,10 +431,32 @@ func (c *Lambda) DeleteAliasRequest(input *DeleteAliasInput) (req *request.Reque
 	return
 }
 
+// DeleteAlias API operation for AWS Lambda.
+//
 // Deletes the specified Lambda function alias. For more information, see Introduction
 // to AWS Lambda Aliases (http://docs.aws.amazon.com/lambda/latest/dg/aliases-intro.html).
 //
 // This requires permission for the lambda:DeleteAlias action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation DeleteAlias for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
+//   * TooManyRequestsException
+
+//
 func (c *Lambda) DeleteAlias(input *DeleteAliasInput) (*DeleteAliasOutput, error) {
 	req, out := c.DeleteAliasRequest(input)
 	err := req.Send()
@@ -315,6 +469,8 @@ const opDeleteEventSourceMapping = "DeleteEventSourceMapping"
 // client's request for the DeleteEventSourceMapping operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See DeleteEventSourceMapping for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -350,11 +506,37 @@ func (c *Lambda) DeleteEventSourceMappingRequest(input *DeleteEventSourceMapping
 	return
 }
 
+// DeleteEventSourceMapping API operation for AWS Lambda.
+//
 // Removes an event source mapping. This means AWS Lambda will no longer invoke
 // the function for events in the associated source.
 //
 // This operation requires permission for the lambda:DeleteEventSourceMapping
 // action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation DeleteEventSourceMapping for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
+//   * TooManyRequestsException
+
+//
 func (c *Lambda) DeleteEventSourceMapping(input *DeleteEventSourceMappingInput) (*EventSourceMappingConfiguration, error) {
 	req, out := c.DeleteEventSourceMappingRequest(input)
 	err := req.Send()
@@ -367,6 +549,8 @@ const opDeleteFunction = "DeleteFunction"
 // client's request for the DeleteFunction operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See DeleteFunction for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -404,6 +588,8 @@ func (c *Lambda) DeleteFunctionRequest(input *DeleteFunctionInput) (req *request
 	return
 }
 
+// DeleteFunction API operation for AWS Lambda.
+//
 // Deletes the specified Lambda function code and configuration.
 //
 // If you are using the versioning feature and you don't specify a function
@@ -417,6 +603,33 @@ func (c *Lambda) DeleteFunctionRequest(input *DeleteFunctionInput) (req *request
 // You will need to delete the event source mappings explicitly.
 //
 // This operation requires permission for the lambda:DeleteFunction action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation DeleteFunction for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * TooManyRequestsException
+
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
+//   * ResourceConflictException
+//   The resource already exists.
+//
 func (c *Lambda) DeleteFunction(input *DeleteFunctionInput) (*DeleteFunctionOutput, error) {
 	req, out := c.DeleteFunctionRequest(input)
 	err := req.Send()
@@ -429,6 +642,8 @@ const opGetAlias = "GetAlias"
 // client's request for the GetAlias operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See GetAlias for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -464,11 +679,37 @@ func (c *Lambda) GetAliasRequest(input *GetAliasInput) (req *request.Request, ou
 	return
 }
 
+// GetAlias API operation for AWS Lambda.
+//
 // Returns the specified alias information such as the alias ARN, description,
 // and function version it is pointing to. For more information, see Introduction
 // to AWS Lambda Aliases (http://docs.aws.amazon.com/lambda/latest/dg/aliases-intro.html).
 //
 // This requires permission for the lambda:GetAlias action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation GetAlias for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
+//   * TooManyRequestsException
+
+//
 func (c *Lambda) GetAlias(input *GetAliasInput) (*AliasConfiguration, error) {
 	req, out := c.GetAliasRequest(input)
 	err := req.Send()
@@ -481,6 +722,8 @@ const opGetEventSourceMapping = "GetEventSourceMapping"
 // client's request for the GetEventSourceMapping operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See GetEventSourceMapping for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -516,11 +759,36 @@ func (c *Lambda) GetEventSourceMappingRequest(input *GetEventSourceMappingInput)
 	return
 }
 
+// GetEventSourceMapping API operation for AWS Lambda.
+//
 // Returns configuration information for the specified event source mapping
 // (see CreateEventSourceMapping).
 //
-// This operation requires permission for the lambda:GetEventSourceMapping
-// action.
+// This operation requires permission for the lambda:GetEventSourceMapping action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation GetEventSourceMapping for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
+//   * TooManyRequestsException
+
+//
 func (c *Lambda) GetEventSourceMapping(input *GetEventSourceMappingInput) (*EventSourceMappingConfiguration, error) {
 	req, out := c.GetEventSourceMappingRequest(input)
 	err := req.Send()
@@ -533,6 +801,8 @@ const opGetFunction = "GetFunction"
 // client's request for the GetFunction operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See GetFunction for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -568,6 +838,8 @@ func (c *Lambda) GetFunctionRequest(input *GetFunctionInput) (req *request.Reque
 	return
 }
 
+// GetFunction API operation for AWS Lambda.
+//
 // Returns the configuration information of the Lambda function and a presigned
 // URL link to the .zip file you uploaded with CreateFunction so you can download
 // the .zip file. Note that the URL is valid for up to 10 minutes. The configuration
@@ -581,6 +853,30 @@ func (c *Lambda) GetFunctionRequest(input *GetFunctionInput) (req *request.Reque
 // Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
 //
 // This operation requires permission for the lambda:GetFunction action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation GetFunction for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * TooManyRequestsException
+
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
 func (c *Lambda) GetFunction(input *GetFunctionInput) (*GetFunctionOutput, error) {
 	req, out := c.GetFunctionRequest(input)
 	err := req.Send()
@@ -593,6 +889,8 @@ const opGetFunctionConfiguration = "GetFunctionConfiguration"
 // client's request for the GetFunctionConfiguration operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See GetFunctionConfiguration for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -628,6 +926,8 @@ func (c *Lambda) GetFunctionConfigurationRequest(input *GetFunctionConfiguration
 	return
 }
 
+// GetFunctionConfiguration API operation for AWS Lambda.
+//
 // Returns the configuration information of the Lambda function. This the same
 // information you provided as parameters when uploading the function by using
 // CreateFunction.
@@ -641,6 +941,30 @@ func (c *Lambda) GetFunctionConfigurationRequest(input *GetFunctionConfiguration
 //
 // This operation requires permission for the lambda:GetFunctionConfiguration
 // operation.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation GetFunctionConfiguration for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * TooManyRequestsException
+
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
 func (c *Lambda) GetFunctionConfiguration(input *GetFunctionConfigurationInput) (*FunctionConfiguration, error) {
 	req, out := c.GetFunctionConfigurationRequest(input)
 	err := req.Send()
@@ -653,6 +977,8 @@ const opGetPolicy = "GetPolicy"
 // client's request for the GetPolicy operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See GetPolicy for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -688,9 +1014,11 @@ func (c *Lambda) GetPolicyRequest(input *GetPolicyInput) (req *request.Request, 
 	return
 }
 
+// GetPolicy API operation for AWS Lambda.
+//
 // Returns the resource policy associated with the specified Lambda function.
 //
-//  If you are using the versioning feature, you can get the resource policy
+// If you are using the versioning feature, you can get the resource policy
 // associated with the specific Lambda function version or alias by specifying
 // the version or alias name using the Qualifier parameter. For more information
 // about versioning, see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
@@ -698,6 +1026,30 @@ func (c *Lambda) GetPolicyRequest(input *GetPolicyInput) (req *request.Request, 
 // For information about adding permissions, see AddPermission.
 //
 // You need permission for the lambda:GetPolicy action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation GetPolicy for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * TooManyRequestsException
+
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
 func (c *Lambda) GetPolicy(input *GetPolicyInput) (*GetPolicyOutput, error) {
 	req, out := c.GetPolicyRequest(input)
 	err := req.Send()
@@ -710,6 +1062,8 @@ const opInvoke = "Invoke"
 // client's request for the Invoke operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See Invoke for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -745,6 +1099,8 @@ func (c *Lambda) InvokeRequest(input *InvokeInput) (req *request.Request, output
 	return
 }
 
+// Invoke API operation for AWS Lambda.
+//
 // Invokes a specific Lambda function.
 //
 // If you are using the versioning feature, you can invoke the specific function
@@ -756,6 +1112,70 @@ func (c *Lambda) InvokeRequest(input *InvokeInput) (req *request.Request, output
 // see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
 //
 // This operation requires permission for the lambda:InvokeFunction action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation Invoke for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * InvalidRequestContentException
+//   The request body could not be parsed as JSON.
+//
+//   * RequestTooLargeException
+//   The request payload exceeded the Invoke request body JSON input limit. For
+//   more information, see Limits (http://docs.aws.amazon.com/lambda/latest/dg/limits.html).
+//
+//   * UnsupportedMediaTypeException
+//   The content type of the Invoke request body is not JSON.
+//
+//   * TooManyRequestsException
+
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
+//   * EC2UnexpectedException
+//   AWS Lambda received an unexpected EC2 client exception while setting up for
+//   the Lambda function.
+//
+//   * SubnetIPAddressLimitReachedException
+//   AWS Lambda was not able to set up VPC access for the Lambda function because
+//   one or more configured subnets has no available IP addresses.
+//
+//   * ENILimitReachedException
+//   AWS Lambda was not able to create an Elastic Network Interface (ENI) in the
+//   VPC, specified as part of Lambda function configuration, because the limit
+//   for network interfaces has been reached.
+//
+//   * EC2ThrottledException
+//   AWS Lambda was throttled by Amazon EC2 during Lambda function initialization
+//   using the execution role provided for the Lambda function.
+//
+//   * EC2AccessDeniedException
+
+//
+//   * InvalidSubnetIDException
+//   The Subnet ID provided in the Lambda function VPC configuration is invalid.
+//
+//   * InvalidSecurityGroupIDException
+//   The Security Group ID provided in the Lambda function VPC configuration is
+//   invalid.
+//
+//   * InvalidZipFileException
+//   AWS Lambda could not unzip the function zip file.
+//
 func (c *Lambda) Invoke(input *InvokeInput) (*InvokeOutput, error) {
 	req, out := c.InvokeRequest(input)
 	err := req.Send()
@@ -768,6 +1188,8 @@ const opInvokeAsync = "InvokeAsync"
 // client's request for the InvokeAsync operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See InvokeAsync for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -806,13 +1228,34 @@ func (c *Lambda) InvokeAsyncRequest(input *InvokeAsyncInput) (req *request.Reque
 	return
 }
 
+// InvokeAsync API operation for AWS Lambda.
+//
 // This API is deprecated. We recommend you use Invoke API (see Invoke).
 //
-//  Submits an invocation request to AWS Lambda. Upon receiving the request,
+// Submits an invocation request to AWS Lambda. Upon receiving the request,
 // Lambda executes the specified function asynchronously. To see the logs generated
 // by the Lambda function execution, see the CloudWatch Logs console.
 //
 // This operation requires permission for the lambda:InvokeFunction action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation InvokeAsync for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * InvalidRequestContentException
+//   The request body could not be parsed as JSON.
+//
 func (c *Lambda) InvokeAsync(input *InvokeAsyncInput) (*InvokeAsyncOutput, error) {
 	req, out := c.InvokeAsyncRequest(input)
 	err := req.Send()
@@ -825,6 +1268,8 @@ const opListAliases = "ListAliases"
 // client's request for the ListAliases operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See ListAliases for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -860,12 +1305,38 @@ func (c *Lambda) ListAliasesRequest(input *ListAliasesInput) (req *request.Reque
 	return
 }
 
+// ListAliases API operation for AWS Lambda.
+//
 // Returns list of aliases created for a Lambda function. For each alias, the
 // response includes information such as the alias ARN, description, alias name,
 // and the function version to which it points. For more information, see Introduction
 // to AWS Lambda Aliases (http://docs.aws.amazon.com/lambda/latest/dg/aliases-intro.html).
 //
 // This requires permission for the lambda:ListAliases action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation ListAliases for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
+//   * TooManyRequestsException
+
+//
 func (c *Lambda) ListAliases(input *ListAliasesInput) (*ListAliasesOutput, error) {
 	req, out := c.ListAliasesRequest(input)
 	err := req.Send()
@@ -878,6 +1349,8 @@ const opListEventSourceMappings = "ListEventSourceMappings"
 // client's request for the ListEventSourceMappings operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See ListEventSourceMappings for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -919,6 +1392,8 @@ func (c *Lambda) ListEventSourceMappingsRequest(input *ListEventSourceMappingsIn
 	return
 }
 
+// ListEventSourceMappings API operation for AWS Lambda.
+//
 // Returns a list of event source mappings you created using the CreateEventSourceMapping
 // (see CreateEventSourceMapping).
 //
@@ -932,6 +1407,30 @@ func (c *Lambda) ListEventSourceMappingsRequest(input *ListEventSourceMappingsIn
 //
 // This operation requires permission for the lambda:ListEventSourceMappings
 // action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation ListEventSourceMappings for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
+//   * TooManyRequestsException
+
+//
 func (c *Lambda) ListEventSourceMappings(input *ListEventSourceMappingsInput) (*ListEventSourceMappingsOutput, error) {
 	req, out := c.ListEventSourceMappingsRequest(input)
 	err := req.Send()
@@ -969,6 +1468,8 @@ const opListFunctions = "ListFunctions"
 // client's request for the ListFunctions operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See ListFunctions for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -1010,6 +1511,8 @@ func (c *Lambda) ListFunctionsRequest(input *ListFunctionsInput) (req *request.R
 	return
 }
 
+// ListFunctions API operation for AWS Lambda.
+//
 // Returns a list of your Lambda functions. For each function, the response
 // includes the function configuration information. You must use GetFunction
 // to retrieve the code for your function.
@@ -1019,6 +1522,21 @@ func (c *Lambda) ListFunctionsRequest(input *ListFunctionsInput) (req *request.R
 // If you are using versioning feature, the response returns list of $LATEST
 // versions of your functions. For information about the versioning feature,
 // see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation ListFunctions for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * TooManyRequestsException
+
+//
 func (c *Lambda) ListFunctions(input *ListFunctionsInput) (*ListFunctionsOutput, error) {
 	req, out := c.ListFunctionsRequest(input)
 	err := req.Send()
@@ -1057,6 +1575,8 @@ const opListVersionsByFunction = "ListVersionsByFunction"
 // value can be used to capture response data after the request's "Send" method
 // is called.
 //
+// See ListVersionsByFunction for usage and error information.
+//
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
 // access properties on the request object before or after sending the request. If
@@ -1091,8 +1611,34 @@ func (c *Lambda) ListVersionsByFunctionRequest(input *ListVersionsByFunctionInpu
 	return
 }
 
+// ListVersionsByFunction API operation for AWS Lambda.
+//
 // List all versions of a function. For information about the versioning feature,
 // see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation ListVersionsByFunction for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
+//   * TooManyRequestsException
+
+//
 func (c *Lambda) ListVersionsByFunction(input *ListVersionsByFunctionInput) (*ListVersionsByFunctionOutput, error) {
 	req, out := c.ListVersionsByFunctionRequest(input)
 	err := req.Send()
@@ -1105,6 +1651,8 @@ const opPublishVersion = "PublishVersion"
 // client's request for the PublishVersion operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See PublishVersion for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -1140,11 +1688,40 @@ func (c *Lambda) PublishVersionRequest(input *PublishVersionInput) (req *request
 	return
 }
 
+// PublishVersion API operation for AWS Lambda.
+//
 // Publishes a version of your function from the current snapshot of $LATEST.
 // That is, AWS Lambda takes a snapshot of the function code and configuration
 // information from $LATEST and publishes a new version. The code and configuration
 // cannot be modified after publication. For information about the versioning
 // feature, see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation PublishVersion for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
+//   * TooManyRequestsException
+
+//
+//   * CodeStorageExceededException
+//   You have exceeded your maximum total code size per account. Limits (http://docs.aws.amazon.com/lambda/latest/dg/limits.html)
+//
 func (c *Lambda) PublishVersion(input *PublishVersionInput) (*FunctionConfiguration, error) {
 	req, out := c.PublishVersionRequest(input)
 	err := req.Send()
@@ -1157,6 +1734,8 @@ const opRemovePermission = "RemovePermission"
 // client's request for the RemovePermission operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See RemovePermission for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -1194,12 +1773,14 @@ func (c *Lambda) RemovePermissionRequest(input *RemovePermissionInput) (req *req
 	return
 }
 
+// RemovePermission API operation for AWS Lambda.
+//
 // You can remove individual permissions from an resource policy associated
 // with a Lambda function by providing a statement ID that you provided when
 // you added the permission.
 //
-// If you are using versioning, the permissions you remove are specific to
-// the Lambda function version or alias you specify in the AddPermission request
+// If you are using versioning, the permissions you remove are specific to the
+// Lambda function version or alias you specify in the AddPermission request
 // via the Qualifier parameter. For more information about versioning, see AWS
 // Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
 //
@@ -1207,6 +1788,30 @@ func (c *Lambda) RemovePermissionRequest(input *RemovePermissionInput) (req *req
 // permission to the function.
 //
 // You need permission for the lambda:RemovePermission action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation RemovePermission for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
+//   * TooManyRequestsException
+
+//
 func (c *Lambda) RemovePermission(input *RemovePermissionInput) (*RemovePermissionOutput, error) {
 	req, out := c.RemovePermissionRequest(input)
 	err := req.Send()
@@ -1219,6 +1824,8 @@ const opUpdateAlias = "UpdateAlias"
 // client's request for the UpdateAlias operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See UpdateAlias for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -1254,11 +1861,37 @@ func (c *Lambda) UpdateAliasRequest(input *UpdateAliasInput) (req *request.Reque
 	return
 }
 
+// UpdateAlias API operation for AWS Lambda.
+//
 // Using this API you can update the function version to which the alias points
 // and the alias description. For more information, see Introduction to AWS
 // Lambda Aliases (http://docs.aws.amazon.com/lambda/latest/dg/aliases-intro.html).
 //
 // This requires permission for the lambda:UpdateAlias action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation UpdateAlias for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
+//   * TooManyRequestsException
+
+//
 func (c *Lambda) UpdateAlias(input *UpdateAliasInput) (*AliasConfiguration, error) {
 	req, out := c.UpdateAliasRequest(input)
 	err := req.Send()
@@ -1271,6 +1904,8 @@ const opUpdateEventSourceMapping = "UpdateEventSourceMapping"
 // client's request for the UpdateEventSourceMapping operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See UpdateEventSourceMapping for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -1306,6 +1941,8 @@ func (c *Lambda) UpdateEventSourceMappingRequest(input *UpdateEventSourceMapping
 	return
 }
 
+// UpdateEventSourceMapping API operation for AWS Lambda.
+//
 // You can update an event source mapping. This is useful if you want to change
 // the parameters of the existing mapping without losing your position in the
 // stream. You can change which function will receive the stream records, but
@@ -1323,6 +1960,33 @@ func (c *Lambda) UpdateEventSourceMappingRequest(input *UpdateEventSourceMapping
 //
 // This operation requires permission for the lambda:UpdateEventSourceMapping
 // action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation UpdateEventSourceMapping for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
+//   * TooManyRequestsException
+
+//
+//   * ResourceConflictException
+//   The resource already exists.
+//
 func (c *Lambda) UpdateEventSourceMapping(input *UpdateEventSourceMappingInput) (*EventSourceMappingConfiguration, error) {
 	req, out := c.UpdateEventSourceMappingRequest(input)
 	err := req.Send()
@@ -1335,6 +1999,8 @@ const opUpdateFunctionCode = "UpdateFunctionCode"
 // client's request for the UpdateFunctionCode operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See UpdateFunctionCode for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -1370,6 +2036,8 @@ func (c *Lambda) UpdateFunctionCodeRequest(input *UpdateFunctionCodeInput) (req 
 	return
 }
 
+// UpdateFunctionCode API operation for AWS Lambda.
+//
 // Updates the code for the specified Lambda function. This operation must only
 // be used on an existing Lambda function and cannot be used to update the function
 // configuration.
@@ -1379,6 +2047,33 @@ func (c *Lambda) UpdateFunctionCodeRequest(input *UpdateFunctionCodeInput) (req 
 // feature, see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
 //
 // This operation requires permission for the lambda:UpdateFunctionCode action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation UpdateFunctionCode for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
+//   * TooManyRequestsException
+
+//
+//   * CodeStorageExceededException
+//   You have exceeded your maximum total code size per account. Limits (http://docs.aws.amazon.com/lambda/latest/dg/limits.html)
+//
 func (c *Lambda) UpdateFunctionCode(input *UpdateFunctionCodeInput) (*FunctionConfiguration, error) {
 	req, out := c.UpdateFunctionCodeRequest(input)
 	err := req.Send()
@@ -1391,6 +2086,8 @@ const opUpdateFunctionConfiguration = "UpdateFunctionConfiguration"
 // client's request for the UpdateFunctionConfiguration operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See UpdateFunctionConfiguration for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -1426,6 +2123,8 @@ func (c *Lambda) UpdateFunctionConfigurationRequest(input *UpdateFunctionConfigu
 	return
 }
 
+// UpdateFunctionConfiguration API operation for AWS Lambda.
+//
 // Updates the configuration parameters for the specified Lambda function by
 // using the values provided in the request. You provide only the parameters
 // you want to change. This operation must only be used on an existing Lambda
@@ -1437,6 +2136,30 @@ func (c *Lambda) UpdateFunctionConfigurationRequest(input *UpdateFunctionConfigu
 //
 // This operation requires permission for the lambda:UpdateFunctionConfiguration
 // action.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation UpdateFunctionConfiguration for usage and error information.
+//
+// Returned Error Codes:
+//   * ServiceException
+//   The AWS Lambda service encountered an internal error.
+//
+//   * ResourceNotFoundException
+//   The resource (for example, a Lambda function or access policy statement)
+//   specified in the request does not exist.
+//
+//   * InvalidParameterValueException
+//   One of the parameters in the request is invalid. For example, if you provided
+//   an IAM role for AWS Lambda to assume in the CreateFunction or the UpdateFunctionConfiguration
+//   API, that AWS Lambda is unable to assume you will get this exception.
+//
+//   * TooManyRequestsException
+
+//
 func (c *Lambda) UpdateFunctionConfiguration(input *UpdateFunctionConfigurationInput) (*FunctionConfiguration, error) {
 	req, out := c.UpdateFunctionConfigurationRequest(input)
 	err := req.Send()
@@ -1450,6 +2173,8 @@ type AddPermissionInput struct {
 	// is a string starting with lambda: followed by the API name . For example,
 	// lambda:CreateFunction. You can use wildcard (lambda:*) to grant permission
 	// for all AWS Lambda actions.
+	//
+	// Action is a required field
 	Action *string `type:"string" required:"true"`
 
 	// A unique token that must be supplied by the principal invoking the function.
@@ -1459,11 +2184,13 @@ type AddPermissionInput struct {
 	// Name of the Lambda function whose resource policy you are updating by adding
 	// a new permission.
 	//
-	//  You can specify a function name (for example, Thumbnail) or you can specify
+	// You can specify a function name (for example, Thumbnail) or you can specify
 	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
 	// AWS Lambda also allows you to specify partial ARN (for example, account-id:Thumbnail).
 	// Note that the length constraint applies only to the ARN. If you specify only
 	// the function name, it is limited to 64 character in length.
+	//
+	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// The principal who is getting this permission. It can be Amazon S3 service
@@ -1472,6 +2199,8 @@ type AddPermissionInput struct {
 	// AWS service principal such as sns.amazonaws.com. For example, you might want
 	// to allow a custom application in another AWS account to push events to AWS
 	// Lambda by invoking your function.
+	//
+	// Principal is a required field
 	Principal *string `type:"string" required:"true"`
 
 	// You can use this optional query parameter to describe a qualified ARN using
@@ -1480,17 +2209,17 @@ type AddPermissionInput struct {
 	// the qualifier, then permission applies only when request is made using qualified
 	// function ARN:
 	//
-	//  arn:aws:lambda:aws-region:acct-id:function:function-name:2
+	// arn:aws:lambda:aws-region:acct-id:function:function-name:2
 	//
 	// If you specify an alias name, for example PROD, then the permission is valid
 	// only for requests made using the alias ARN:
 	//
-	//  arn:aws:lambda:aws-region:acct-id:function:function-name:PROD
+	// arn:aws:lambda:aws-region:acct-id:function:function-name:PROD
 	//
 	// If the qualifier is not specified, the permission is valid only when requests
 	// is made using unqualified function ARN.
 	//
-	//  arn:aws:lambda:aws-region:acct-id:function:function-name
+	// arn:aws:lambda:aws-region:acct-id:function:function-name
 	Qualifier *string `location:"querystring" locationName:"Qualifier" min:"1" type:"string"`
 
 	// This parameter is used for S3 and SES only. The AWS account ID (without a
@@ -1513,6 +2242,8 @@ type AddPermissionInput struct {
 	SourceArn *string `type:"string"`
 
 	// A unique statement identifier.
+	//
+	// StatementId is a required field
 	StatementId *string `min:"1" type:"string" required:"true"`
 }
 
@@ -1612,12 +2343,18 @@ type CreateAliasInput struct {
 	Description *string `type:"string"`
 
 	// Name of the Lambda function for which you want to create an alias.
+	//
+	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// Lambda function version for which you are creating the alias.
+	//
+	// FunctionVersion is a required field
 	FunctionVersion *string `min:"1" type:"string" required:"true"`
 
 	// Name for the alias you are creating.
+	//
+	// Name is a required field
 	Name *string `min:"1" type:"string" required:"true"`
 }
 
@@ -1676,28 +2413,34 @@ type CreateEventSourceMappingInput struct {
 	// AWS Lambda to invoke your Lambda function, it depends on the BatchSize. AWS
 	// Lambda POSTs the Amazon Kinesis event, containing records, to your Lambda
 	// function as JSON.
+	//
+	// EventSourceArn is a required field
 	EventSourceArn *string `type:"string" required:"true"`
 
 	// The Lambda function to invoke when AWS Lambda detects an event on the stream.
 	//
-	//  You can specify the function name (for example, Thumbnail) or you can specify
+	// You can specify the function name (for example, Thumbnail) or you can specify
 	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
 	//
-	//  If you are using versioning, you can also provide a qualified function
-	// ARN (ARN that is qualified with function version or alias name as suffix).
-	// For more information about versioning, see AWS Lambda Function Versioning
-	// and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html)
+	// If you are using versioning, you can also provide a qualified function ARN
+	// (ARN that is qualified with function version or alias name as suffix). For
+	// more information about versioning, see AWS Lambda Function Versioning and
+	// Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html)
 	//
 	// AWS Lambda also allows you to specify only the function name with the account
 	// ID qualifier (for example, account-id:Thumbnail).
 	//
-	// Note that the length constraint applies only to the ARN. If you specify
-	// only the function name, it is limited to 64 character in length.
+	// Note that the length constraint applies only to the ARN. If you specify only
+	// the function name, it is limited to 64 character in length.
+	//
+	// FunctionName is a required field
 	FunctionName *string `min:"1" type:"string" required:"true"`
 
 	// The position in the stream where AWS Lambda should start reading. For more
 	// information, go to ShardIteratorType (http://docs.aws.amazon.com/kinesis/latest/APIReference/API_GetShardIterator.html#Kinesis-GetShardIterator-request-ShardIteratorType)
 	// in the Amazon Kinesis API Reference.
+	//
+	// StartingPosition is a required field
 	StartingPosition *string `type:"string" required:"true" enum:"EventSourcePosition"`
 }
 
@@ -1740,6 +2483,8 @@ type CreateFunctionInput struct {
 	_ struct{} `type:"structure"`
 
 	// The code for the Lambda function.
+	//
+	// Code is a required field
 	Code *FunctionCode `type:"structure" required:"true"`
 
 	// A short, user-defined function description. Lambda does not use this value.
@@ -1749,12 +2494,16 @@ type CreateFunctionInput struct {
 	// The name you want to assign to the function you are uploading. The function
 	// names appear in the console and are returned in the ListFunctions API. Function
 	// names are used to specify functions to other AWS Lambda APIs, such as Invoke.
+	//
+	// FunctionName is a required field
 	FunctionName *string `min:"1" type:"string" required:"true"`
 
 	// The function within your code that Lambda calls to begin execution. For Node.js,
 	// it is the module-name.export value in your function. For Java, it can be
 	// package.class-name::handler or package.class-name. For more information,
 	// see Lambda Function Handler (Java) (http://docs.aws.amazon.com/lambda/latest/dg/java-programming-model-handler-types.html).
+	//
+	// Handler is a required field
 	Handler *string `type:"string" required:"true"`
 
 	// The amount of memory, in MB, your Lambda function is given. Lambda uses this
@@ -1772,12 +2521,16 @@ type CreateFunctionInput struct {
 	// The Amazon Resource Name (ARN) of the IAM role that Lambda assumes when it
 	// executes your function to access any other Amazon Web Services (AWS) resources.
 	// For more information, see AWS Lambda: How it Works (http://docs.aws.amazon.com/lambda/latest/dg/lambda-introduction.html).
+	//
+	// Role is a required field
 	Role *string `type:"string" required:"true"`
 
 	// The runtime environment for the Lambda function you are uploading.
 	//
 	// To use the Node.js runtime v4.3, set the value to "nodejs4.3". To use earlier
 	// runtime (v0.10.42), set the value to "nodejs".
+	//
+	// Runtime is a required field
 	Runtime *string `type:"string" required:"true" enum:"Runtime"`
 
 	// The function execution time at which Lambda should terminate the function.
@@ -1846,9 +2599,13 @@ type DeleteAliasInput struct {
 
 	// The Lambda function name for which the alias is created. Deleting an alias
 	// does not delete the function version to which it is pointing.
+	//
+	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// Name of the alias to delete.
+	//
+	// Name is a required field
 	Name *string `location:"uri" locationName:"Name" min:"1" type:"string" required:"true"`
 }
 
@@ -1902,6 +2659,8 @@ type DeleteEventSourceMappingInput struct {
 	_ struct{} `type:"structure"`
 
 	// The event source mapping ID.
+	//
+	// UUID is a required field
 	UUID *string `location:"uri" locationName:"UUID" type:"string" required:"true"`
 }
 
@@ -1933,7 +2692,7 @@ type DeleteFunctionInput struct {
 
 	// The Lambda function to delete.
 	//
-	//  You can specify the function name (for example, Thumbnail) or you can specify
+	// You can specify the function name (for example, Thumbnail) or you can specify
 	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
 	// If you are using versioning, you can also provide a qualified function ARN
 	// (ARN that is qualified with function version or alias name as suffix). AWS
@@ -1941,6 +2700,8 @@ type DeleteFunctionInput struct {
 	// ID qualifier (for example, account-id:Thumbnail). Note that the length constraint
 	// applies only to the ARN. If you specify only the function name, it is limited
 	// to 64 character in length.
+	//
+	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// Using this optional parameter you can specify a function version (but not
@@ -2190,9 +2951,13 @@ type GetAliasInput struct {
 	// Function name for which the alias is created. An alias is a subresource that
 	// exists only in the context of an existing Lambda function so you must specify
 	// the function name.
+	//
+	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// Name of the alias for which you want to retrieve information.
+	//
+	// Name is a required field
 	Name *string `location:"uri" locationName:"Name" min:"1" type:"string" required:"true"`
 }
 
@@ -2232,6 +2997,8 @@ type GetEventSourceMappingInput struct {
 	_ struct{} `type:"structure"`
 
 	// The AWS Lambda assigned ID of the event source mapping.
+	//
+	// UUID is a required field
 	UUID *string `location:"uri" locationName:"UUID" type:"string" required:"true"`
 }
 
@@ -2264,11 +3031,13 @@ type GetFunctionConfigurationInput struct {
 	// The name of the Lambda function for which you want to retrieve the configuration
 	// information.
 	//
-	//  You can specify a function name (for example, Thumbnail) or you can specify
+	// You can specify a function name (for example, Thumbnail) or you can specify
 	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
 	// AWS Lambda also allows you to specify a partial ARN (for example, account-id:Thumbnail).
 	// Note that the length constraint applies only to the ARN. If you specify only
 	// the function name, it is limited to 64 character in length.
+	//
+	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// Using this optional parameter you can specify a function version or an alias
@@ -2316,11 +3085,13 @@ type GetFunctionInput struct {
 
 	// The Lambda function name.
 	//
-	//  You can specify a function name (for example, Thumbnail) or you can specify
+	// You can specify a function name (for example, Thumbnail) or you can specify
 	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
 	// AWS Lambda also allows you to specify a partial ARN (for example, account-id:Thumbnail).
 	// Note that the length constraint applies only to the ARN. If you specify only
 	// the function name, it is limited to 64 character in length.
+	//
+	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// Using this optional parameter to specify a function version or an alias name.
@@ -2388,7 +3159,7 @@ type GetPolicyInput struct {
 
 	// Function name whose resource policy you want to retrieve.
 	//
-	//  You can specify the function name (for example, Thumbnail) or you can specify
+	// You can specify the function name (for example, Thumbnail) or you can specify
 	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
 	// If you are using versioning, you can also provide a qualified function ARN
 	// (ARN that is qualified with function version or alias name as suffix). AWS
@@ -2396,6 +3167,8 @@ type GetPolicyInput struct {
 	// ID qualifier (for example, account-id:Thumbnail). Note that the length constraint
 	// applies only to the ARN. If you specify only the function name, it is limited
 	// to 64 character in length.
+	//
+	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// You can specify this optional query parameter to specify a function version
@@ -2457,9 +3230,13 @@ type InvokeAsyncInput struct {
 	_ struct{} `deprecated:"true" type:"structure" payload:"InvokeArgs"`
 
 	// The Lambda function name.
+	//
+	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// JSON that you want to provide to your Lambda function as input.
+	//
+	// InvokeArgs is a required field
 	InvokeArgs io.ReadSeeker `type:"blob" required:"true"`
 }
 
@@ -2524,11 +3301,13 @@ type InvokeInput struct {
 
 	// The Lambda function name.
 	//
-	//  You can specify a function name (for example, Thumbnail) or you can specify
+	// You can specify a function name (for example, Thumbnail) or you can specify
 	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
 	// AWS Lambda also allows you to specify a partial ARN (for example, account-id:Thumbnail).
 	// Note that the length constraint applies only to the ARN. If you specify only
 	// the function name, it is limited to 64 character in length.
+	//
+	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// By default, the Invoke API assumes RequestResponse invocation type. You can
@@ -2635,6 +3414,8 @@ type ListAliasesInput struct {
 	_ struct{} `type:"structure"`
 
 	// Lambda function name for which the alias is created.
+	//
+	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// If you specify this optional parameter, the API returns only the aliases
@@ -2712,7 +3493,7 @@ type ListEventSourceMappingsInput struct {
 
 	// The name of the Lambda function.
 	//
-	//  You can specify the function name (for example, Thumbnail) or you can specify
+	// You can specify the function name (for example, Thumbnail) or you can specify
 	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
 	// If you are using versioning, you can also provide a qualified function ARN
 	// (ARN that is qualified with function version or alias name as suffix). AWS
@@ -2844,6 +3625,8 @@ type ListVersionsByFunctionInput struct {
 	// AWS Lambda also allows you to specify a partial ARN (for example, account-id:Thumbnail).
 	// Note that the length constraint applies only to the ARN. If you specify only
 	// the function name, it is limited to 64 character in length.
+	//
+	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// Optional string. An opaque pagination token returned from a previous ListVersionsByFunction
@@ -2923,6 +3706,8 @@ type PublishVersionInput struct {
 	// allows you to specify a partial ARN (for example, account-id:Thumbnail).
 	// Note that the length constraint applies only to the ARN. If you specify only
 	// the function name, it is limited to 64 character in length.
+	//
+	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 }
 
@@ -2957,11 +3742,13 @@ type RemovePermissionInput struct {
 
 	// Lambda function whose resource policy you want to remove a permission from.
 	//
-	//  You can specify a function name (for example, Thumbnail) or you can specify
+	// You can specify a function name (for example, Thumbnail) or you can specify
 	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
 	// AWS Lambda also allows you to specify a partial ARN (for example, account-id:Thumbnail).
 	// Note that the length constraint applies only to the ARN. If you specify only
 	// the function name, it is limited to 64 character in length.
+	//
+	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// You can specify this optional parameter to remove permission associated with
@@ -2971,6 +3758,8 @@ type RemovePermissionInput struct {
 	Qualifier *string `location:"querystring" locationName:"Qualifier" min:"1" type:"string"`
 
 	// Statement ID of the permission to remove.
+	//
+	// StatementId is a required field
 	StatementId *string `location:"uri" locationName:"StatementId" min:"1" type:"string" required:"true"`
 }
 
@@ -3030,6 +3819,8 @@ type UpdateAliasInput struct {
 	Description *string `type:"string"`
 
 	// The function name for which the alias is created.
+	//
+	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// Using this parameter you can change the Lambda function version to which
@@ -3037,6 +3828,8 @@ type UpdateAliasInput struct {
 	FunctionVersion *string `min:"1" type:"string"`
 
 	// The alias name.
+	//
+	// Name is a required field
 	Name *string `location:"uri" locationName:"Name" min:"1" type:"string" required:"true"`
 }
 
@@ -3088,7 +3881,7 @@ type UpdateEventSourceMappingInput struct {
 
 	// The Lambda function to which you want the stream records sent.
 	//
-	//  You can specify a function name (for example, Thumbnail) or you can specify
+	// You can specify a function name (for example, Thumbnail) or you can specify
 	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
 	// AWS Lambda also allows you to specify a partial ARN (for example, account-id:Thumbnail).
 	//
@@ -3097,11 +3890,13 @@ type UpdateEventSourceMappingInput struct {
 	// more information about versioning, see AWS Lambda Function Versioning and
 	// Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html)
 	//
-	// Note that the length constraint applies only to the ARN. If you specify
-	// only the function name, it is limited to 64 character in length.
+	// Note that the length constraint applies only to the ARN. If you specify only
+	// the function name, it is limited to 64 character in length.
 	FunctionName *string `min:"1" type:"string"`
 
 	// The event source mapping identifier.
+	//
+	// UUID is a required field
 	UUID *string `location:"uri" locationName:"UUID" type:"string" required:"true"`
 }
 
@@ -3139,11 +3934,13 @@ type UpdateFunctionCodeInput struct {
 
 	// The existing Lambda function name whose code you want to replace.
 	//
-	//  You can specify a function name (for example, Thumbnail) or you can specify
+	// You can specify a function name (for example, Thumbnail) or you can specify
 	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
 	// AWS Lambda also allows you to specify a partial ARN (for example, account-id:Thumbnail).
 	// Note that the length constraint applies only to the ARN. If you specify only
 	// the function name, it is limited to 64 character in length.
+	//
+	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// This boolean parameter can be used to request AWS Lambda to update the Lambda
@@ -3216,11 +4013,13 @@ type UpdateFunctionConfigurationInput struct {
 
 	// The name of the Lambda function.
 	//
-	//  You can specify a function name (for example, Thumbnail) or you can specify
+	// You can specify a function name (for example, Thumbnail) or you can specify
 	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
 	// AWS Lambda also allows you to specify a partial ARN (for example, account-id:Thumbnail).
 	// Note that the length constraint applies only to the ARN. If you specify only
 	// the function name, it is limited to 64 character in length.
+	//
+	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// The function that Lambda calls to begin executing your function. For Node.js,
@@ -3338,44 +4137,53 @@ func (s VpcConfigResponse) GoString() string {
 }
 
 const (
-	// @enum EventSourcePosition
+	// EventSourcePositionTrimHorizon is a EventSourcePosition enum value
 	EventSourcePositionTrimHorizon = "TRIM_HORIZON"
-	// @enum EventSourcePosition
+
+	// EventSourcePositionLatest is a EventSourcePosition enum value
 	EventSourcePositionLatest = "LATEST"
 )
 
 const (
-	// @enum InvocationType
+	// InvocationTypeEvent is a InvocationType enum value
 	InvocationTypeEvent = "Event"
-	// @enum InvocationType
+
+	// InvocationTypeRequestResponse is a InvocationType enum value
 	InvocationTypeRequestResponse = "RequestResponse"
-	// @enum InvocationType
+
+	// InvocationTypeDryRun is a InvocationType enum value
 	InvocationTypeDryRun = "DryRun"
 )
 
 const (
-	// @enum LogType
+	// LogTypeNone is a LogType enum value
 	LogTypeNone = "None"
-	// @enum LogType
+
+	// LogTypeTail is a LogType enum value
 	LogTypeTail = "Tail"
 )
 
 const (
-	// @enum Runtime
+	// RuntimeNodejs is a Runtime enum value
 	RuntimeNodejs = "nodejs"
-	// @enum Runtime
+
+	// RuntimeNodejs43 is a Runtime enum value
 	RuntimeNodejs43 = "nodejs4.3"
-	// @enum Runtime
+
+	// RuntimeJava8 is a Runtime enum value
 	RuntimeJava8 = "java8"
-	// @enum Runtime
+
+	// RuntimePython27 is a Runtime enum value
 	RuntimePython27 = "python2.7"
 )
 
 const (
-	// @enum ThrottleReason
+	// ThrottleReasonConcurrentInvocationLimitExceeded is a ThrottleReason enum value
 	ThrottleReasonConcurrentInvocationLimitExceeded = "ConcurrentInvocationLimitExceeded"
-	// @enum ThrottleReason
+
+	// ThrottleReasonFunctionInvocationRateLimitExceeded is a ThrottleReason enum value
 	ThrottleReasonFunctionInvocationRateLimitExceeded = "FunctionInvocationRateLimitExceeded"
-	// @enum ThrottleReason
+
+	// ThrottleReasonCallerRateLimitExceeded is a ThrottleReason enum value
 	ThrottleReasonCallerRateLimitExceeded = "CallerRateLimitExceeded"
 )

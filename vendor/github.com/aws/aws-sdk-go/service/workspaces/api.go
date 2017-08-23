@@ -18,6 +18,8 @@ const opCreateTags = "CreateTags"
 // value can be used to capture response data after the request's "Send" method
 // is called.
 //
+// See CreateTags for usage and error information.
+//
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
 // access properties on the request object before or after sending the request. If
@@ -52,7 +54,27 @@ func (c *WorkSpaces) CreateTagsRequest(input *CreateTagsInput) (req *request.Req
 	return
 }
 
+// CreateTags API operation for Amazon WorkSpaces.
+//
 // Creates tags for a WorkSpace.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon WorkSpaces's
+// API operation CreateTags for usage and error information.
+//
+// Returned Error Codes:
+//   * ResourceNotFoundException
+//   The resource could not be found.
+//
+//   * InvalidParameterValuesException
+//   One or more parameter values are not valid.
+//
+//   * ResourceLimitExceededException
+//   Your resource limits have been exceeded.
+//
 func (c *WorkSpaces) CreateTags(input *CreateTagsInput) (*CreateTagsOutput, error) {
 	req, out := c.CreateTagsRequest(input)
 	err := req.Send()
@@ -65,6 +87,8 @@ const opCreateWorkspaces = "CreateWorkspaces"
 // client's request for the CreateWorkspaces operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See CreateWorkspaces for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -100,9 +124,26 @@ func (c *WorkSpaces) CreateWorkspacesRequest(input *CreateWorkspacesInput) (req 
 	return
 }
 
+// CreateWorkspaces API operation for Amazon WorkSpaces.
+//
 // Creates one or more WorkSpaces.
 //
-//  This operation is asynchronous and returns before the WorkSpaces are created.
+// This operation is asynchronous and returns before the WorkSpaces are created.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon WorkSpaces's
+// API operation CreateWorkspaces for usage and error information.
+//
+// Returned Error Codes:
+//   * ResourceLimitExceededException
+//   Your resource limits have been exceeded.
+//
+//   * InvalidParameterValuesException
+//   One or more parameter values are not valid.
+//
 func (c *WorkSpaces) CreateWorkspaces(input *CreateWorkspacesInput) (*CreateWorkspacesOutput, error) {
 	req, out := c.CreateWorkspacesRequest(input)
 	err := req.Send()
@@ -115,6 +156,8 @@ const opDeleteTags = "DeleteTags"
 // client's request for the DeleteTags operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See DeleteTags for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -150,7 +193,24 @@ func (c *WorkSpaces) DeleteTagsRequest(input *DeleteTagsInput) (req *request.Req
 	return
 }
 
+// DeleteTags API operation for Amazon WorkSpaces.
+//
 // Deletes tags from a WorkSpace.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon WorkSpaces's
+// API operation DeleteTags for usage and error information.
+//
+// Returned Error Codes:
+//   * ResourceNotFoundException
+//   The resource could not be found.
+//
+//   * InvalidParameterValuesException
+//   One or more parameter values are not valid.
+//
 func (c *WorkSpaces) DeleteTags(input *DeleteTagsInput) (*DeleteTagsOutput, error) {
 	req, out := c.DeleteTagsRequest(input)
 	err := req.Send()
@@ -163,6 +223,8 @@ const opDescribeTags = "DescribeTags"
 // client's request for the DescribeTags operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See DescribeTags for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -198,7 +260,21 @@ func (c *WorkSpaces) DescribeTagsRequest(input *DescribeTagsInput) (req *request
 	return
 }
 
+// DescribeTags API operation for Amazon WorkSpaces.
+//
 // Describes tags for a WorkSpace.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon WorkSpaces's
+// API operation DescribeTags for usage and error information.
+//
+// Returned Error Codes:
+//   * ResourceNotFoundException
+//   The resource could not be found.
+//
 func (c *WorkSpaces) DescribeTags(input *DescribeTagsInput) (*DescribeTagsOutput, error) {
 	req, out := c.DescribeTagsRequest(input)
 	err := req.Send()
@@ -211,6 +287,8 @@ const opDescribeWorkspaceBundles = "DescribeWorkspaceBundles"
 // client's request for the DescribeWorkspaceBundles operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See DescribeWorkspaceBundles for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -252,6 +330,8 @@ func (c *WorkSpaces) DescribeWorkspaceBundlesRequest(input *DescribeWorkspaceBun
 	return
 }
 
+// DescribeWorkspaceBundles API operation for Amazon WorkSpaces.
+//
 // Obtains information about the WorkSpace bundles that are available to your
 // account in the specified region.
 //
@@ -262,6 +342,18 @@ func (c *WorkSpaces) DescribeWorkspaceBundlesRequest(input *DescribeWorkspaceBun
 // and response parameters. If more results are available, the NextToken response
 // member contains a token that you pass in the next call to this operation
 // to retrieve the next set of items.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon WorkSpaces's
+// API operation DescribeWorkspaceBundles for usage and error information.
+//
+// Returned Error Codes:
+//   * InvalidParameterValuesException
+//   One or more parameter values are not valid.
+//
 func (c *WorkSpaces) DescribeWorkspaceBundles(input *DescribeWorkspaceBundlesInput) (*DescribeWorkspaceBundlesOutput, error) {
 	req, out := c.DescribeWorkspaceBundlesRequest(input)
 	err := req.Send()
@@ -299,6 +391,8 @@ const opDescribeWorkspaceDirectories = "DescribeWorkspaceDirectories"
 // client's request for the DescribeWorkspaceDirectories operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See DescribeWorkspaceDirectories for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -340,6 +434,8 @@ func (c *WorkSpaces) DescribeWorkspaceDirectoriesRequest(input *DescribeWorkspac
 	return
 }
 
+// DescribeWorkspaceDirectories API operation for Amazon WorkSpaces.
+//
 // Retrieves information about the AWS Directory Service directories in the
 // region that are registered with Amazon WorkSpaces and are available to your
 // account.
@@ -348,6 +444,18 @@ func (c *WorkSpaces) DescribeWorkspaceDirectoriesRequest(input *DescribeWorkspac
 // and response parameters. If more results are available, the NextToken response
 // member contains a token that you pass in the next call to this operation
 // to retrieve the next set of items.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon WorkSpaces's
+// API operation DescribeWorkspaceDirectories for usage and error information.
+//
+// Returned Error Codes:
+//   * InvalidParameterValuesException
+//   One or more parameter values are not valid.
+//
 func (c *WorkSpaces) DescribeWorkspaceDirectories(input *DescribeWorkspaceDirectoriesInput) (*DescribeWorkspaceDirectoriesOutput, error) {
 	req, out := c.DescribeWorkspaceDirectoriesRequest(input)
 	err := req.Send()
@@ -385,6 +493,8 @@ const opDescribeWorkspaces = "DescribeWorkspaces"
 // client's request for the DescribeWorkspaces operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See DescribeWorkspaces for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -426,6 +536,8 @@ func (c *WorkSpaces) DescribeWorkspacesRequest(input *DescribeWorkspacesInput) (
 	return
 }
 
+// DescribeWorkspaces API operation for Amazon WorkSpaces.
+//
 // Obtains information about the specified WorkSpaces.
 //
 // Only one of the filter parameters, such as BundleId, DirectoryId, or WorkspaceIds,
@@ -435,6 +547,21 @@ func (c *WorkSpaces) DescribeWorkspacesRequest(input *DescribeWorkspacesInput) (
 // and response parameters. If more results are available, the NextToken response
 // member contains a token that you pass in the next call to this operation
 // to retrieve the next set of items.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon WorkSpaces's
+// API operation DescribeWorkspaces for usage and error information.
+//
+// Returned Error Codes:
+//   * InvalidParameterValuesException
+//   One or more parameter values are not valid.
+//
+//   * ResourceUnavailableException
+//   The specified resource is not available.
+//
 func (c *WorkSpaces) DescribeWorkspaces(input *DescribeWorkspacesInput) (*DescribeWorkspacesOutput, error) {
 	req, out := c.DescribeWorkspacesRequest(input)
 	err := req.Send()
@@ -473,6 +600,8 @@ const opDescribeWorkspacesConnectionStatus = "DescribeWorkspacesConnectionStatus
 // value can be used to capture response data after the request's "Send" method
 // is called.
 //
+// See DescribeWorkspacesConnectionStatus for usage and error information.
+//
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
 // access properties on the request object before or after sending the request. If
@@ -507,7 +636,21 @@ func (c *WorkSpaces) DescribeWorkspacesConnectionStatusRequest(input *DescribeWo
 	return
 }
 
+// DescribeWorkspacesConnectionStatus API operation for Amazon WorkSpaces.
+//
 // Describes the connection status of a specified WorkSpace.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon WorkSpaces's
+// API operation DescribeWorkspacesConnectionStatus for usage and error information.
+//
+// Returned Error Codes:
+//   * InvalidParameterValuesException
+//   One or more parameter values are not valid.
+//
 func (c *WorkSpaces) DescribeWorkspacesConnectionStatus(input *DescribeWorkspacesConnectionStatusInput) (*DescribeWorkspacesConnectionStatusOutput, error) {
 	req, out := c.DescribeWorkspacesConnectionStatusRequest(input)
 	err := req.Send()
@@ -520,6 +663,8 @@ const opModifyWorkspaceProperties = "ModifyWorkspaceProperties"
 // client's request for the ModifyWorkspaceProperties operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See ModifyWorkspaceProperties for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -555,8 +700,42 @@ func (c *WorkSpaces) ModifyWorkspacePropertiesRequest(input *ModifyWorkspaceProp
 	return
 }
 
+// ModifyWorkspaceProperties API operation for Amazon WorkSpaces.
+//
 // Modifies the WorkSpace properties, including the RunningMode and AutoStop
 // time.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon WorkSpaces's
+// API operation ModifyWorkspaceProperties for usage and error information.
+//
+// Returned Error Codes:
+//   * InvalidParameterValuesException
+//   One or more parameter values are not valid.
+//
+//   * InvalidResourceStateException
+//   The specified WorkSpace has an invalid state for this operation.
+//
+//   * OperationInProgressException
+//   The properties of this WorkSpace are currently being modified. Try again
+//   in a moment.
+//
+//   * UnsupportedWorkspaceConfigurationException
+//   The WorkSpace does not have the supported configuration for this operation.
+//   For more information, see the Amazon WorkSpaces Administration Guide (http://docs.aws.amazon.com/workspaces/latest/adminguide).
+//
+//   * ResourceNotFoundException
+//   The resource could not be found.
+//
+//   * AccessDeniedException
+
+//
+//   * ResourceUnavailableException
+//   The specified resource is not available.
+//
 func (c *WorkSpaces) ModifyWorkspaceProperties(input *ModifyWorkspacePropertiesInput) (*ModifyWorkspacePropertiesOutput, error) {
 	req, out := c.ModifyWorkspacePropertiesRequest(input)
 	err := req.Send()
@@ -569,6 +748,8 @@ const opRebootWorkspaces = "RebootWorkspaces"
 // client's request for the RebootWorkspaces operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See RebootWorkspaces for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -604,12 +785,21 @@ func (c *WorkSpaces) RebootWorkspacesRequest(input *RebootWorkspacesInput) (req 
 	return
 }
 
+// RebootWorkspaces API operation for Amazon WorkSpaces.
+//
 // Reboots the specified WorkSpaces.
 //
 // To be able to reboot a WorkSpace, the WorkSpace must have a State of AVAILABLE,
 // IMPAIRED, or INOPERABLE.
 //
-//  This operation is asynchronous and returns before the WorkSpaces have rebooted.
+// This operation is asynchronous and returns before the WorkSpaces have rebooted.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon WorkSpaces's
+// API operation RebootWorkspaces for usage and error information.
 func (c *WorkSpaces) RebootWorkspaces(input *RebootWorkspacesInput) (*RebootWorkspacesOutput, error) {
 	req, out := c.RebootWorkspacesRequest(input)
 	err := req.Send()
@@ -622,6 +812,8 @@ const opRebuildWorkspaces = "RebuildWorkspaces"
 // client's request for the RebuildWorkspaces operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See RebuildWorkspaces for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -657,25 +849,34 @@ func (c *WorkSpaces) RebuildWorkspacesRequest(input *RebuildWorkspacesInput) (re
 	return
 }
 
+// RebuildWorkspaces API operation for Amazon WorkSpaces.
+//
 // Rebuilds the specified WorkSpaces.
 //
 // Rebuilding a WorkSpace is a potentially destructive action that can result
 // in the loss of data. Rebuilding a WorkSpace causes the following to occur:
 //
-//   The system is restored to the image of the bundle that the WorkSpace is
-// created from. Any applications that have been installed, or system settings
-// that have been made since the WorkSpace was created will be lost.
+//    * The system is restored to the image of the bundle that the WorkSpace
+//    is created from. Any applications that have been installed, or system
+//    settings that have been made since the WorkSpace was created will be lost.
 //
-//   The data drive (D drive) is re-created from the last automatic snapshot
-// taken of the data drive. The current contents of the data drive are overwritten.
-// Automatic snapshots of the data drive are taken every 12 hours, so the snapshot
-// can be as much as 12 hours old.
+//    * The data drive (D drive) is re-created from the last automatic snapshot
+//    taken of the data drive. The current contents of the data drive are overwritten.
+//    Automatic snapshots of the data drive are taken every 12 hours, so the
+//    snapshot can be as much as 12 hours old.
 //
-//   To be able to rebuild a WorkSpace, the WorkSpace must have a State of
-// AVAILABLE or ERROR.
+// To be able to rebuild a WorkSpace, the WorkSpace must have a State of AVAILABLE
+// or ERROR.
 //
-//  This operation is asynchronous and returns before the WorkSpaces have been
+// This operation is asynchronous and returns before the WorkSpaces have been
 // completely rebuilt.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon WorkSpaces's
+// API operation RebuildWorkspaces for usage and error information.
 func (c *WorkSpaces) RebuildWorkspaces(input *RebuildWorkspacesInput) (*RebuildWorkspacesOutput, error) {
 	req, out := c.RebuildWorkspacesRequest(input)
 	err := req.Send()
@@ -688,6 +889,8 @@ const opStartWorkspaces = "StartWorkspaces"
 // client's request for the StartWorkspaces operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See StartWorkspaces for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -723,8 +926,17 @@ func (c *WorkSpaces) StartWorkspacesRequest(input *StartWorkspacesInput) (req *r
 	return
 }
 
+// StartWorkspaces API operation for Amazon WorkSpaces.
+//
 // Starts the specified WorkSpaces. The API only works with WorkSpaces that
 // have RunningMode configured as AutoStop and the State set to “STOPPED.”
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon WorkSpaces's
+// API operation StartWorkspaces for usage and error information.
 func (c *WorkSpaces) StartWorkspaces(input *StartWorkspacesInput) (*StartWorkspacesOutput, error) {
 	req, out := c.StartWorkspacesRequest(input)
 	err := req.Send()
@@ -737,6 +949,8 @@ const opStopWorkspaces = "StopWorkspaces"
 // client's request for the StopWorkspaces operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See StopWorkspaces for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -772,9 +986,18 @@ func (c *WorkSpaces) StopWorkspacesRequest(input *StopWorkspacesInput) (req *req
 	return
 }
 
+// StopWorkspaces API operation for Amazon WorkSpaces.
+//
 // Stops the specified WorkSpaces. The API only works with WorkSpaces that have
 // RunningMode configured as AutoStop and the State set to AVAILABLE, IMPAIRED,
 // UNHEALTHY, or ERROR.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon WorkSpaces's
+// API operation StopWorkspaces for usage and error information.
 func (c *WorkSpaces) StopWorkspaces(input *StopWorkspacesInput) (*StopWorkspacesOutput, error) {
 	req, out := c.StopWorkspacesRequest(input)
 	err := req.Send()
@@ -787,6 +1010,8 @@ const opTerminateWorkspaces = "TerminateWorkspaces"
 // client's request for the TerminateWorkspaces operation. The "output" return
 // value can be used to capture response data after the request's "Send" method
 // is called.
+//
+// See TerminateWorkspaces for usage and error information.
 //
 // Creating a request object using this method should be used when you want to inject
 // custom logic into the request's lifecycle using a custom handler, or if you want to
@@ -822,16 +1047,25 @@ func (c *WorkSpaces) TerminateWorkspacesRequest(input *TerminateWorkspacesInput)
 	return
 }
 
+// TerminateWorkspaces API operation for Amazon WorkSpaces.
+//
 // Terminates the specified WorkSpaces.
 //
-// Terminating a WorkSpace is a permanent action and cannot be undone. The
-// user's data is not maintained and will be destroyed. If you need to archive
-// any user data, contact Amazon Web Services before terminating the WorkSpace.
+// Terminating a WorkSpace is a permanent action and cannot be undone. The user's
+// data is not maintained and will be destroyed. If you need to archive any
+// user data, contact Amazon Web Services before terminating the WorkSpace.
 //
 // You can terminate a WorkSpace that is in any state except SUSPENDED.
 //
-//  This operation is asynchronous and returns before the WorkSpaces have been
+// This operation is asynchronous and returns before the WorkSpaces have been
 // completely terminated.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon WorkSpaces's
+// API operation TerminateWorkspaces for usage and error information.
 func (c *WorkSpaces) TerminateWorkspaces(input *TerminateWorkspacesInput) (*TerminateWorkspacesOutput, error) {
 	req, out := c.TerminateWorkspacesRequest(input)
 	err := req.Send()
@@ -861,9 +1095,13 @@ type CreateTagsInput struct {
 	_ struct{} `type:"structure"`
 
 	// The resource ID of the request.
+	//
+	// ResourceId is a required field
 	ResourceId *string `min:"1" type:"string" required:"true"`
 
 	// The tags of the request.
+	//
+	// Tags is a required field
 	Tags []*Tag `type:"list" required:"true"`
 }
 
@@ -926,6 +1164,8 @@ type CreateWorkspacesInput struct {
 	_ struct{} `type:"structure"`
 
 	// An array of structures that specify the WorkSpaces to create.
+	//
+	// Workspaces is a required field
 	Workspaces []*WorkspaceRequest `min:"1" type:"list" required:"true"`
 }
 
@@ -1028,9 +1268,13 @@ type DeleteTagsInput struct {
 	_ struct{} `type:"structure"`
 
 	// The resource ID of the request.
+	//
+	// ResourceId is a required field
 	ResourceId *string `min:"1" type:"string" required:"true"`
 
 	// The tag keys of the request.
+	//
+	// TagKeys is a required field
 	TagKeys []*string `type:"list" required:"true"`
 }
 
@@ -1083,6 +1327,8 @@ type DescribeTagsInput struct {
 	_ struct{} `type:"structure"`
 
 	// The resource ID of the request.
+	//
+	// ResourceId is a required field
 	ResourceId *string `min:"1" type:"string" required:"true"`
 }
 
@@ -1147,9 +1393,9 @@ type DescribeWorkspaceBundlesInput struct {
 	//
 	// This contains one of the following values:
 	//
-	//   null- Retrieves the bundles that belong to the account making the call.
+	//    * null- Retrieves the bundles that belong to the account making the call.
 	//
-	//    AMAZON- Retrieves the bundles that are provided by AWS.
+	//    * AMAZON- Retrieves the bundles that are provided by AWS.
 	Owner *string `type:"string"`
 }
 
@@ -1471,9 +1717,13 @@ type ModifyWorkspacePropertiesInput struct {
 	_ struct{} `type:"structure"`
 
 	// The ID of the WorkSpace.
+	//
+	// WorkspaceId is a required field
 	WorkspaceId *string `type:"string" required:"true"`
 
 	// The WorkSpace properties of the request.
+	//
+	// WorkspaceProperties is a required field
 	WorkspaceProperties *WorkspaceProperties `type:"structure" required:"true"`
 }
 
@@ -1523,6 +1773,8 @@ type RebootRequest struct {
 	_ struct{} `type:"structure"`
 
 	// The identifier of the WorkSpace to reboot.
+	//
+	// WorkspaceId is a required field
 	WorkspaceId *string `type:"string" required:"true"`
 }
 
@@ -1554,6 +1806,8 @@ type RebootWorkspacesInput struct {
 	_ struct{} `type:"structure"`
 
 	// An array of structures that specify the WorkSpaces to reboot.
+	//
+	// RebootWorkspaceRequests is a required field
 	RebootWorkspaceRequests []*RebootRequest `min:"1" type:"list" required:"true"`
 }
 
@@ -1617,6 +1871,8 @@ type RebuildRequest struct {
 	_ struct{} `type:"structure"`
 
 	// The identifier of the WorkSpace to rebuild.
+	//
+	// WorkspaceId is a required field
 	WorkspaceId *string `type:"string" required:"true"`
 }
 
@@ -1648,6 +1904,8 @@ type RebuildWorkspacesInput struct {
 	_ struct{} `type:"structure"`
 
 	// An array of structures that specify the WorkSpaces to rebuild.
+	//
+	// RebuildWorkspaceRequests is a required field
 	RebuildWorkspaceRequests []*RebuildRequest `min:"1" type:"list" required:"true"`
 }
 
@@ -1727,6 +1985,8 @@ type StartWorkspacesInput struct {
 	_ struct{} `type:"structure"`
 
 	// The requests.
+	//
+	// StartWorkspaceRequests is a required field
 	StartWorkspaceRequests []*StartRequest `min:"1" type:"list" required:"true"`
 }
 
@@ -1795,6 +2055,8 @@ type StopWorkspacesInput struct {
 	_ struct{} `type:"structure"`
 
 	// The requests.
+	//
+	// StopWorkspaceRequests is a required field
 	StopWorkspaceRequests []*StopRequest `min:"1" type:"list" required:"true"`
 }
 
@@ -1846,6 +2108,8 @@ type Tag struct {
 	_ struct{} `type:"structure"`
 
 	// The key of the tag.
+	//
+	// Key is a required field
 	Key *string `min:"1" type:"string" required:"true"`
 
 	// The value of the tag.
@@ -1884,6 +2148,8 @@ type TerminateRequest struct {
 	_ struct{} `type:"structure"`
 
 	// The identifier of the WorkSpace to terminate.
+	//
+	// WorkspaceId is a required field
 	WorkspaceId *string `type:"string" required:"true"`
 }
 
@@ -1915,6 +2181,8 @@ type TerminateWorkspacesInput struct {
 	_ struct{} `type:"structure"`
 
 	// An array of structures that specify the WorkSpaces to terminate.
+	//
+	// TerminateWorkspaceRequests is a required field
 	TerminateWorkspaceRequests []*TerminateRequest `min:"1" type:"list" required:"true"`
 }
 
@@ -2200,11 +2468,15 @@ type WorkspaceRequest struct {
 	// The identifier of the bundle to create the WorkSpace from. You can use the
 	// DescribeWorkspaceBundles operation to obtain a list of the bundles that are
 	// available.
+	//
+	// BundleId is a required field
 	BundleId *string `type:"string" required:"true"`
 
 	// The identifier of the AWS Directory Service directory to create the WorkSpace
 	// in. You can use the DescribeWorkspaceDirectories operation to obtain a list
 	// of the directories that are available.
+	//
+	// DirectoryId is a required field
 	DirectoryId *string `type:"string" required:"true"`
 
 	// Specifies whether the data stored on the root volume, or C: drive, is encrypted.
@@ -2215,6 +2487,8 @@ type WorkspaceRequest struct {
 
 	// The username that the WorkSpace is assigned to. This username must exist
 	// in the AWS Directory Service directory specified by the DirectoryId member.
+	//
+	// UserName is a required field
 	UserName *string `min:"1" type:"string" required:"true"`
 
 	// Specifies whether the data stored on the user volume, or D: drive, is encrypted.
@@ -2270,77 +2544,100 @@ func (s *WorkspaceRequest) Validate() error {
 }
 
 const (
-	// @enum Compute
+	// ComputeValue is a Compute enum value
 	ComputeValue = "VALUE"
-	// @enum Compute
+
+	// ComputeStandard is a Compute enum value
 	ComputeStandard = "STANDARD"
-	// @enum Compute
+
+	// ComputePerformance is a Compute enum value
 	ComputePerformance = "PERFORMANCE"
 )
 
 const (
-	// @enum ConnectionState
+	// ConnectionStateConnected is a ConnectionState enum value
 	ConnectionStateConnected = "CONNECTED"
-	// @enum ConnectionState
+
+	// ConnectionStateDisconnected is a ConnectionState enum value
 	ConnectionStateDisconnected = "DISCONNECTED"
-	// @enum ConnectionState
+
+	// ConnectionStateUnknown is a ConnectionState enum value
 	ConnectionStateUnknown = "UNKNOWN"
 )
 
 const (
-	// @enum RunningMode
+	// RunningModeAutoStop is a RunningMode enum value
 	RunningModeAutoStop = "AUTO_STOP"
-	// @enum RunningMode
+
+	// RunningModeAlwaysOn is a RunningMode enum value
 	RunningModeAlwaysOn = "ALWAYS_ON"
 )
 
 const (
-	// @enum WorkspaceDirectoryState
+	// WorkspaceDirectoryStateRegistering is a WorkspaceDirectoryState enum value
 	WorkspaceDirectoryStateRegistering = "REGISTERING"
-	// @enum WorkspaceDirectoryState
+
+	// WorkspaceDirectoryStateRegistered is a WorkspaceDirectoryState enum value
 	WorkspaceDirectoryStateRegistered = "REGISTERED"
-	// @enum WorkspaceDirectoryState
+
+	// WorkspaceDirectoryStateDeregistering is a WorkspaceDirectoryState enum value
 	WorkspaceDirectoryStateDeregistering = "DEREGISTERING"
-	// @enum WorkspaceDirectoryState
+
+	// WorkspaceDirectoryStateDeregistered is a WorkspaceDirectoryState enum value
 	WorkspaceDirectoryStateDeregistered = "DEREGISTERED"
-	// @enum WorkspaceDirectoryState
+
+	// WorkspaceDirectoryStateError is a WorkspaceDirectoryState enum value
 	WorkspaceDirectoryStateError = "ERROR"
 )
 
 const (
-	// @enum WorkspaceDirectoryType
+	// WorkspaceDirectoryTypeSimpleAd is a WorkspaceDirectoryType enum value
 	WorkspaceDirectoryTypeSimpleAd = "SIMPLE_AD"
-	// @enum WorkspaceDirectoryType
+
+	// WorkspaceDirectoryTypeAdConnector is a WorkspaceDirectoryType enum value
 	WorkspaceDirectoryTypeAdConnector = "AD_CONNECTOR"
 )
 
 const (
-	// @enum WorkspaceState
+	// WorkspaceStatePending is a WorkspaceState enum value
 	WorkspaceStatePending = "PENDING"
-	// @enum WorkspaceState
+
+	// WorkspaceStateAvailable is a WorkspaceState enum value
 	WorkspaceStateAvailable = "AVAILABLE"
-	// @enum WorkspaceState
+
+	// WorkspaceStateImpaired is a WorkspaceState enum value
 	WorkspaceStateImpaired = "IMPAIRED"
-	// @enum WorkspaceState
+
+	// WorkspaceStateUnhealthy is a WorkspaceState enum value
 	WorkspaceStateUnhealthy = "UNHEALTHY"
-	// @enum WorkspaceState
+
+	// WorkspaceStateRebooting is a WorkspaceState enum value
 	WorkspaceStateRebooting = "REBOOTING"
-	// @enum WorkspaceState
+
+	// WorkspaceStateStarting is a WorkspaceState enum value
 	WorkspaceStateStarting = "STARTING"
-	// @enum WorkspaceState
+
+	// WorkspaceStateRebuilding is a WorkspaceState enum value
 	WorkspaceStateRebuilding = "REBUILDING"
-	// @enum WorkspaceState
+
+	// WorkspaceStateMaintenance is a WorkspaceState enum value
 	WorkspaceStateMaintenance = "MAINTENANCE"
-	// @enum WorkspaceState
+
+	// WorkspaceStateTerminating is a WorkspaceState enum value
 	WorkspaceStateTerminating = "TERMINATING"
-	// @enum WorkspaceState
+
+	// WorkspaceStateTerminated is a WorkspaceState enum value
 	WorkspaceStateTerminated = "TERMINATED"
-	// @enum WorkspaceState
+
+	// WorkspaceStateSuspended is a WorkspaceState enum value
 	WorkspaceStateSuspended = "SUSPENDED"
-	// @enum WorkspaceState
+
+	// WorkspaceStateStopping is a WorkspaceState enum value
 	WorkspaceStateStopping = "STOPPING"
-	// @enum WorkspaceState
+
+	// WorkspaceStateStopped is a WorkspaceState enum value
 	WorkspaceStateStopped = "STOPPED"
-	// @enum WorkspaceState
+
+	// WorkspaceStateError is a WorkspaceState enum value
 	WorkspaceStateError = "ERROR"
 )
