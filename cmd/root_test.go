@@ -56,8 +56,13 @@ func TestSendMessageToURL(t *testing.T) {
 		{"xyz", false},
 	}
 
+	queue := Queue{
+		Name: "test",
+		URL:  url,
+	}
+
 	for _, c := range cases {
-		if actual := sendMessageToURL(c.msg, url); actual != c.expected {
+		if actual := sendMessageToURL(c.msg, queue); actual != c.expected {
 			t.Errorf("sendMessageToURL(%#v) expected %#v, but got %#v", c.msg, c.expected, actual)
 		}
 	}
