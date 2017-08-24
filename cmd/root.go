@@ -23,6 +23,7 @@ package cmd
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -59,6 +60,7 @@ var sqsEndpoint string
 var parallelRequests int
 var svc *sqs.SQS
 var httpClient *http.Client
+var port int
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -86,6 +88,7 @@ func init() {
 	RootCmd.PersistentFlags().StringVar(&awsRegion, "aws-region", "us-east-1", "AWS Region for the SQS queue")
 	RootCmd.PersistentFlags().StringVar(&sqsEndpoint, "sqs-endpoint", "", "SQS Endpoint for using with fake_sqs")
 	RootCmd.PersistentFlags().IntVar(&parallelRequests, "parallel", 1, "Number of messages to be consumed in parallel")
+	RootCmd.PersistentFlags().IntVar(&port, "port", 8090, "Port used by metrics server")
 
 	httpClient = &http.Client{}
 }
@@ -128,7 +131,7 @@ func startGohaqd(cmd *cobra.Command, args []string) {
 	}
 
 	http.Handle("/metrics", promhttp.Handler())
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":"+fmt.Sprint(port), nil))
 }
 
 func initializeQueue(queue Queue) {
