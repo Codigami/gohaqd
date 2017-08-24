@@ -103,6 +103,8 @@ func startGohaqd(cmd *cobra.Command, args []string) {
 				URL:      url,
 				Parallel: parallelRequests,
 			})
+		} else {
+			os.Exit(1)
 		}
 	} else {
 		err = yaml.Unmarshal(dat, &config)
