@@ -170,12 +170,17 @@ func initializeQueue(queue Queue) {
 func startConsumer(queue Queue) {
 	for msg := range queue.sem {
 		if sendMessageToURL(*msg.Body, queue) {
-			_, err := svc.DeleteMessage(&sqs.DeleteMessageInput{
-				QueueUrl:      queue.msgparams.QueueUrl,
-				ReceiptHandle: msg.ReceiptHandle,
-			})
-			if err != nil {
-				log.Fatalf("%s: Error while deleting processed message from SQS: %s", queue.Name, err.Error())
+			// Retry deletion of consumed message 3 times
+			for retryAttempt := 1; retryAttempt <= 3; retryAttempt++ {
+				_, err := svc.DeleteMessage(&sqs.DeleteMessageInput{
+					QueueUrl:      queue.msgparams.QueueUrl,
+					ReceiptHandle: msg.ReceiptHandle,
+				})
+				if err != nil {
+					log.Printf("%s: Error while deleting processed message from SQS: %s", queue.Name, err.Error())
+				} else {
+					break
+				}
 			}
 		}
 	}
@@ -192,7 +197,8 @@ func startPoller(queue Queue) {
 func pollSQS(queue Queue) {
 	resp, err := svc.ReceiveMessage(queue.msgparams)
 	if err != nil {
-		log.Fatalf("%s: Error while reading message from SQS: %s", queue.Name, err.Error())
+		log.Printf("%s: Error while reading message from SQS: %s", queue.Name, err.Error())
+		return
 	}
 
 	for _, msg := range resp.Messages {
