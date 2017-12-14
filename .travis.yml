@@ -11,5 +11,5 @@ script:
 - docker build -t $REPO:$TAG .
 
 after_success:
-- test $TRAVIS_PULL_REQUEST = "false" && docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && docker push $REPO
+- test $TRAVIS_PULL_REQUEST = "false" -a $TRAVIS_BRANCH = "master" && docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && docker push $REPO
 
