@@ -1,6 +1,6 @@
 FROM golang:1.8 AS buildimage
 
-RUN apt-get update && apt-get install ca-certificates
+RUN apt-get update && apt-get install -y ca-certificates
 COPY . /go/src/github.com/Codigami/gohaqd/
 WORKDIR /go/src/github.com/Codigami/gohaqd
 RUN CGO_ENABLED=0 GOOS=linux /bin/bash -c "bash check.sh && go build -a -v -ldflags '-w'"
