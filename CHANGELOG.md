@@ -1,3 +1,5 @@
+## Refer [Github releases](https://github.com/Codigami/gohaqd/releases) for changelog
+
 ## v2.0 (August 23, 2017)
 
   * Use config file for multiple queue configuration ([#5](https://github.com/Codigami/gohaqd/pull/5), [@ApsOps](https://github.com/ApsOps))
