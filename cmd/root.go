@@ -55,6 +55,7 @@ type Config struct {
 var cfgFile string
 var queueName string
 var url string
+var healthcheckURL string
 var awsRegion string
 var sqsEndpoint string
 var parallelRequests int
@@ -81,10 +82,11 @@ func Execute() {
 }
 
 func init() {
-	RootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "./gohaqd.yaml", "config file")
+	RootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "./gohaqd.yaml", "config file path")
 	RootCmd.PersistentFlags().StringVarP(&queueName, "queue-name", "q", "", "queue name. (Used only when --config is not set and default config doesn't exist)")
 	RootCmd.PersistentFlags().StringVarP(&url, "url", "u", "", "HTTP endpoint. Takes the URL from the message by default. (Used only when --config is not set and default config doesn't exist)")
 
+	RootCmd.PersistentFlags().StringVar(&healthcheckURL, "healthcheck-url", "", "HTTP endpoint for checking if consumer server is up")
 	RootCmd.PersistentFlags().StringVar(&awsRegion, "aws-region", "us-east-1", "AWS Region for the SQS queue")
 	RootCmd.PersistentFlags().StringVar(&sqsEndpoint, "sqs-endpoint", "", "SQS Endpoint for using with fake_sqs")
 	RootCmd.PersistentFlags().IntVar(&parallelRequests, "parallel", 1, "Number of messages to be consumed in parallel")
@@ -125,6 +127,22 @@ func startGohaqd(cmd *cobra.Command, args []string) {
 	}
 	sess := session.New(awsConfig)
 	svc = sqs.New(sess)
+
+	if healthcheckURL != "" {
+		var resp *http.Response
+		var err error
+
+		for {
+			resp, err = httpClient.Get(healthcheckURL)
+			if err == nil {
+				log.Println("Consumer server healthcheck successful. Starting processing.")
+				break
+			}
+			log.Printf("Consumer server healthcheck failed, retrying after 5 seconds... Error: %s", err.Error())
+			time.Sleep(5 * time.Second)
+		}
+		defer resp.Body.Close()
+	}
 
 	for _, q := range config.Queues {
 		initializeQueue(q)
@@ -230,6 +248,10 @@ func sendMessageToURL(msg string, queue Queue) bool {
 	for {
 		resp, err = httpClient.Post(endpoint, "application/json", bytes.NewBuffer([]byte(msg)))
 		if err == nil {
+			break
+		}
+		if healthcheckURL != "" {
+			log.Printf("%s: Error hitting endpoint with msg '%s'... Error: %s", queue.Name, msg, err.Error())
 			break
 		}
 		log.Printf("%s: Error hitting endpoint with msg '%s', retrying after 1 second... Error: %s", queue.Name, msg, err.Error())

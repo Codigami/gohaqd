@@ -14,13 +14,15 @@ It pulls data off a queue, inserts it into the message body, and sends an HTTP P
 ```
 ## Flags:
 ```
-      --aws-region string     AWS Region for the SQS queue (default "us-east-1")
-  -c, --config string         config file (default is ./gohaqd.yaml) (default "./gohaqd.yaml")
-  -h, --help                  help for gohaqd
-      --parallel int          Number of messages to be consumed in parallel (default 1)
-  -q, --queue-name string     queue name. (Used only when --config is not set and default config doesn't exist)
-      --sqs-endpoint string   SQS Endpoint for using with fake_sqs
-  -u, --url string            HTTP endpoint. Takes the URL from the message by default. (Used only when --config is not set and default config doesn't exist)
+      --aws-region string        AWS Region for the SQS queue (default "us-east-1")
+  -c, --config string            config file path (default "./gohaqd.yaml")
+      --healthcheck-url string   HTTP endpoint for checking if consumer server is up
+  -h, --help                     help for gohaqd
+      --parallel int             Number of messages to be consumed in parallel (default 1)
+      --port int                 Port used by metrics server (default 8090)
+  -q, --queue-name string        queue name. (Used only when --config is not set and default config doesn't exist)
+      --sqs-endpoint string      SQS Endpoint for using with fake_sqs
+  -u, --url string               HTTP endpoint. Takes the URL from the message by default. (Used only when --config is not set and default config doesn't exist)
 ```
 
 ## Sample config file:
