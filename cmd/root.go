@@ -245,9 +245,17 @@ func sendMessageToURL(msg string, queue Queue) bool {
 		}
 	}
 
-	resp, err = httpClient.Post(endpoint, "application/json", bytes.NewBuffer([]byte(msg)))
-	if err != nil {
-		log.Printf("%s: Error hitting endpoint with msg '%s'... Error: %s", queue.Name, msg, err.Error())
+	for {
+		resp, err = httpClient.Post(endpoint, "application/json", bytes.NewBuffer([]byte(msg)))
+		if err == nil {
+			break
+		}
+		if healthcheckURL != "" {
+			log.Printf("%s: Error hitting endpoint with msg '%s'... Error: %s", queue.Name, msg, err.Error())
+			break
+		}
+		log.Printf("%s: Error hitting endpoint with msg '%s', retrying after 1 second... Error: %s", queue.Name, msg, err.Error())
+		time.Sleep(time.Second)
 	}
 	defer resp.Body.Close()
 
