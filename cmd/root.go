@@ -252,7 +252,7 @@ func sendMessageToURL(msg string, queue Queue) bool {
 		}
 		if healthcheckURL != "" {
 			log.Printf("%s: Error hitting endpoint with msg '%s'... Error: %s", queue.Name, msg, err.Error())
-			break
+			return false
 		}
 		log.Printf("%s: Error hitting endpoint with msg '%s', retrying after 1 second... Error: %s", queue.Name, msg, err.Error())
 		time.Sleep(time.Second)
