@@ -1,12 +1,9 @@
 package protocol_test
 
 import (
-	"fmt"
 	"net/http"
 	"net/url"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 
 	"github.com/aws/aws-sdk-go/aws/client/metadata"
 	"github.com/aws/aws-sdk-go/aws/request"
@@ -21,11 +18,13 @@ import (
 )
 
 func xmlData(set bool, b []byte, size, delta int) {
+	const openingTags = "<B><A>"
+	const closingTags = "</A></B>"
 	if !set {
-		copy(b, []byte("<B><A>"))
+		copy(b, []byte(openingTags))
 	}
 	if size == 0 {
-		copy(b[delta-len("</B></A>"):], []byte("</B></A>"))
+		copy(b[delta-len(closingTags):], []byte(closingTags))
 	}
 }
 
@@ -116,14 +115,21 @@ func checkForLeak(data interface{}, build, fn func(*request.Request), t *testing
 	fn(req)
 
 	if result.errExists {
-		assert.NotNil(t, req.Error)
+		if err := req.Error; err == nil {
+			t.Errorf("expect error")
+		}
 	} else {
-		fmt.Println(req.Error)
-		assert.Nil(t, req.Error)
+		if err := req.Error; err != nil {
+			t.Errorf("expect nil, %v", err)
+		}
 	}
 
-	assert.Equal(t, reader.Closed, result.closed)
-	assert.Equal(t, reader.Size, result.size)
+	if e, a := reader.Closed, result.closed; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
+	if e, a := reader.Size, result.size; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
 }
 
 func TestJSONRpc(t *testing.T) {

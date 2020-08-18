@@ -1,8 +1,8 @@
-hash: 944a58b0e1a1b171d7f6a47e0c003502a3a1c3f6631f05da2c4affdf09cee22c
-updated: 2017-08-23T15:13:49.678690407+05:30
+hash: e896526fd266141a5c92819fe8a97612df6b56cc653ccf9c3c565cca672962da
+updated: 2020-08-18T14:10:55.080099+05:30
 imports:
 - name: github.com/aws/aws-sdk-go
-  version: 6c577e9e7b08a6d10bad1c9703227cd0403a8dd7
+  version: cea18deb37ae1ca4a803a70c67a87fbe44d7b189
   subpackages:
   - aws
   - aws/awserr
@@ -13,26 +13,37 @@ imports:
   - aws/credentials
   - aws/credentials/ec2rolecreds
   - aws/credentials/endpointcreds
+  - aws/credentials/processcreds
   - aws/credentials/stscreds
+  - aws/csm
   - aws/defaults
   - aws/ec2metadata
+  - aws/endpoints
   - aws/request
   - aws/session
   - aws/signer/v4
-  - private/endpoints
+  - internal/context
+  - internal/ini
+  - internal/sdkio
+  - internal/sdkmath
+  - internal/sdkrand
+  - internal/sdkuri
+  - internal/shareddefaults
+  - internal/strings
+  - internal/sync/singleflight
   - private/protocol
+  - private/protocol/json/jsonutil
   - private/protocol/query
   - private/protocol/query/queryutil
   - private/protocol/rest
   - private/protocol/xml/xmlutil
   - service/sqs
   - service/sts
+  - service/sts/stsiface
 - name: github.com/beorn7/perks
   version: 4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9
   subpackages:
   - quantile
-- name: github.com/go-ini/ini
-  version: 2ba15ac2dc9cdf88c110ec2dc0ced7fa45f5678c
 - name: github.com/golang/protobuf
   version: 2402d76f3d41f928c7902a765dfc872356dd3aad
   subpackages:

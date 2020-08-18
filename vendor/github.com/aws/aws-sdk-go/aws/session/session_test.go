@@ -1,42 +1,54 @@
+// +build go1.7
+
 package session
 
 import (
 	"bytes"
 	"fmt"
 	"net/http"
-	"net/http/httptest"
 	"os"
+	"path/filepath"
+	"strings"
 	"testing"
-	"time"
-
-	"github.com/stretchr/testify/assert"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/defaults"
+	"github.com/aws/aws-sdk-go/aws/endpoints"
+	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/service/s3"
 )
 
 func TestNewDefaultSession(t *testing.T) {
-	oldEnv := initSessionTestEnv()
-	defer popEnv(oldEnv)
+	restoreEnvFn := initSessionTestEnv()
+	defer restoreEnvFn()
 
 	s := New(&aws.Config{Region: aws.String("region")})
 
-	assert.Equal(t, "region", *s.Config.Region)
-	assert.Equal(t, http.DefaultClient, s.Config.HTTPClient)
-	assert.NotNil(t, s.Config.Logger)
-	assert.Equal(t, aws.LogOff, *s.Config.LogLevel)
+	if e, a := "region", *s.Config.Region; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
+	if e, a := http.DefaultClient, s.Config.HTTPClient; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
+	if s.Config.Logger == nil {
+		t.Errorf("expect not nil")
+	}
+	if e, a := aws.LogOff, *s.Config.LogLevel; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
 }
 
 func TestNew_WithCustomCreds(t *testing.T) {
-	oldEnv := initSessionTestEnv()
-	defer popEnv(oldEnv)
+	restoreEnvFn := initSessionTestEnv()
+	defer restoreEnvFn()
 
 	customCreds := credentials.NewStaticCredentials("AKID", "SECRET", "TOKEN")
 	s := New(&aws.Config{Credentials: customCreds})
 
-	assert.Equal(t, customCreds, s.Config.Credentials)
+	if e, a := customCreds, s.Config.Credentials; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
 }
 
 type mockLogger struct {
@@ -48,31 +60,45 @@ func (w mockLogger) Log(args ...interface{}) {
 }
 
 func TestNew_WithSessionLoadError(t *testing.T) {
-	oldEnv := initSessionTestEnv()
-	defer popEnv(oldEnv)
+	restoreEnvFn := initSessionTestEnv()
+	defer restoreEnvFn()
 
 	os.Setenv("AWS_SDK_LOAD_CONFIG", "1")
 	os.Setenv("AWS_CONFIG_FILE", testConfigFilename)
 	os.Setenv("AWS_PROFILE", "assume_role_invalid_source_profile")
 
 	logger := bytes.Buffer{}
-	s := New(&aws.Config{Logger: &mockLogger{&logger}})
+	s := New(&aws.Config{
+		Region: aws.String("us-west-2"),
+		Logger: &mockLogger{&logger},
+	})
 
-	assert.NotNil(t, s)
+	if s == nil {
+		t.Errorf("expect not nil")
+	}
 
 	svc := s3.New(s)
 	_, err := svc.ListBuckets(&s3.ListBucketsInput{})
 
-	assert.Error(t, err)
-	assert.Contains(t, logger.String(), "ERROR: failed to create session with AWS_SDK_LOAD_CONFIG enabled")
-	assert.Contains(t, err.Error(), SharedConfigAssumeRoleError{
-		RoleARN: "assume_role_invalid_source_profile_role_arn",
-	}.Error())
+	if err == nil {
+		t.Errorf("expect not nil")
+	}
+	if e, a := "ERROR: failed to create session with AWS_SDK_LOAD_CONFIG enabled", logger.String(); !strings.Contains(a, e) {
+		t.Errorf("expect %v, to be in %v", e, a)
+	}
+
+	expectErr := SharedConfigAssumeRoleError{
+		RoleARN:       "assume_role_invalid_source_profile_role_arn",
+		SourceProfile: "profile_not_exists",
+	}
+	if e, a := expectErr.Error(), err.Error(); !strings.Contains(a, e) {
+		t.Errorf("expect %v, to be in %v", e, a)
+	}
 }
 
 func TestSessionCopy(t *testing.T) {
-	oldEnv := initSessionTestEnv()
-	defer popEnv(oldEnv)
+	restoreEnvFn := initSessionTestEnv()
+	defer restoreEnvFn()
 
 	os.Setenv("AWS_REGION", "orig_region")
 
@@ -83,35 +109,103 @@ func TestSessionCopy(t *testing.T) {
 
 	newSess := s.Copy(&aws.Config{Region: aws.String("new_region")})
 
-	assert.Equal(t, "orig_region", *s.Config.Region)
-	assert.Equal(t, "new_region", *newSess.Config.Region)
+	if e, a := "orig_region", *s.Config.Region; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
+	if e, a := "new_region", *newSess.Config.Region; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
 }
 
 func TestSessionClientConfig(t *testing.T) {
-	s, err := NewSession(&aws.Config{Region: aws.String("orig_region")})
-	assert.NoError(t, err)
+	s, err := NewSession(&aws.Config{
+		Credentials: credentials.AnonymousCredentials,
+		Region:      aws.String("orig_region"),
+		EndpointResolver: endpoints.ResolverFunc(
+			func(service, region string, opts ...func(*endpoints.Options)) (endpoints.ResolvedEndpoint, error) {
+				if e, a := "mock-service", service; e != a {
+					t.Errorf("expect %q service, got %q", e, a)
+				}
+				if e, a := "other-region", region; e != a {
+					t.Errorf("expect %q region, got %q", e, a)
+				}
+				return endpoints.ResolvedEndpoint{
+					URL:           "https://" + service + "." + region + ".amazonaws.com",
+					SigningRegion: region,
+				}, nil
+			},
+		),
+	})
+	if err != nil {
+		t.Errorf("expect nil, %v", err)
+	}
 
-	cfg := s.ClientConfig("s3", &aws.Config{Region: aws.String("us-west-2")})
+	cfg := s.ClientConfig("mock-service", &aws.Config{Region: aws.String("other-region")})
 
-	assert.Equal(t, "https://s3-us-west-2.amazonaws.com", cfg.Endpoint)
-	assert.Empty(t, cfg.SigningRegion)
-	assert.Equal(t, "us-west-2", *cfg.Config.Region)
+	if e, a := "https://mock-service.other-region.amazonaws.com", cfg.Endpoint; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
+	if e, a := "other-region", cfg.SigningRegion; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
+	if e, a := "other-region", *cfg.Config.Region; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
+}
+
+func TestNewSession_ResolveEndpointError(t *testing.T) {
+	logger := mockLogger{Buffer: bytes.NewBuffer(nil)}
+	sess, err := NewSession(defaults.Config(), &aws.Config{
+		Region: aws.String(""),
+		Logger: logger,
+		EndpointResolver: endpoints.ResolverFunc(
+			func(service, region string, opts ...func(*endpoints.Options)) (endpoints.ResolvedEndpoint, error) {
+				return endpoints.ResolvedEndpoint{}, fmt.Errorf("mock error")
+			},
+		),
+	})
+	if err != nil {
+		t.Fatalf("expect no error got %v", err)
+	}
+
+	cfg := sess.ClientConfig("mock service")
+
+	var r request.Request
+	cfg.Handlers.Validate.Run(&r)
+
+	if r.Error == nil {
+		t.Fatalf("expect validation error, got none")
+	}
+
+	if e, a := aws.ErrMissingRegion.Error(), r.Error.Error(); !strings.Contains(a, e) {
+		t.Errorf("expect %v validation error, got %v", e, a)
+	}
+
+	if v := logger.Buffer.String(); len(v) != 0 {
+		t.Errorf("expect nothing logged, got %s", v)
+	}
 }
 
 func TestNewSession_NoCredentials(t *testing.T) {
-	oldEnv := initSessionTestEnv()
-	defer popEnv(oldEnv)
+	restoreEnvFn := initSessionTestEnv()
+	defer restoreEnvFn()
 
 	s, err := NewSession()
-	assert.NoError(t, err)
+	if err != nil {
+		t.Errorf("expect nil, %v", err)
+	}
 
-	assert.NotNil(t, s.Config.Credentials)
-	assert.NotEqual(t, credentials.AnonymousCredentials, s.Config.Credentials)
+	if s.Config.Credentials == nil {
+		t.Errorf("expect not nil")
+	}
+	if e, a := credentials.AnonymousCredentials, s.Config.Credentials; e == a {
+		t.Errorf("expect different credentials, %v", e)
+	}
 }
 
 func TestNewSessionWithOptions_OverrideProfile(t *testing.T) {
-	oldEnv := initSessionTestEnv()
-	defer popEnv(oldEnv)
+	restoreEnvFn := initSessionTestEnv()
+	defer restoreEnvFn()
 
 	os.Setenv("AWS_SDK_LOAD_CONFIG", "1")
 	os.Setenv("AWS_SHARED_CREDENTIALS_FILE", testConfigFilename)
@@ -120,21 +214,35 @@ func TestNewSessionWithOptions_OverrideProfile(t *testing.T) {
 	s, err := NewSessionWithOptions(Options{
 		Profile: "full_profile",
 	})
-	assert.NoError(t, err)
+	if err != nil {
+		t.Errorf("expect nil, %v", err)
+	}
 
-	assert.Equal(t, "full_profile_region", *s.Config.Region)
+	if e, a := "full_profile_region", *s.Config.Region; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
 
 	creds, err := s.Config.Credentials.Get()
-	assert.NoError(t, err)
-	assert.Equal(t, "full_profile_akid", creds.AccessKeyID)
-	assert.Equal(t, "full_profile_secret", creds.SecretAccessKey)
-	assert.Empty(t, creds.SessionToken)
-	assert.Contains(t, creds.ProviderName, "SharedConfigCredentials")
+	if err != nil {
+		t.Errorf("expect nil, %v", err)
+	}
+	if e, a := "full_profile_akid", creds.AccessKeyID; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
+	if e, a := "full_profile_secret", creds.SecretAccessKey; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
+	if v := creds.SessionToken; len(v) != 0 {
+		t.Errorf("expect empty, got %v", v)
+	}
+	if e, a := "SharedConfigCredentials", creds.ProviderName; !strings.Contains(a, e) {
+		t.Errorf("expect %v, to be in %v", e, a)
+	}
 }
 
 func TestNewSessionWithOptions_OverrideSharedConfigEnable(t *testing.T) {
-	oldEnv := initSessionTestEnv()
-	defer popEnv(oldEnv)
+	restoreEnvFn := initSessionTestEnv()
+	defer restoreEnvFn()
 
 	os.Setenv("AWS_SDK_LOAD_CONFIG", "0")
 	os.Setenv("AWS_SHARED_CREDENTIALS_FILE", testConfigFilename)
@@ -143,21 +251,35 @@ func TestNewSessionWithOptions_OverrideSharedConfigEnable(t *testing.T) {
 	s, err := NewSessionWithOptions(Options{
 		SharedConfigState: SharedConfigEnable,
 	})
-	assert.NoError(t, err)
+	if err != nil {
+		t.Errorf("expect nil, %v", err)
+	}
 
-	assert.Equal(t, "full_profile_region", *s.Config.Region)
+	if e, a := "full_profile_region", *s.Config.Region; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
 
 	creds, err := s.Config.Credentials.Get()
-	assert.NoError(t, err)
-	assert.Equal(t, "full_profile_akid", creds.AccessKeyID)
-	assert.Equal(t, "full_profile_secret", creds.SecretAccessKey)
-	assert.Empty(t, creds.SessionToken)
-	assert.Contains(t, creds.ProviderName, "SharedConfigCredentials")
+	if err != nil {
+		t.Errorf("expect nil, %v", err)
+	}
+	if e, a := "full_profile_akid", creds.AccessKeyID; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
+	if e, a := "full_profile_secret", creds.SecretAccessKey; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
+	if v := creds.SessionToken; len(v) != 0 {
+		t.Errorf("expect empty, got %v", v)
+	}
+	if e, a := "SharedConfigCredentials", creds.ProviderName; !strings.Contains(a, e) {
+		t.Errorf("expect %v, to be in %v", e, a)
+	}
 }
 
 func TestNewSessionWithOptions_OverrideSharedConfigDisable(t *testing.T) {
-	oldEnv := initSessionTestEnv()
-	defer popEnv(oldEnv)
+	restoreEnvFn := initSessionTestEnv()
+	defer restoreEnvFn()
 
 	os.Setenv("AWS_SDK_LOAD_CONFIG", "1")
 	os.Setenv("AWS_SHARED_CREDENTIALS_FILE", testConfigFilename)
@@ -166,26 +288,77 @@ func TestNewSessionWithOptions_OverrideSharedConfigDisable(t *testing.T) {
 	s, err := NewSessionWithOptions(Options{
 		SharedConfigState: SharedConfigDisable,
 	})
-	assert.NoError(t, err)
+	if err != nil {
+		t.Errorf("expect nil, %v", err)
+	}
 
-	assert.Empty(t, *s.Config.Region)
+	if v := *s.Config.Region; len(v) != 0 {
+		t.Errorf("expect empty, got %v", v)
+	}
 
 	creds, err := s.Config.Credentials.Get()
-	assert.NoError(t, err)
-	assert.Equal(t, "full_profile_akid", creds.AccessKeyID)
-	assert.Equal(t, "full_profile_secret", creds.SecretAccessKey)
-	assert.Empty(t, creds.SessionToken)
-	assert.Contains(t, creds.ProviderName, "SharedConfigCredentials")
+	if err != nil {
+		t.Errorf("expect nil, %v", err)
+	}
+	if e, a := "full_profile_akid", creds.AccessKeyID; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
+	if e, a := "full_profile_secret", creds.SecretAccessKey; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
+	if v := creds.SessionToken; len(v) != 0 {
+		t.Errorf("expect empty, got %v", v)
+	}
+	if e, a := "SharedConfigCredentials", creds.ProviderName; !strings.Contains(a, e) {
+		t.Errorf("expect %v, to be in %v", e, a)
+	}
+}
+
+func TestNewSessionWithOptions_OverrideSharedConfigFiles(t *testing.T) {
+	restoreEnvFn := initSessionTestEnv()
+	defer restoreEnvFn()
+
+	os.Setenv("AWS_SDK_LOAD_CONFIG", "1")
+	os.Setenv("AWS_SHARED_CREDENTIALS_FILE", testConfigFilename)
+	os.Setenv("AWS_PROFILE", "config_file_load_order")
+
+	s, err := NewSessionWithOptions(Options{
+		SharedConfigFiles: []string{testConfigOtherFilename},
+	})
+	if err != nil {
+		t.Errorf("expect nil, %v", err)
+	}
+
+	if e, a := "shared_config_other_region", *s.Config.Region; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
+
+	creds, err := s.Config.Credentials.Get()
+	if err != nil {
+		t.Errorf("expect nil, %v", err)
+	}
+	if e, a := "shared_config_other_akid", creds.AccessKeyID; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
+	if e, a := "shared_config_other_secret", creds.SecretAccessKey; e != a {
+		t.Errorf("expect %v, got %v", e, a)
+	}
+	if v := creds.SessionToken; len(v) != 0 {
+		t.Errorf("expect empty, got %v", v)
+	}
+	if e, a := "SharedConfigCredentials", creds.ProviderName; !strings.Contains(a, e) {
+		t.Errorf("expect %v, to be in %v", e, a)
+	}
 }
 
 func TestNewSessionWithOptions_Overrides(t *testing.T) {
-	cases := []struct {
+	cases := map[string]struct {
 		InEnvs    map[string]string
 		InProfile string
 		OutRegion string
 		OutCreds  credentials.Value
 	}{
-		{
+		"env profile with opt profile": {
 			InEnvs: map[string]string{
 				"AWS_SDK_LOAD_CONFIG":         "0",
 				"AWS_SHARED_CREDENTIALS_FILE": testConfigFilename,
@@ -199,7 +372,23 @@ func TestNewSessionWithOptions_Overrides(t *testing.T) {
 				ProviderName:    "SharedConfigCredentials",
 			},
 		},
-		{
+		"env creds with env profile": {
+			InEnvs: map[string]string{
+				"AWS_SDK_LOAD_CONFIG":         "0",
+				"AWS_SHARED_CREDENTIALS_FILE": testConfigFilename,
+				"AWS_REGION":                  "env_region",
+				"AWS_ACCESS_KEY":              "env_akid",
+				"AWS_SECRET_ACCESS_KEY":       "env_secret",
+				"AWS_PROFILE":                 "other_profile",
+			},
+			OutRegion: "env_region",
+			OutCreds: credentials.Value{
+				AccessKeyID:     "env_akid",
+				SecretAccessKey: "env_secret",
+				ProviderName:    "EnvConfigCredentials",
+			},
+		},
+		"env creds with opt profile": {
 			InEnvs: map[string]string{
 				"AWS_SDK_LOAD_CONFIG":         "0",
 				"AWS_SHARED_CREDENTIALS_FILE": testConfigFilename,
@@ -211,17 +400,17 @@ func TestNewSessionWithOptions_Overrides(t *testing.T) {
 			InProfile: "full_profile",
 			OutRegion: "env_region",
 			OutCreds: credentials.Value{
-				AccessKeyID:     "env_akid",
-				SecretAccessKey: "env_secret",
-				ProviderName:    "EnvConfigCredentials",
+				AccessKeyID:     "full_profile_akid",
+				SecretAccessKey: "full_profile_secret",
+				ProviderName:    "SharedConfigCredentials",
 			},
 		},
-		{
+		"cfg and cred file with opt profile": {
 			InEnvs: map[string]string{
 				"AWS_SDK_LOAD_CONFIG":         "0",
 				"AWS_SHARED_CREDENTIALS_FILE": testConfigFilename,
 				"AWS_CONFIG_FILE":             testConfigOtherFilename,
-				"AWS_PROFILE":                 "shared_profile",
+				"AWS_PROFILE":                 "other_profile",
 			},
 			InProfile: "config_file_load_order",
 			OutRegion: "shared_config_region",
@@ -233,112 +422,244 @@ func TestNewSessionWithOptions_Overrides(t *testing.T) {
 		},
 	}
 
-	for _, c := range cases {
-		oldEnv := initSessionTestEnv()
-		defer popEnv(oldEnv)
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			restoreEnvFn := initSessionTestEnv()
+			defer restoreEnvFn()
 
-		for k, v := range c.InEnvs {
-			os.Setenv(k, v)
-		}
+			for k, v := range c.InEnvs {
+				os.Setenv(k, v)
+			}
 
-		s, err := NewSessionWithOptions(Options{
-			Profile:           c.InProfile,
-			SharedConfigState: SharedConfigEnable,
+			s, err := NewSessionWithOptions(Options{
+				Profile:           c.InProfile,
+				SharedConfigState: SharedConfigEnable,
+			})
+			if err != nil {
+				t.Fatalf("expect no error, got %v", err)
+			}
+
+			creds, err := s.Config.Credentials.Get()
+			if err != nil {
+				t.Fatalf("expect no error, got %v", err)
+			}
+			if e, a := c.OutRegion, *s.Config.Region; e != a {
+				t.Errorf("expect %v, got %v", e, a)
+			}
+			if e, a := c.OutCreds.AccessKeyID, creds.AccessKeyID; e != a {
+				t.Errorf("expect %v, got %v", e, a)
+			}
+			if e, a := c.OutCreds.SecretAccessKey, creds.SecretAccessKey; e != a {
+				t.Errorf("expect %v, got %v", e, a)
+			}
+			if e, a := c.OutCreds.SessionToken, creds.SessionToken; e != a {
+				t.Errorf("expect %v, got %v", e, a)
+			}
+			if e, a := c.OutCreds.ProviderName, creds.ProviderName; !strings.Contains(a, e) {
+				t.Errorf("expect %v, to be in %v", e, a)
+			}
 		})
-		assert.NoError(t, err)
-
-		creds, err := s.Config.Credentials.Get()
-		assert.NoError(t, err)
-		assert.Equal(t, c.OutRegion, *s.Config.Region)
-		assert.Equal(t, c.OutCreds.AccessKeyID, creds.AccessKeyID)
-		assert.Equal(t, c.OutCreds.SecretAccessKey, creds.SecretAccessKey)
-		assert.Equal(t, c.OutCreds.SessionToken, creds.SessionToken)
-		assert.Contains(t, creds.ProviderName, c.OutCreds.ProviderName)
 	}
 }
 
-func TestSesisonAssumeRole(t *testing.T) {
-	oldEnv := initSessionTestEnv()
-	defer popEnv(oldEnv)
+func TestNewSession_EnvCredsWithInvalidConfigFile(t *testing.T) {
+	cases := map[string]struct {
+		AccessKey, SecretKey string
+		Profile              string
+		Options              Options
+		ExpectCreds          credentials.Value
+		Err                  string
+	}{
+		"no options": {
+			Err: "SharedConfigLoadError",
+		},
+		"env only": {
+			AccessKey: "env_akid",
+			SecretKey: "env_secret",
+			ExpectCreds: credentials.Value{
+				AccessKeyID:     "env_akid",
+				SecretAccessKey: "env_secret",
+				ProviderName:    "EnvConfigCredentials",
+			},
+		},
+		"static credentials only": {
+			Options: Options{
+				Config: aws.Config{
+					Credentials: credentials.NewStaticCredentials(
+						"AKID", "SECRET", ""),
+				},
+			},
+			ExpectCreds: credentials.Value{
+				AccessKeyID:     "AKID",
+				SecretAccessKey: "SECRET",
+				ProviderName:    "StaticProvider",
+			},
+		},
+		"env profile and env": {
+			AccessKey: "env_akid",
+			SecretKey: "env_secret",
+			Profile:   "env_profile",
+			Err:       "SharedConfigLoadError",
+		},
+		"opt profile and env": {
+			AccessKey: "env_akid",
+			SecretKey: "env_secret",
+			Options: Options{
+				Profile: "someProfile",
+			},
+			Err: "SharedConfigLoadError",
+		},
+		"cfg enabled": {
+			AccessKey: "env_akid",
+			SecretKey: "env_secret",
+			Options: Options{
+				SharedConfigState: SharedConfigEnable,
+			},
+			Err: "SharedConfigLoadError",
+		},
+	}
 
-	os.Setenv("AWS_REGION", "us-east-1")
-	os.Setenv("AWS_SDK_LOAD_CONFIG", "1")
-	os.Setenv("AWS_SHARED_CREDENTIALS_FILE", testConfigFilename)
-	os.Setenv("AWS_PROFILE", "assume_role_w_creds")
+	var cfgFile = filepath.Join("testdata", "shared_config_invalid_ini")
 
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		const respMsg = `
-<AssumeRoleResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
-  <AssumeRoleResult>
-    <AssumedRoleUser>
-      <Arn>arn:aws:sts::account_id:assumed-role/role/session_name</Arn>
-      <AssumedRoleId>AKID:session_name</AssumedRoleId>
-    </AssumedRoleUser>
-    <Credentials>
-      <AccessKeyId>AKID</AccessKeyId>
-      <SecretAccessKey>SECRET</SecretAccessKey>
-      <SessionToken>SESSION_TOKEN</SessionToken>
-      <Expiration>%s</Expiration>
-    </Credentials>
-  </AssumeRoleResult>
-  <ResponseMetadata>
-    <RequestId>request-id</RequestId>
-  </ResponseMetadata>
-</AssumeRoleResponse>
-`
-		w.Write([]byte(fmt.Sprintf(respMsg, time.Now().Add(15*time.Minute).Format("2006-01-02T15:04:05Z"))))
-	}))
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			restoreEnvFn := initSessionTestEnv()
+			defer restoreEnvFn()
 
-	s, err := NewSession(&aws.Config{Endpoint: aws.String(server.URL), DisableSSL: aws.Bool(true)})
+			if v := c.AccessKey; len(v) != 0 {
+				os.Setenv("AWS_ACCESS_KEY", v)
+			}
+			if v := c.SecretKey; len(v) != 0 {
+				os.Setenv("AWS_SECRET_ACCESS_KEY", v)
+			}
+			if v := c.Profile; len(v) != 0 {
+				os.Setenv("AWS_PROFILE", v)
+			}
 
-	creds, err := s.Config.Credentials.Get()
-	assert.NoError(t, err)
-	assert.Equal(t, "AKID", creds.AccessKeyID)
-	assert.Equal(t, "SECRET", creds.SecretAccessKey)
-	assert.Equal(t, "SESSION_TOKEN", creds.SessionToken)
-	assert.Contains(t, creds.ProviderName, "AssumeRoleProvider")
+			opts := c.Options
+			opts.SharedConfigFiles = []string{cfgFile}
+			s, err := NewSessionWithOptions(opts)
+			if len(c.Err) != 0 {
+				if err == nil {
+					t.Fatalf("expect session error, got none")
+				}
+				if e, a := c.Err, err.Error(); !strings.Contains(a, e) {
+					t.Fatalf("expect session error to contain %q, got %v", e, a)
+				}
+				return
+			}
+
+			if err != nil {
+				t.Fatalf("expect no error, got %v", err)
+			}
+
+			creds, err := s.Config.Credentials.Get()
+			if err != nil {
+				t.Fatalf("expect no error, got %v", err)
+			}
+			if e, a := c.ExpectCreds.AccessKeyID, creds.AccessKeyID; e != a {
+				t.Errorf("expect %v, got %v", e, a)
+			}
+			if e, a := c.ExpectCreds.SecretAccessKey, creds.SecretAccessKey; e != a {
+				t.Errorf("expect %v, got %v", e, a)
+			}
+			if e, a := c.ExpectCreds.ProviderName, creds.ProviderName; !strings.Contains(a, e) {
+				t.Errorf("expect %v, to be in %v", e, a)
+			}
+		})
+	}
 }
 
-func TestSessionAssumeRole_DisableSharedConfig(t *testing.T) {
-	// Backwards compatibility with Shared config disabled
-	// assume role should not be built into the config.
-	oldEnv := initSessionTestEnv()
-	defer popEnv(oldEnv)
+func TestSession_RegionalEndpoints(t *testing.T) {
+	cases := map[string]struct {
+		Env    map[string]string
+		Config aws.Config
 
-	os.Setenv("AWS_SDK_LOAD_CONFIG", "0")
-	os.Setenv("AWS_SHARED_CREDENTIALS_FILE", testConfigFilename)
-	os.Setenv("AWS_PROFILE", "assume_role_w_creds")
+		ExpectErr       string
+		ExpectSTS       endpoints.STSRegionalEndpoint
+		ExpectS3UsEast1 endpoints.S3UsEast1RegionalEndpoint
+	}{
+		"default": {
+			ExpectSTS:       endpoints.LegacySTSEndpoint,
+			ExpectS3UsEast1: endpoints.LegacyS3UsEast1Endpoint,
+		},
+		"enable regional": {
+			Config: aws.Config{
+				STSRegionalEndpoint:       endpoints.RegionalSTSEndpoint,
+				S3UsEast1RegionalEndpoint: endpoints.RegionalS3UsEast1Endpoint,
+			},
+			ExpectSTS:       endpoints.RegionalSTSEndpoint,
+			ExpectS3UsEast1: endpoints.RegionalS3UsEast1Endpoint,
+		},
+		"sts env enable": {
+			Env: map[string]string{
+				"AWS_STS_REGIONAL_ENDPOINTS": "regional",
+			},
+			ExpectSTS:       endpoints.RegionalSTSEndpoint,
+			ExpectS3UsEast1: endpoints.LegacyS3UsEast1Endpoint,
+		},
+		"sts us-east-1 env merge enable": {
+			Env: map[string]string{
+				"AWS_STS_REGIONAL_ENDPOINTS": "legacy",
+			},
+			Config: aws.Config{
+				STSRegionalEndpoint: endpoints.RegionalSTSEndpoint,
+			},
+			ExpectSTS:       endpoints.RegionalSTSEndpoint,
+			ExpectS3UsEast1: endpoints.LegacyS3UsEast1Endpoint,
+		},
+		"s3 us-east-1 env enable": {
+			Env: map[string]string{
+				"AWS_S3_US_EAST_1_REGIONAL_ENDPOINT": "regional",
+			},
+			ExpectSTS:       endpoints.LegacySTSEndpoint,
+			ExpectS3UsEast1: endpoints.RegionalS3UsEast1Endpoint,
+		},
+		"s3 us-east-1 env merge enable": {
+			Env: map[string]string{
+				"AWS_S3_US_EAST_1_REGIONAL_ENDPOINT": "legacy",
+			},
+			Config: aws.Config{
+				S3UsEast1RegionalEndpoint: endpoints.RegionalS3UsEast1Endpoint,
+			},
+			ExpectSTS:       endpoints.LegacySTSEndpoint,
+			ExpectS3UsEast1: endpoints.RegionalS3UsEast1Endpoint,
+		},
+	}
 
-	s, err := NewSession()
-	assert.NoError(t, err)
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			restoreEnvFn := initSessionTestEnv()
+			defer restoreEnvFn()
 
-	creds, err := s.Config.Credentials.Get()
-	assert.NoError(t, err)
-	assert.Equal(t, "assume_role_w_creds_akid", creds.AccessKeyID)
-	assert.Equal(t, "assume_role_w_creds_secret", creds.SecretAccessKey)
-	assert.Contains(t, creds.ProviderName, "SharedConfigCredentials")
-}
+			for k, v := range c.Env {
+				os.Setenv(k, v)
+			}
 
-func TestSessionAssumeRole_InvalidSourceProfile(t *testing.T) {
-	// Backwards compatibility with Shared config disabled
-	// assume role should not be built into the config.
-	oldEnv := initSessionTestEnv()
-	defer popEnv(oldEnv)
+			s, err := NewSession(&c.Config)
+			if len(c.ExpectErr) != 0 {
+				if err == nil {
+					t.Fatalf("expect session error, got none")
+				}
+				if e, a := c.ExpectErr, err.Error(); !strings.Contains(a, e) {
+					t.Fatalf("expect session error to contain %q, got %v", e, a)
+				}
+				return
+			}
 
-	os.Setenv("AWS_SDK_LOAD_CONFIG", "1")
-	os.Setenv("AWS_SHARED_CREDENTIALS_FILE", testConfigFilename)
-	os.Setenv("AWS_PROFILE", "assume_role_invalid_source_profile")
+			if err != nil {
+				t.Fatalf("expect no error, got %v", err)
+			}
 
-	s, err := NewSession()
-	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "SharedConfigAssumeRoleError: failed to load assume role")
-	assert.Nil(t, s)
-}
+			if e, a := c.ExpectSTS, s.Config.STSRegionalEndpoint; e != a {
+				t.Errorf("expect %v STSRegionalEndpoint, got %v", e, a)
+			}
 
-func initSessionTestEnv() (oldEnv []string) {
-	oldEnv = stashEnv()
-	os.Setenv("AWS_CONFIG_FILE", "file_not_exists")
-	os.Setenv("AWS_SHARED_CREDENTIALS_FILE", "file_not_exists")
+			if e, a := c.ExpectS3UsEast1, s.Config.S3UsEast1RegionalEndpoint; e != a {
+				t.Errorf("expect %v S3UsEast1RegionalEndpoint, got %v", e, a)
+			}
 
-	return oldEnv
+			// Asserts
+		})
+	}
 }

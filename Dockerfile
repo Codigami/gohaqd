@@ -1,4 +1,4 @@
-FROM golang:1.8 AS buildimage
+FROM golang:1.14.0 AS buildimage
 
 RUN apt-get update && apt-get install -y ca-certificates
 COPY . /go/src/github.com/Codigami/gohaqd/

@@ -7,10 +7,28 @@
     "protocol":"json",
     "serviceAbbreviation":"Directory Service",
     "serviceFullName":"AWS Directory Service",
+    "serviceId":"Directory Service",
     "signatureVersion":"v4",
-    "targetPrefix":"DirectoryService_20150416"
+    "targetPrefix":"DirectoryService_20150416",
+    "uid":"ds-2015-04-16"
   },
   "operations":{
+    "AcceptSharedDirectory":{
+      "name":"AcceptSharedDirectory",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"AcceptSharedDirectoryRequest"},
+      "output":{"shape":"AcceptSharedDirectoryResult"},
+      "errors":[
+        {"shape":"InvalidParameterException"},
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"DirectoryAlreadySharedException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
     "AddIpRoutes":{
       "name":"AddIpRoutes",
       "http":{
@@ -41,6 +59,20 @@
         {"shape":"EntityDoesNotExistException"},
         {"shape":"InvalidParameterException"},
         {"shape":"TagLimitExceededException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "CancelSchemaExtension":{
+      "name":"CancelSchemaExtension",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"CancelSchemaExtensionRequest"},
+      "output":{"shape":"CancelSchemaExtensionResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
         {"shape":"ClientException"},
         {"shape":"ServiceException"}
       ]
@@ -128,6 +160,23 @@
         {"shape":"ServiceException"}
       ]
     },
+    "CreateLogSubscription":{
+      "name":"CreateLogSubscription",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"CreateLogSubscriptionRequest"},
+      "output":{"shape":"CreateLogSubscriptionResult"},
+      "errors":[
+        {"shape":"EntityAlreadyExistsException"},
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"InsufficientPermissionsException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
     "CreateMicrosoftAD":{
       "name":"CreateMicrosoftAD",
       "http":{
@@ -208,6 +257,21 @@
         {"shape":"ServiceException"}
       ]
     },
+    "DeleteLogSubscription":{
+      "name":"DeleteLogSubscription",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteLogSubscriptionRequest"},
+      "output":{"shape":"DeleteLogSubscriptionResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
     "DeleteSnapshot":{
       "name":"DeleteSnapshot",
       "http":{
@@ -239,6 +303,25 @@
         {"shape":"UnsupportedOperationException"}
       ]
     },
+    "DeregisterCertificate":{
+      "name":"DeregisterCertificate",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeregisterCertificateRequest"},
+      "output":{"shape":"DeregisterCertificateResult"},
+      "errors":[
+        {"shape":"DirectoryUnavailableException"},
+        {"shape":"DirectoryDoesNotExistException"},
+        {"shape":"CertificateDoesNotExistException"},
+        {"shape":"CertificateInUseException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
     "DeregisterEventTopic":{
       "name":"DeregisterEventTopic",
       "http":{
@@ -249,6 +332,23 @@
       "output":{"shape":"DeregisterEventTopicResult"},
       "errors":[
         {"shape":"EntityDoesNotExistException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "DescribeCertificate":{
+      "name":"DescribeCertificate",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeCertificateRequest"},
+      "output":{"shape":"DescribeCertificateResult"},
+      "errors":[
+        {"shape":"DirectoryDoesNotExistException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"CertificateDoesNotExistException"},
         {"shape":"InvalidParameterException"},
         {"shape":"ClientException"},
         {"shape":"ServiceException"}
@@ -287,6 +387,23 @@
         {"shape":"ServiceException"}
       ]
     },
+    "DescribeDomainControllers":{
+      "name":"DescribeDomainControllers",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeDomainControllersRequest"},
+      "output":{"shape":"DescribeDomainControllersResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"InvalidNextTokenException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"},
+        {"shape":"UnsupportedOperationException"}
+      ]
+    },
     "DescribeEventTopics":{
       "name":"DescribeEventTopics",
       "http":{
@@ -298,6 +415,40 @@
       "errors":[
         {"shape":"EntityDoesNotExistException"},
         {"shape":"InvalidParameterException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "DescribeLDAPSSettings":{
+      "name":"DescribeLDAPSSettings",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeLDAPSSettingsRequest"},
+      "output":{"shape":"DescribeLDAPSSettingsResult"},
+      "errors":[
+        {"shape":"DirectoryDoesNotExistException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"InvalidNextTokenException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "DescribeSharedDirectories":{
+      "name":"DescribeSharedDirectories",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeSharedDirectoriesRequest"},
+      "output":{"shape":"DescribeSharedDirectoriesResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"InvalidNextTokenException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"UnsupportedOperationException"},
         {"shape":"ClientException"},
         {"shape":"ServiceException"}
       ]
@@ -335,6 +486,24 @@
         {"shape":"UnsupportedOperationException"}
       ]
     },
+    "DisableLDAPS":{
+      "name":"DisableLDAPS",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DisableLDAPSRequest"},
+      "output":{"shape":"DisableLDAPSResult"},
+      "errors":[
+        {"shape":"DirectoryUnavailableException"},
+        {"shape":"DirectoryDoesNotExistException"},
+        {"shape":"InvalidLDAPSStatusException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
     "DisableRadius":{
       "name":"DisableRadius",
       "http":{
@@ -361,6 +530,25 @@
         {"shape":"EntityDoesNotExistException"},
         {"shape":"InsufficientPermissionsException"},
         {"shape":"AuthenticationFailedException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "EnableLDAPS":{
+      "name":"EnableLDAPS",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"EnableLDAPSRequest"},
+      "output":{"shape":"EnableLDAPSResult"},
+      "errors":[
+        {"shape":"DirectoryUnavailableException"},
+        {"shape":"DirectoryDoesNotExistException"},
+        {"shape":"NoAvailableCertificateException"},
+        {"shape":"InvalidLDAPSStatusException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"InvalidParameterException"},
         {"shape":"ClientException"},
         {"shape":"ServiceException"}
       ]
@@ -425,6 +613,23 @@
         {"shape":"ServiceException"}
       ]
     },
+    "ListCertificates":{
+      "name":"ListCertificates",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListCertificatesRequest"},
+      "output":{"shape":"ListCertificatesResult"},
+      "errors":[
+        {"shape":"DirectoryDoesNotExistException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"InvalidNextTokenException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
     "ListIpRoutes":{
       "name":"ListIpRoutes",
       "http":{
@@ -437,6 +642,36 @@
         {"shape":"EntityDoesNotExistException"},
         {"shape":"InvalidNextTokenException"},
         {"shape":"InvalidParameterException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "ListLogSubscriptions":{
+      "name":"ListLogSubscriptions",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListLogSubscriptionsRequest"},
+      "output":{"shape":"ListLogSubscriptionsResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"InvalidNextTokenException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "ListSchemaExtensions":{
+      "name":"ListSchemaExtensions",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListSchemaExtensionsRequest"},
+      "output":{"shape":"ListSchemaExtensionsResult"},
+      "errors":[
+        {"shape":"InvalidNextTokenException"},
+        {"shape":"EntityDoesNotExistException"},
         {"shape":"ClientException"},
         {"shape":"ServiceException"}
       ]
@@ -457,6 +692,26 @@
         {"shape":"ServiceException"}
       ]
     },
+    "RegisterCertificate":{
+      "name":"RegisterCertificate",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"RegisterCertificateRequest"},
+      "output":{"shape":"RegisterCertificateResult"},
+      "errors":[
+        {"shape":"DirectoryUnavailableException"},
+        {"shape":"DirectoryDoesNotExistException"},
+        {"shape":"InvalidCertificateException"},
+        {"shape":"CertificateLimitExceededException"},
+        {"shape":"CertificateAlreadyExistsException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
     "RegisterEventTopic":{
       "name":"RegisterEventTopic",
       "http":{
@@ -468,6 +723,22 @@
       "errors":[
         {"shape":"EntityDoesNotExistException"},
         {"shape":"InvalidParameterException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "RejectSharedDirectory":{
+      "name":"RejectSharedDirectory",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"RejectSharedDirectoryRequest"},
+      "output":{"shape":"RejectSharedDirectoryResult"},
+      "errors":[
+        {"shape":"InvalidParameterException"},
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"DirectoryAlreadySharedException"},
         {"shape":"ClientException"},
         {"shape":"ServiceException"}
       ]
@@ -503,6 +774,24 @@
         {"shape":"ServiceException"}
       ]
     },
+    "ResetUserPassword":{
+      "name":"ResetUserPassword",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ResetUserPasswordRequest"},
+      "output":{"shape":"ResetUserPasswordResult"},
+      "errors":[
+        {"shape":"DirectoryUnavailableException"},
+        {"shape":"UserDoesNotExistException"},
+        {"shape":"InvalidPasswordException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
     "RestoreFromSnapshot":{
       "name":"RestoreFromSnapshot",
       "http":{
@@ -514,6 +803,60 @@
       "errors":[
         {"shape":"EntityDoesNotExistException"},
         {"shape":"InvalidParameterException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "ShareDirectory":{
+      "name":"ShareDirectory",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ShareDirectoryRequest"},
+      "output":{"shape":"ShareDirectoryResult"},
+      "errors":[
+        {"shape":"DirectoryAlreadySharedException"},
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"InvalidTargetException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"ClientException"},
+        {"shape":"ShareLimitExceededException"},
+        {"shape":"OrganizationsException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "StartSchemaExtension":{
+      "name":"StartSchemaExtension",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"StartSchemaExtensionRequest"},
+      "output":{"shape":"StartSchemaExtensionResult"},
+      "errors":[
+        {"shape":"DirectoryUnavailableException"},
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"SnapshotLimitExceededException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "UnshareDirectory":{
+      "name":"UnshareDirectory",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"UnshareDirectoryRequest"},
+      "output":{"shape":"UnshareDirectoryResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"InvalidTargetException"},
+        {"shape":"DirectoryNotSharedException"},
         {"shape":"ClientException"},
         {"shape":"ServiceException"}
       ]
@@ -535,6 +878,24 @@
         {"shape":"ServiceException"}
       ]
     },
+    "UpdateNumberOfDomainControllers":{
+      "name":"UpdateNumberOfDomainControllers",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"UpdateNumberOfDomainControllersRequest"},
+      "output":{"shape":"UpdateNumberOfDomainControllersResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"DirectoryUnavailableException"},
+        {"shape":"DomainControllerLimitExceededException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
     "UpdateRadius":{
       "name":"UpdateRadius",
       "http":{
@@ -546,6 +907,21 @@
       "errors":[
         {"shape":"InvalidParameterException"},
         {"shape":"EntityDoesNotExistException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "UpdateTrust":{
+      "name":"UpdateTrust",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"UpdateTrustRequest"},
+      "output":{"shape":"UpdateTrustResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"InvalidParameterException"},
         {"shape":"ClientException"},
         {"shape":"ServiceException"}
       ]
@@ -568,6 +944,27 @@
     }
   },
   "shapes":{
+    "AcceptSharedDirectoryRequest":{
+      "type":"structure",
+      "required":["SharedDirectoryId"],
+      "members":{
+        "SharedDirectoryId":{"shape":"DirectoryId"}
+      }
+    },
+    "AcceptSharedDirectoryResult":{
+      "type":"structure",
+      "members":{
+        "SharedDirectory":{"shape":"SharedDirectory"}
+      }
+    },
+    "AccessDeniedException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ExceptionMessage"},
+        "RequestId":{"shape":"RequestId"}
+      },
+      "exception":true
+    },
     "AccessUrl":{
       "type":"string",
       "max":128,
@@ -642,6 +1039,102 @@
       "type":"list",
       "member":{"shape":"AvailabilityZone"}
     },
+    "CancelSchemaExtensionRequest":{
+      "type":"structure",
+      "required":[
+        "DirectoryId",
+        "SchemaExtensionId"
+      ],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "SchemaExtensionId":{"shape":"SchemaExtensionId"}
+      }
+    },
+    "CancelSchemaExtensionResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "Certificate":{
+      "type":"structure",
+      "members":{
+        "CertificateId":{"shape":"CertificateId"},
+        "State":{"shape":"CertificateState"},
+        "StateReason":{"shape":"CertificateStateReason"},
+        "CommonName":{"shape":"CertificateCN"},
+        "RegisteredDateTime":{"shape":"CertificateRegisteredDateTime"},
+        "ExpiryDateTime":{"shape":"CertificateExpiryDateTime"}
+      }
+    },
+    "CertificateAlreadyExistsException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ExceptionMessage"},
+        "RequestId":{"shape":"RequestId"}
+      },
+      "exception":true
+    },
+    "CertificateCN":{"type":"string"},
+    "CertificateData":{
+      "type":"string",
+      "max":8192,
+      "min":1
+    },
+    "CertificateDoesNotExistException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ExceptionMessage"},
+        "RequestId":{"shape":"RequestId"}
+      },
+      "exception":true
+    },
+    "CertificateExpiryDateTime":{"type":"timestamp"},
+    "CertificateId":{
+      "type":"string",
+      "pattern":"^c-[0-9a-f]{10}$"
+    },
+    "CertificateInUseException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ExceptionMessage"},
+        "RequestId":{"shape":"RequestId"}
+      },
+      "exception":true
+    },
+    "CertificateInfo":{
+      "type":"structure",
+      "members":{
+        "CertificateId":{"shape":"CertificateId"},
+        "CommonName":{"shape":"CertificateCN"},
+        "State":{"shape":"CertificateState"},
+        "ExpiryDateTime":{"shape":"CertificateExpiryDateTime"}
+      }
+    },
+    "CertificateLimitExceededException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ExceptionMessage"},
+        "RequestId":{"shape":"RequestId"}
+      },
+      "exception":true
+    },
+    "CertificateRegisteredDateTime":{"type":"timestamp"},
+    "CertificateState":{
+      "type":"string",
+      "enum":[
+        "Registering",
+        "Registered",
+        "RegisterFailed",
+        "Deregistering",
+        "Deregistered",
+        "DeregisterFailed"
+      ]
+    },
+    "CertificateStateReason":{"type":"string"},
+    "CertificatesInfo":{
+      "type":"list",
+      "member":{"shape":"CertificateInfo"}
+    },
     "CidrIp":{
       "type":"string",
       "pattern":"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([1-9]|[1-2][0-9]|3[0-2]))$"
@@ -705,7 +1198,8 @@
         "Password":{"shape":"ConnectPassword"},
         "Description":{"shape":"Description"},
         "Size":{"shape":"DirectorySize"},
-        "ConnectSettings":{"shape":"DirectoryConnectSettings"}
+        "ConnectSettings":{"shape":"DirectoryConnectSettings"},
+        "Tags":{"shape":"Tags"}
       }
     },
     "ConnectDirectoryResult":{
@@ -791,13 +1285,30 @@
         "Password":{"shape":"Password"},
         "Description":{"shape":"Description"},
         "Size":{"shape":"DirectorySize"},
-        "VpcSettings":{"shape":"DirectoryVpcSettings"}
+        "VpcSettings":{"shape":"DirectoryVpcSettings"},
+        "Tags":{"shape":"Tags"}
       }
     },
     "CreateDirectoryResult":{
       "type":"structure",
       "members":{
         "DirectoryId":{"shape":"DirectoryId"}
+      }
+    },
+    "CreateLogSubscriptionRequest":{
+      "type":"structure",
+      "required":[
+        "DirectoryId",
+        "LogGroupName"
+      ],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "LogGroupName":{"shape":"LogGroupName"}
+      }
+    },
+    "CreateLogSubscriptionResult":{
+      "type":"structure",
+      "members":{
       }
     },
     "CreateMicrosoftADRequest":{
@@ -812,7 +1323,9 @@
         "ShortName":{"shape":"DirectoryShortName"},
         "Password":{"shape":"Password"},
         "Description":{"shape":"Description"},
-        "VpcSettings":{"shape":"DirectoryVpcSettings"}
+        "VpcSettings":{"shape":"DirectoryVpcSettings"},
+        "Edition":{"shape":"DirectoryEdition"},
+        "Tags":{"shape":"Tags"}
       }
     },
     "CreateMicrosoftADResult":{
@@ -821,6 +1334,7 @@
         "DirectoryId":{"shape":"DirectoryId"}
       }
     },
+    "CreateSnapshotBeforeSchemaExtension":{"type":"boolean"},
     "CreateSnapshotRequest":{
       "type":"structure",
       "required":["DirectoryId"],
@@ -849,7 +1363,8 @@
         "TrustPassword":{"shape":"TrustPassword"},
         "TrustDirection":{"shape":"TrustDirection"},
         "TrustType":{"shape":"TrustType"},
-        "ConditionalForwarderIpAddrs":{"shape":"DnsIpAddrs"}
+        "ConditionalForwarderIpAddrs":{"shape":"DnsIpAddrs"},
+        "SelectiveAuth":{"shape":"SelectiveAuth"}
       }
     },
     "CreateTrustResult":{
@@ -859,6 +1374,16 @@
       }
     },
     "CreatedDateTime":{"type":"timestamp"},
+    "CustomerId":{
+      "type":"string",
+      "pattern":"^(\\d{12})$"
+    },
+    "CustomerUserName":{
+      "type":"string",
+      "max":64,
+      "min":1,
+      "pattern":"^(?!.*\\\\|.*\"|.*\\/|.*\\[|.*\\]|.*:|.*;|.*\\||.*=|.*,|.*\\+|.*\\*|.*\\?|.*<|.*>|.*@).*$"
+    },
     "DeleteAssociatedConditionalForwarder":{"type":"boolean"},
     "DeleteConditionalForwarderRequest":{
       "type":"structure",
@@ -889,6 +1414,18 @@
         "DirectoryId":{"shape":"DirectoryId"}
       }
     },
+    "DeleteLogSubscriptionRequest":{
+      "type":"structure",
+      "required":["DirectoryId"],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"}
+      }
+    },
+    "DeleteLogSubscriptionResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
     "DeleteSnapshotRequest":{
       "type":"structure",
       "required":["SnapshotId"],
@@ -916,6 +1453,22 @@
         "TrustId":{"shape":"TrustId"}
       }
     },
+    "DeregisterCertificateRequest":{
+      "type":"structure",
+      "required":[
+        "DirectoryId",
+        "CertificateId"
+      ],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "CertificateId":{"shape":"CertificateId"}
+      }
+    },
+    "DeregisterCertificateResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
     "DeregisterEventTopicRequest":{
       "type":"structure",
       "required":[
@@ -930,6 +1483,23 @@
     "DeregisterEventTopicResult":{
       "type":"structure",
       "members":{
+      }
+    },
+    "DescribeCertificateRequest":{
+      "type":"structure",
+      "required":[
+        "DirectoryId",
+        "CertificateId"
+      ],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "CertificateId":{"shape":"CertificateId"}
+      }
+    },
+    "DescribeCertificateResult":{
+      "type":"structure",
+      "members":{
+        "Certificate":{"shape":"Certificate"}
       }
     },
     "DescribeConditionalForwardersRequest":{
@@ -961,6 +1531,23 @@
         "NextToken":{"shape":"NextToken"}
       }
     },
+    "DescribeDomainControllersRequest":{
+      "type":"structure",
+      "required":["DirectoryId"],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "DomainControllerIds":{"shape":"DomainControllerIds"},
+        "NextToken":{"shape":"NextToken"},
+        "Limit":{"shape":"Limit"}
+      }
+    },
+    "DescribeDomainControllersResult":{
+      "type":"structure",
+      "members":{
+        "DomainControllers":{"shape":"DomainControllers"},
+        "NextToken":{"shape":"NextToken"}
+      }
+    },
     "DescribeEventTopicsRequest":{
       "type":"structure",
       "members":{
@@ -972,6 +1559,40 @@
       "type":"structure",
       "members":{
         "EventTopics":{"shape":"EventTopics"}
+      }
+    },
+    "DescribeLDAPSSettingsRequest":{
+      "type":"structure",
+      "required":["DirectoryId"],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "Type":{"shape":"LDAPSType"},
+        "NextToken":{"shape":"NextToken"},
+        "Limit":{"shape":"PageLimit"}
+      }
+    },
+    "DescribeLDAPSSettingsResult":{
+      "type":"structure",
+      "members":{
+        "LDAPSSettingsInfo":{"shape":"LDAPSSettingsInfo"},
+        "NextToken":{"shape":"NextToken"}
+      }
+    },
+    "DescribeSharedDirectoriesRequest":{
+      "type":"structure",
+      "required":["OwnerDirectoryId"],
+      "members":{
+        "OwnerDirectoryId":{"shape":"DirectoryId"},
+        "SharedDirectoryIds":{"shape":"DirectoryIds"},
+        "NextToken":{"shape":"NextToken"},
+        "Limit":{"shape":"Limit"}
+      }
+    },
+    "DescribeSharedDirectoriesResult":{
+      "type":"structure",
+      "members":{
+        "SharedDirectories":{"shape":"SharedDirectories"},
+        "NextToken":{"shape":"NextToken"}
       }
     },
     "DescribeSnapshotsRequest":{
@@ -1012,6 +1633,18 @@
       "min":0,
       "pattern":"^([a-zA-Z0-9_])[\\\\a-zA-Z0-9_@#%*+=:?./!\\s-]*$"
     },
+    "DesiredNumberOfDomainControllers":{
+      "type":"integer",
+      "min":2
+    },
+    "DirectoryAlreadySharedException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ExceptionMessage"},
+        "RequestId":{"shape":"RequestId"}
+      },
+      "exception":true
+    },
     "DirectoryConnectSettings":{
       "type":"structure",
       "required":[
@@ -1045,11 +1678,15 @@
         "Name":{"shape":"DirectoryName"},
         "ShortName":{"shape":"DirectoryShortName"},
         "Size":{"shape":"DirectorySize"},
+        "Edition":{"shape":"DirectoryEdition"},
         "Alias":{"shape":"AliasName"},
         "AccessUrl":{"shape":"AccessUrl"},
         "Description":{"shape":"Description"},
         "DnsIpAddrs":{"shape":"DnsIpAddrs"},
         "Stage":{"shape":"DirectoryStage"},
+        "ShareStatus":{"shape":"ShareStatus"},
+        "ShareMethod":{"shape":"ShareMethod"},
+        "ShareNotes":{"shape":"Notes"},
         "LaunchTime":{"shape":"LaunchTime"},
         "StageLastUpdatedDateTime":{"shape":"LastUpdatedDateTime"},
         "Type":{"shape":"DirectoryType"},
@@ -1058,12 +1695,29 @@
         "RadiusSettings":{"shape":"RadiusSettings"},
         "RadiusStatus":{"shape":"RadiusStatus"},
         "StageReason":{"shape":"StageReason"},
-        "SsoEnabled":{"shape":"SsoEnabled"}
+        "SsoEnabled":{"shape":"SsoEnabled"},
+        "DesiredNumberOfDomainControllers":{"shape":"DesiredNumberOfDomainControllers"},
+        "OwnerDirectoryDescription":{"shape":"OwnerDirectoryDescription"}
       }
     },
     "DirectoryDescriptions":{
       "type":"list",
       "member":{"shape":"DirectoryDescription"}
+    },
+    "DirectoryDoesNotExistException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ExceptionMessage"},
+        "RequestId":{"shape":"RequestId"}
+      },
+      "exception":true
+    },
+    "DirectoryEdition":{
+      "type":"string",
+      "enum":[
+        "Enterprise",
+        "Standard"
+      ]
     },
     "DirectoryId":{
       "type":"string",
@@ -1099,6 +1753,14 @@
       "type":"string",
       "pattern":"^([a-zA-Z0-9]+[\\\\.-])+([a-zA-Z0-9])+$"
     },
+    "DirectoryNotSharedException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ExceptionMessage"},
+        "RequestId":{"shape":"RequestId"}
+      },
+      "exception":true
+    },
     "DirectoryShortName":{
       "type":"string",
       "pattern":"^[^\\\\/:*?\\\"\\<\\>|.]+[^\\\\/:*?\\\"<>|]*$"
@@ -1131,7 +1793,8 @@
       "enum":[
         "SimpleAD",
         "ADConnector",
-        "MicrosoftAD"
+        "MicrosoftAD",
+        "SharedMicrosoftAD"
       ]
     },
     "DirectoryUnavailableException":{
@@ -1160,6 +1823,22 @@
         "SubnetIds":{"shape":"SubnetIds"},
         "SecurityGroupId":{"shape":"SecurityGroupId"},
         "AvailabilityZones":{"shape":"AvailabilityZones"}
+      }
+    },
+    "DisableLDAPSRequest":{
+      "type":"structure",
+      "required":[
+        "DirectoryId",
+        "Type"
+      ],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "Type":{"shape":"LDAPSType"}
+      }
+    },
+    "DisableLDAPSResult":{
+      "type":"structure",
+      "members":{
       }
     },
     "DisableRadiusRequest":{
@@ -1192,6 +1871,70 @@
       "type":"list",
       "member":{"shape":"IpAddr"}
     },
+    "DomainController":{
+      "type":"structure",
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "DomainControllerId":{"shape":"DomainControllerId"},
+        "DnsIpAddr":{"shape":"IpAddr"},
+        "VpcId":{"shape":"VpcId"},
+        "SubnetId":{"shape":"SubnetId"},
+        "AvailabilityZone":{"shape":"AvailabilityZone"},
+        "Status":{"shape":"DomainControllerStatus"},
+        "StatusReason":{"shape":"DomainControllerStatusReason"},
+        "LaunchTime":{"shape":"LaunchTime"},
+        "StatusLastUpdatedDateTime":{"shape":"LastUpdatedDateTime"}
+      }
+    },
+    "DomainControllerId":{
+      "type":"string",
+      "pattern":"^dc-[0-9a-f]{10}$"
+    },
+    "DomainControllerIds":{
+      "type":"list",
+      "member":{"shape":"DomainControllerId"}
+    },
+    "DomainControllerLimitExceededException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ExceptionMessage"},
+        "RequestId":{"shape":"RequestId"}
+      },
+      "exception":true
+    },
+    "DomainControllerStatus":{
+      "type":"string",
+      "enum":[
+        "Creating",
+        "Active",
+        "Impaired",
+        "Restoring",
+        "Deleting",
+        "Deleted",
+        "Failed"
+      ]
+    },
+    "DomainControllerStatusReason":{"type":"string"},
+    "DomainControllers":{
+      "type":"list",
+      "member":{"shape":"DomainController"}
+    },
+    "EnableLDAPSRequest":{
+      "type":"structure",
+      "required":[
+        "DirectoryId",
+        "Type"
+      ],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "Type":{"shape":"LDAPSType"}
+      }
+    },
+    "EnableLDAPSResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
     "EnableRadiusRequest":{
       "type":"structure",
       "required":[
@@ -1222,6 +1965,7 @@
       "members":{
       }
     },
+    "EndDateTime":{"type":"timestamp"},
     "EntityAlreadyExistsException":{
       "type":"structure",
       "members":{
@@ -1285,6 +2029,22 @@
       },
       "exception":true
     },
+    "InvalidCertificateException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ExceptionMessage"},
+        "RequestId":{"shape":"RequestId"}
+      },
+      "exception":true
+    },
+    "InvalidLDAPSStatusException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ExceptionMessage"},
+        "RequestId":{"shape":"RequestId"}
+      },
+      "exception":true
+    },
     "InvalidNextTokenException":{
       "type":"structure",
       "members":{
@@ -1294,6 +2054,22 @@
       "exception":true
     },
     "InvalidParameterException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ExceptionMessage"},
+        "RequestId":{"shape":"RequestId"}
+      },
+      "exception":true
+    },
+    "InvalidPasswordException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ExceptionMessage"},
+        "RequestId":{"shape":"RequestId"}
+      },
+      "exception":true
+    },
+    "InvalidTargetException":{
       "type":"structure",
       "members":{
         "Message":{"shape":"ExceptionMessage"},
@@ -1355,11 +2131,58 @@
       "type":"list",
       "member":{"shape":"IpRouteInfo"}
     },
+    "LDAPSSettingInfo":{
+      "type":"structure",
+      "members":{
+        "LDAPSStatus":{"shape":"LDAPSStatus"},
+        "LDAPSStatusReason":{"shape":"LDAPSStatusReason"},
+        "LastUpdatedDateTime":{"shape":"LastUpdatedDateTime"}
+      }
+    },
+    "LDAPSSettingsInfo":{
+      "type":"list",
+      "member":{"shape":"LDAPSSettingInfo"}
+    },
+    "LDAPSStatus":{
+      "type":"string",
+      "enum":[
+        "Enabling",
+        "Enabled",
+        "EnableFailed",
+        "Disabled"
+      ]
+    },
+    "LDAPSStatusReason":{"type":"string"},
+    "LDAPSType":{
+      "type":"string",
+      "enum":["Client"]
+    },
     "LastUpdatedDateTime":{"type":"timestamp"},
     "LaunchTime":{"type":"timestamp"},
+    "LdifContent":{
+      "type":"string",
+      "max":500000,
+      "min":1
+    },
     "Limit":{
       "type":"integer",
       "min":0
+    },
+    "ListCertificatesRequest":{
+      "type":"structure",
+      "required":["DirectoryId"],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "NextToken":{"shape":"NextToken"},
+        "Limit":{"shape":"PageLimit"}
+      }
+    },
+    "ListCertificatesResult":{
+      "type":"structure",
+      "members":{
+        "NextToken":{"shape":"NextToken"},
+        "CertificatesInfo":{"shape":"CertificatesInfo"}
+      }
     },
     "ListIpRoutesRequest":{
       "type":"structure",
@@ -1374,6 +2197,37 @@
       "type":"structure",
       "members":{
         "IpRoutesInfo":{"shape":"IpRoutesInfo"},
+        "NextToken":{"shape":"NextToken"}
+      }
+    },
+    "ListLogSubscriptionsRequest":{
+      "type":"structure",
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "NextToken":{"shape":"NextToken"},
+        "Limit":{"shape":"Limit"}
+      }
+    },
+    "ListLogSubscriptionsResult":{
+      "type":"structure",
+      "members":{
+        "LogSubscriptions":{"shape":"LogSubscriptions"},
+        "NextToken":{"shape":"NextToken"}
+      }
+    },
+    "ListSchemaExtensionsRequest":{
+      "type":"structure",
+      "required":["DirectoryId"],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "NextToken":{"shape":"NextToken"},
+        "Limit":{"shape":"Limit"}
+      }
+    },
+    "ListSchemaExtensionsResult":{
+      "type":"structure",
+      "members":{
+        "SchemaExtensionsInfo":{"shape":"SchemaExtensionsInfo"},
         "NextToken":{"shape":"NextToken"}
       }
     },
@@ -1393,11 +2247,66 @@
         "NextToken":{"shape":"NextToken"}
       }
     },
+    "LogGroupName":{
+      "type":"string",
+      "max":512,
+      "min":1,
+      "pattern":"[-._/#A-Za-z0-9]+"
+    },
+    "LogSubscription":{
+      "type":"structure",
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "LogGroupName":{"shape":"LogGroupName"},
+        "SubscriptionCreatedDateTime":{"shape":"SubscriptionCreatedDateTime"}
+      }
+    },
+    "LogSubscriptions":{
+      "type":"list",
+      "member":{"shape":"LogSubscription"}
+    },
     "ManualSnapshotsLimitReached":{"type":"boolean"},
     "NextToken":{"type":"string"},
+    "NoAvailableCertificateException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ExceptionMessage"},
+        "RequestId":{"shape":"RequestId"}
+      },
+      "exception":true
+    },
+    "Notes":{
+      "type":"string",
+      "max":1024,
+      "sensitive":true
+    },
     "OrganizationalUnitDN":{
       "type":"string",
       "max":2000,
+      "min":1
+    },
+    "OrganizationsException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ExceptionMessage"},
+        "RequestId":{"shape":"RequestId"}
+      },
+      "exception":true
+    },
+    "OwnerDirectoryDescription":{
+      "type":"structure",
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "AccountId":{"shape":"CustomerId"},
+        "DnsIpAddrs":{"shape":"DnsIpAddrs"},
+        "VpcSettings":{"shape":"DirectoryVpcSettingsDescription"},
+        "RadiusSettings":{"shape":"RadiusSettings"},
+        "RadiusStatus":{"shape":"RadiusStatus"}
+      }
+    },
+    "PageLimit":{
+      "type":"integer",
+      "max":50,
       "min":1
     },
     "Password":{
@@ -1461,6 +2370,23 @@
       "max":20,
       "min":1
     },
+    "RegisterCertificateRequest":{
+      "type":"structure",
+      "required":[
+        "DirectoryId",
+        "CertificateData"
+      ],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "CertificateData":{"shape":"CertificateData"}
+      }
+    },
+    "RegisterCertificateResult":{
+      "type":"structure",
+      "members":{
+        "CertificateId":{"shape":"CertificateId"}
+      }
+    },
     "RegisterEventTopicRequest":{
       "type":"structure",
       "required":[
@@ -1475,6 +2401,19 @@
     "RegisterEventTopicResult":{
       "type":"structure",
       "members":{
+      }
+    },
+    "RejectSharedDirectoryRequest":{
+      "type":"structure",
+      "required":["SharedDirectoryId"],
+      "members":{
+        "SharedDirectoryId":{"shape":"DirectoryId"}
+      }
+    },
+    "RejectSharedDirectoryResult":{
+      "type":"structure",
+      "members":{
+        "SharedDirectoryId":{"shape":"DirectoryId"}
       }
     },
     "RemoteDomainName":{
@@ -1525,6 +2464,24 @@
       "type":"string",
       "pattern":"^([A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12})$"
     },
+    "ResetUserPasswordRequest":{
+      "type":"structure",
+      "required":[
+        "DirectoryId",
+        "UserName",
+        "NewPassword"
+      ],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "UserName":{"shape":"CustomerUserName"},
+        "NewPassword":{"shape":"UserPassword"}
+      }
+    },
+    "ResetUserPasswordResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
     "ResourceId":{
       "type":"string",
       "pattern":"^[d]-[0-9a-f]{10}$"
@@ -1547,9 +2504,51 @@
       "min":1,
       "pattern":"[&\\w+-.@]+"
     },
+    "SchemaExtensionId":{
+      "type":"string",
+      "pattern":"^e-[0-9a-f]{10}$"
+    },
+    "SchemaExtensionInfo":{
+      "type":"structure",
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "SchemaExtensionId":{"shape":"SchemaExtensionId"},
+        "Description":{"shape":"Description"},
+        "SchemaExtensionStatus":{"shape":"SchemaExtensionStatus"},
+        "SchemaExtensionStatusReason":{"shape":"SchemaExtensionStatusReason"},
+        "StartDateTime":{"shape":"StartDateTime"},
+        "EndDateTime":{"shape":"EndDateTime"}
+      }
+    },
+    "SchemaExtensionStatus":{
+      "type":"string",
+      "enum":[
+        "Initializing",
+        "CreatingSnapshot",
+        "UpdatingSchema",
+        "Replicating",
+        "CancelInProgress",
+        "RollbackInProgress",
+        "Cancelled",
+        "Failed",
+        "Completed"
+      ]
+    },
+    "SchemaExtensionStatusReason":{"type":"string"},
+    "SchemaExtensionsInfo":{
+      "type":"list",
+      "member":{"shape":"SchemaExtensionInfo"}
+    },
     "SecurityGroupId":{
       "type":"string",
-      "pattern":"^(sg-[0-9a-f]{8})$"
+      "pattern":"^(sg-[0-9a-f]{8}|sg-[0-9a-f]{17})$"
+    },
+    "SelectiveAuth":{
+      "type":"string",
+      "enum":[
+        "Enabled",
+        "Disabled"
+      ]
     },
     "Server":{
       "type":"string",
@@ -1568,6 +2567,84 @@
       },
       "exception":true,
       "fault":true
+    },
+    "ShareDirectoryRequest":{
+      "type":"structure",
+      "required":[
+        "DirectoryId",
+        "ShareTarget",
+        "ShareMethod"
+      ],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "ShareNotes":{"shape":"Notes"},
+        "ShareTarget":{"shape":"ShareTarget"},
+        "ShareMethod":{"shape":"ShareMethod"}
+      }
+    },
+    "ShareDirectoryResult":{
+      "type":"structure",
+      "members":{
+        "SharedDirectoryId":{"shape":"DirectoryId"}
+      }
+    },
+    "ShareLimitExceededException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ExceptionMessage"},
+        "RequestId":{"shape":"RequestId"}
+      },
+      "exception":true
+    },
+    "ShareMethod":{
+      "type":"string",
+      "enum":[
+        "ORGANIZATIONS",
+        "HANDSHAKE"
+      ]
+    },
+    "ShareStatus":{
+      "type":"string",
+      "enum":[
+        "Shared",
+        "PendingAcceptance",
+        "Rejected",
+        "Rejecting",
+        "RejectFailed",
+        "Sharing",
+        "ShareFailed",
+        "Deleted",
+        "Deleting"
+      ]
+    },
+    "ShareTarget":{
+      "type":"structure",
+      "required":[
+        "Id",
+        "Type"
+      ],
+      "members":{
+        "Id":{"shape":"TargetId"},
+        "Type":{"shape":"TargetType"}
+      }
+    },
+    "SharedDirectories":{
+      "type":"list",
+      "member":{"shape":"SharedDirectory"}
+    },
+    "SharedDirectory":{
+      "type":"structure",
+      "members":{
+        "OwnerAccountId":{"shape":"CustomerId"},
+        "OwnerDirectoryId":{"shape":"DirectoryId"},
+        "ShareMethod":{"shape":"ShareMethod"},
+        "SharedAccountId":{"shape":"CustomerId"},
+        "SharedDirectoryId":{"shape":"DirectoryId"},
+        "ShareStatus":{"shape":"ShareStatus"},
+        "ShareNotes":{"shape":"Notes"},
+        "CreatedDateTime":{"shape":"CreatedDateTime"},
+        "LastUpdatedDateTime":{"shape":"LastUpdatedDateTime"}
+      }
     },
     "Snapshot":{
       "type":"structure",
@@ -1631,16 +2708,39 @@
     },
     "SsoEnabled":{"type":"boolean"},
     "StageReason":{"type":"string"},
+    "StartDateTime":{"type":"timestamp"},
+    "StartSchemaExtensionRequest":{
+      "type":"structure",
+      "required":[
+        "DirectoryId",
+        "CreateSnapshotBeforeSchemaExtension",
+        "LdifContent",
+        "Description"
+      ],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "CreateSnapshotBeforeSchemaExtension":{"shape":"CreateSnapshotBeforeSchemaExtension"},
+        "LdifContent":{"shape":"LdifContent"},
+        "Description":{"shape":"Description"}
+      }
+    },
+    "StartSchemaExtensionResult":{
+      "type":"structure",
+      "members":{
+        "SchemaExtensionId":{"shape":"SchemaExtensionId"}
+      }
+    },
     "StartTime":{"type":"timestamp"},
     "StateLastUpdatedDateTime":{"type":"timestamp"},
     "SubnetId":{
       "type":"string",
-      "pattern":"^(subnet-[0-9a-f]{8})$"
+      "pattern":"^(subnet-[0-9a-f]{8}|subnet-[0-9a-f]{17})$"
     },
     "SubnetIds":{
       "type":"list",
       "member":{"shape":"SubnetId"}
     },
+    "SubscriptionCreatedDateTime":{"type":"timestamp"},
     "Tag":{
       "type":"structure",
       "required":[
@@ -1680,6 +2780,15 @@
       "type":"list",
       "member":{"shape":"Tag"}
     },
+    "TargetId":{
+      "type":"string",
+      "max":64,
+      "min":1
+    },
+    "TargetType":{
+      "type":"string",
+      "enum":["ACCOUNT"]
+    },
     "TopicArn":{"type":"string"},
     "TopicName":{
       "type":"string",
@@ -1712,7 +2821,8 @@
         "CreatedDateTime":{"shape":"CreatedDateTime"},
         "LastUpdatedDateTime":{"shape":"LastUpdatedDateTime"},
         "StateLastUpdatedDateTime":{"shape":"StateLastUpdatedDateTime"},
-        "TrustStateReason":{"shape":"TrustStateReason"}
+        "TrustStateReason":{"shape":"TrustStateReason"},
+        "SelectiveAuth":{"shape":"SelectiveAuth"}
       }
     },
     "TrustDirection":{
@@ -1735,6 +2845,7 @@
       "type":"string",
       "max":128,
       "min":1,
+      "pattern":"(.|\\s)*\\S(.|\\s)*",
       "sensitive":true
     },
     "TrustState":{
@@ -1745,6 +2856,9 @@
         "Verifying",
         "VerifyFailed",
         "Verified",
+        "Updating",
+        "UpdateFailed",
+        "Updated",
         "Deleting",
         "Deleted",
         "Failed"
@@ -1753,11 +2867,42 @@
     "TrustStateReason":{"type":"string"},
     "TrustType":{
       "type":"string",
-      "enum":["Forest"]
+      "enum":[
+        "Forest",
+        "External"
+      ]
     },
     "Trusts":{
       "type":"list",
       "member":{"shape":"Trust"}
+    },
+    "UnshareDirectoryRequest":{
+      "type":"structure",
+      "required":[
+        "DirectoryId",
+        "UnshareTarget"
+      ],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "UnshareTarget":{"shape":"UnshareTarget"}
+      }
+    },
+    "UnshareDirectoryResult":{
+      "type":"structure",
+      "members":{
+        "SharedDirectoryId":{"shape":"DirectoryId"}
+      }
+    },
+    "UnshareTarget":{
+      "type":"structure",
+      "required":[
+        "Id",
+        "Type"
+      ],
+      "members":{
+        "Id":{"shape":"TargetId"},
+        "Type":{"shape":"TargetType"}
+      }
     },
     "UnsupportedOperationException":{
       "type":"structure",
@@ -1785,6 +2930,22 @@
       "members":{
       }
     },
+    "UpdateNumberOfDomainControllersRequest":{
+      "type":"structure",
+      "required":[
+        "DirectoryId",
+        "DesiredNumber"
+      ],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "DesiredNumber":{"shape":"DesiredNumberOfDomainControllers"}
+      }
+    },
+    "UpdateNumberOfDomainControllersResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
     "UpdateRadiusRequest":{
       "type":"structure",
       "required":[
@@ -1802,11 +2963,40 @@
       }
     },
     "UpdateSecurityGroupForDirectoryControllers":{"type":"boolean"},
+    "UpdateTrustRequest":{
+      "type":"structure",
+      "required":["TrustId"],
+      "members":{
+        "TrustId":{"shape":"TrustId"},
+        "SelectiveAuth":{"shape":"SelectiveAuth"}
+      }
+    },
+    "UpdateTrustResult":{
+      "type":"structure",
+      "members":{
+        "RequestId":{"shape":"RequestId"},
+        "TrustId":{"shape":"TrustId"}
+      }
+    },
     "UseSameUsername":{"type":"boolean"},
+    "UserDoesNotExistException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ExceptionMessage"},
+        "RequestId":{"shape":"RequestId"}
+      },
+      "exception":true
+    },
     "UserName":{
       "type":"string",
       "min":1,
       "pattern":"[a-zA-Z0-9._-]+"
+    },
+    "UserPassword":{
+      "type":"string",
+      "max":127,
+      "min":1,
+      "sensitive":true
     },
     "VerifyTrustRequest":{
       "type":"structure",
@@ -1823,7 +3013,7 @@
     },
     "VpcId":{
       "type":"string",
-      "pattern":"^(vpc-[0-9a-f]{8})$"
+      "pattern":"^(vpc-[0-9a-f]{8}|vpc-[0-9a-f]{17})$"
     }
   }
 }

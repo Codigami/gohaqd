@@ -7,10 +7,26 @@
     "protocol":"json",
     "serviceAbbreviation":"Amazon Snowball",
     "serviceFullName":"Amazon Import/Export Snowball",
+    "serviceId":"Snowball",
     "signatureVersion":"v4",
-    "targetPrefix":"AWSIESnowballJobManagementService"
+    "targetPrefix":"AWSIESnowballJobManagementService",
+    "uid":"snowball-2016-06-30"
   },
   "operations":{
+    "CancelCluster":{
+      "name":"CancelCluster",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"CancelClusterRequest"},
+      "output":{"shape":"CancelClusterResult"},
+      "errors":[
+        {"shape":"KMSRequestFailedException"},
+        {"shape":"InvalidJobStateException"},
+        {"shape":"InvalidResourceException"}
+      ]
+    },
     "CancelJob":{
       "name":"CancelJob",
       "http":{
@@ -38,6 +54,21 @@
         {"shape":"UnsupportedAddressException"}
       ]
     },
+    "CreateCluster":{
+      "name":"CreateCluster",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"CreateClusterRequest"},
+      "output":{"shape":"CreateClusterResult"},
+      "errors":[
+        {"shape":"InvalidResourceException"},
+        {"shape":"KMSRequestFailedException"},
+        {"shape":"InvalidInputCombinationException"},
+        {"shape":"Ec2RequestFailedException"}
+      ]
+    },
     "CreateJob":{
       "name":"CreateJob",
       "http":{
@@ -48,7 +79,10 @@
       "output":{"shape":"CreateJobResult"},
       "errors":[
         {"shape":"InvalidResourceException"},
-        {"shape":"KMSRequestFailedException"}
+        {"shape":"KMSRequestFailedException"},
+        {"shape":"InvalidInputCombinationException"},
+        {"shape":"ClusterLimitExceededException"},
+        {"shape":"Ec2RequestFailedException"}
       ]
     },
     "DescribeAddress":{
@@ -71,6 +105,19 @@
       },
       "input":{"shape":"DescribeAddressesRequest"},
       "output":{"shape":"DescribeAddressesResult"},
+      "errors":[
+        {"shape":"InvalidResourceException"},
+        {"shape":"InvalidNextTokenException"}
+      ]
+    },
+    "DescribeCluster":{
+      "name":"DescribeCluster",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeClusterRequest"},
+      "output":{"shape":"DescribeClusterResult"},
       "errors":[
         {"shape":"InvalidResourceException"}
       ]
@@ -122,6 +169,57 @@
       "input":{"shape":"GetSnowballUsageRequest"},
       "output":{"shape":"GetSnowballUsageResult"}
     },
+    "GetSoftwareUpdates":{
+      "name":"GetSoftwareUpdates",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"GetSoftwareUpdatesRequest"},
+      "output":{"shape":"GetSoftwareUpdatesResult"},
+      "errors":[
+        {"shape":"InvalidResourceException"},
+        {"shape":"InvalidJobStateException"}
+      ]
+    },
+    "ListClusterJobs":{
+      "name":"ListClusterJobs",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListClusterJobsRequest"},
+      "output":{"shape":"ListClusterJobsResult"},
+      "errors":[
+        {"shape":"InvalidResourceException"},
+        {"shape":"InvalidNextTokenException"}
+      ]
+    },
+    "ListClusters":{
+      "name":"ListClusters",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListClustersRequest"},
+      "output":{"shape":"ListClustersResult"},
+      "errors":[
+        {"shape":"InvalidNextTokenException"}
+      ]
+    },
+    "ListCompatibleImages":{
+      "name":"ListCompatibleImages",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListCompatibleImagesRequest"},
+      "output":{"shape":"ListCompatibleImagesResult"},
+      "errors":[
+        {"shape":"InvalidNextTokenException"},
+        {"shape":"Ec2RequestFailedException"}
+      ]
+    },
     "ListJobs":{
       "name":"ListJobs",
       "http":{
@@ -129,7 +227,26 @@
         "requestUri":"/"
       },
       "input":{"shape":"ListJobsRequest"},
-      "output":{"shape":"ListJobsResult"}
+      "output":{"shape":"ListJobsResult"},
+      "errors":[
+        {"shape":"InvalidNextTokenException"}
+      ]
+    },
+    "UpdateCluster":{
+      "name":"UpdateCluster",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"UpdateClusterRequest"},
+      "output":{"shape":"UpdateClusterResult"},
+      "errors":[
+        {"shape":"InvalidResourceException"},
+        {"shape":"InvalidJobStateException"},
+        {"shape":"KMSRequestFailedException"},
+        {"shape":"InvalidInputCombinationException"},
+        {"shape":"Ec2RequestFailedException"}
+      ]
     },
     "UpdateJob":{
       "name":"UpdateJob",
@@ -142,7 +259,10 @@
       "errors":[
         {"shape":"InvalidResourceException"},
         {"shape":"InvalidJobStateException"},
-        {"shape":"KMSRequestFailedException"}
+        {"shape":"KMSRequestFailedException"},
+        {"shape":"InvalidInputCombinationException"},
+        {"shape":"ClusterLimitExceededException"},
+        {"shape":"Ec2RequestFailedException"}
       ]
     }
   },
@@ -162,7 +282,8 @@
         "Landmark":{"shape":"String"},
         "Country":{"shape":"String"},
         "PostalCode":{"shape":"String"},
-        "PhoneNumber":{"shape":"String"}
+        "PhoneNumber":{"shape":"String"},
+        "IsRestricted":{"shape":"Boolean"}
       }
     },
     "AddressId":{
@@ -175,7 +296,25 @@
       "type":"list",
       "member":{"shape":"Address"}
     },
+    "AmiId":{
+      "type":"string",
+      "max":21,
+      "min":12,
+      "pattern":"(ami-[0-9a-f]{8})|(ami-[0-9a-f]{17})"
+    },
     "Boolean":{"type":"boolean"},
+    "CancelClusterRequest":{
+      "type":"structure",
+      "required":["ClusterId"],
+      "members":{
+        "ClusterId":{"shape":"ClusterId"}
+      }
+    },
+    "CancelClusterResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
     "CancelJobRequest":{
       "type":"structure",
       "required":["JobId"],
@@ -187,6 +326,72 @@
       "type":"structure",
       "members":{
       }
+    },
+    "ClusterId":{
+      "type":"string",
+      "max":39,
+      "min":39,
+      "pattern":"CID[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+    },
+    "ClusterLimitExceededException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"String"}
+      },
+      "exception":true
+    },
+    "ClusterListEntry":{
+      "type":"structure",
+      "members":{
+        "ClusterId":{"shape":"String"},
+        "ClusterState":{"shape":"ClusterState"},
+        "CreationDate":{"shape":"Timestamp"},
+        "Description":{"shape":"String"}
+      }
+    },
+    "ClusterListEntryList":{
+      "type":"list",
+      "member":{"shape":"ClusterListEntry"}
+    },
+    "ClusterMetadata":{
+      "type":"structure",
+      "members":{
+        "ClusterId":{"shape":"String"},
+        "Description":{"shape":"String"},
+        "KmsKeyARN":{"shape":"KmsKeyARN"},
+        "RoleARN":{"shape":"RoleARN"},
+        "ClusterState":{"shape":"ClusterState"},
+        "JobType":{"shape":"JobType"},
+        "SnowballType":{"shape":"SnowballType"},
+        "CreationDate":{"shape":"Timestamp"},
+        "Resources":{"shape":"JobResource"},
+        "AddressId":{"shape":"AddressId"},
+        "ShippingOption":{"shape":"ShippingOption"},
+        "Notification":{"shape":"Notification"},
+        "ForwardingAddressId":{"shape":"AddressId"},
+        "TaxDocuments":{"shape":"TaxDocuments"}
+      }
+    },
+    "ClusterState":{
+      "type":"string",
+      "enum":[
+        "AwaitingQuorum",
+        "Pending",
+        "InUse",
+        "Complete",
+        "Cancelled"
+      ]
+    },
+    "CompatibleImage":{
+      "type":"structure",
+      "members":{
+        "AmiId":{"shape":"String"},
+        "Name":{"shape":"String"}
+      }
+    },
+    "CompatibleImageList":{
+      "type":"list",
+      "member":{"shape":"CompatibleImage"}
     },
     "CreateAddressRequest":{
       "type":"structure",
@@ -201,7 +406,7 @@
         "AddressId":{"shape":"String"}
       }
     },
-    "CreateJobRequest":{
+    "CreateClusterRequest":{
       "type":"structure",
       "required":[
         "JobType",
@@ -217,9 +422,36 @@
         "AddressId":{"shape":"AddressId"},
         "KmsKeyARN":{"shape":"KmsKeyARN"},
         "RoleARN":{"shape":"RoleARN"},
+        "SnowballType":{"shape":"SnowballType"},
+        "ShippingOption":{"shape":"ShippingOption"},
+        "Notification":{"shape":"Notification"},
+        "ForwardingAddressId":{"shape":"AddressId"},
+        "TaxDocuments":{"shape":"TaxDocuments"}
+      }
+    },
+    "CreateClusterResult":{
+      "type":"structure",
+      "members":{
+        "ClusterId":{"shape":"ClusterId"}
+      }
+    },
+    "CreateJobRequest":{
+      "type":"structure",
+      "members":{
+        "JobType":{"shape":"JobType"},
+        "Resources":{"shape":"JobResource"},
+        "Description":{"shape":"String"},
+        "AddressId":{"shape":"AddressId"},
+        "KmsKeyARN":{"shape":"KmsKeyARN"},
+        "RoleARN":{"shape":"RoleARN"},
         "SnowballCapacityPreference":{"shape":"SnowballCapacity"},
         "ShippingOption":{"shape":"ShippingOption"},
-        "Notification":{"shape":"Notification"}
+        "Notification":{"shape":"Notification"},
+        "ClusterId":{"shape":"ClusterId"},
+        "SnowballType":{"shape":"SnowballType"},
+        "ForwardingAddressId":{"shape":"AddressId"},
+        "TaxDocuments":{"shape":"TaxDocuments"},
+        "DeviceConfiguration":{"shape":"DeviceConfiguration"}
       }
     },
     "CreateJobResult":{
@@ -264,6 +496,19 @@
         "NextToken":{"shape":"String"}
       }
     },
+    "DescribeClusterRequest":{
+      "type":"structure",
+      "required":["ClusterId"],
+      "members":{
+        "ClusterId":{"shape":"ClusterId"}
+      }
+    },
+    "DescribeClusterResult":{
+      "type":"structure",
+      "members":{
+        "ClusterMetadata":{"shape":"ClusterMetadata"}
+      }
+    },
     "DescribeJobRequest":{
       "type":"structure",
       "required":["JobId"],
@@ -277,6 +522,45 @@
         "JobMetadata":{"shape":"JobMetadata"},
         "SubJobMetadata":{"shape":"JobMetadataList"}
       }
+    },
+    "DeviceConfiguration":{
+      "type":"structure",
+      "members":{
+        "SnowconeDeviceConfiguration":{"shape":"SnowconeDeviceConfiguration"}
+      }
+    },
+    "Ec2AmiResource":{
+      "type":"structure",
+      "required":["AmiId"],
+      "members":{
+        "AmiId":{"shape":"AmiId"},
+        "SnowballAmiId":{"shape":"String"}
+      }
+    },
+    "Ec2AmiResourceList":{
+      "type":"list",
+      "member":{"shape":"Ec2AmiResource"}
+    },
+    "Ec2RequestFailedException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"String"}
+      },
+      "exception":true
+    },
+    "EventTriggerDefinition":{
+      "type":"structure",
+      "members":{
+        "EventResourceARN":{"shape":"ResourceARN"}
+      }
+    },
+    "EventTriggerDefinitionList":{
+      "type":"list",
+      "member":{"shape":"EventTriggerDefinition"}
+    },
+    "GSTIN":{
+      "type":"string",
+      "pattern":"\\d{2}[A-Z]{5}\\d{4}[A-Z]{1}[A-Z\\d]{1}[Z]{1}[A-Z\\d]{1}"
     },
     "GetJobManifestRequest":{
       "type":"structure",
@@ -316,8 +600,34 @@
         "SnowballsInUse":{"shape":"Integer"}
       }
     },
+    "GetSoftwareUpdatesRequest":{
+      "type":"structure",
+      "required":["JobId"],
+      "members":{
+        "JobId":{"shape":"JobId"}
+      }
+    },
+    "GetSoftwareUpdatesResult":{
+      "type":"structure",
+      "members":{
+        "UpdatesURI":{"shape":"String"}
+      }
+    },
+    "INDTaxDocuments":{
+      "type":"structure",
+      "members":{
+        "GSTIN":{"shape":"GSTIN"}
+      }
+    },
     "Integer":{"type":"integer"},
     "InvalidAddressException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"String"}
+      },
+      "exception":true
+    },
+    "InvalidInputCombinationException":{
       "type":"structure",
       "members":{
         "Message":{"shape":"String"}
@@ -331,10 +641,18 @@
       },
       "exception":true
     },
-    "InvalidResourceException":{
+    "InvalidNextTokenException":{
       "type":"structure",
       "members":{
         "Message":{"shape":"String"}
+      },
+      "exception":true
+    },
+    "InvalidResourceException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"String"},
+        "ResourceType":{"shape":"String"}
       },
       "exception":true
     },
@@ -349,7 +667,11 @@
       "members":{
         "JobId":{"shape":"String"},
         "JobState":{"shape":"JobState"},
-        "IsMaster":{"shape":"Boolean"}
+        "IsMaster":{"shape":"Boolean"},
+        "JobType":{"shape":"JobType"},
+        "SnowballType":{"shape":"SnowballType"},
+        "CreationDate":{"shape":"Timestamp"},
+        "Description":{"shape":"String"}
       }
     },
     "JobListEntryList":{
@@ -370,6 +692,7 @@
         "JobId":{"shape":"String"},
         "JobState":{"shape":"JobState"},
         "JobType":{"shape":"JobType"},
+        "SnowballType":{"shape":"SnowballType"},
         "CreationDate":{"shape":"Timestamp"},
         "Resources":{"shape":"JobResource"},
         "Description":{"shape":"String"},
@@ -380,7 +703,11 @@
         "SnowballCapacityPreference":{"shape":"SnowballCapacity"},
         "Notification":{"shape":"Notification"},
         "DataTransferProgress":{"shape":"DataTransfer"},
-        "JobLogInfo":{"shape":"JobLogs"}
+        "JobLogInfo":{"shape":"JobLogs"},
+        "ClusterId":{"shape":"String"},
+        "ForwardingAddressId":{"shape":"AddressId"},
+        "TaxDocuments":{"shape":"TaxDocuments"},
+        "DeviceConfiguration":{"shape":"DeviceConfiguration"}
       }
     },
     "JobMetadataList":{
@@ -390,7 +717,9 @@
     "JobResource":{
       "type":"structure",
       "members":{
-        "S3Resources":{"shape":"S3ResourceList"}
+        "S3Resources":{"shape":"S3ResourceList"},
+        "LambdaResources":{"shape":"LambdaResourceList"},
+        "Ec2AmiResources":{"shape":"Ec2AmiResourceList"}
       }
     },
     "JobState":{
@@ -402,6 +731,7 @@
         "InTransitToCustomer",
         "WithCustomer",
         "InTransitToAWS",
+        "WithAWSSortingFacility",
         "WithAWS",
         "InProgress",
         "Complete",
@@ -418,7 +748,8 @@
       "type":"string",
       "enum":[
         "IMPORT",
-        "EXPORT"
+        "EXPORT",
+        "LOCAL_USE"
       ]
     },
     "KMSRequestFailedException":{
@@ -438,7 +769,62 @@
     "KmsKeyARN":{
       "type":"string",
       "max":255,
-      "pattern":"arn:(aws|aws-us-gov):kms:.*:[0-9]{12}:key/.*"
+      "pattern":"arn:aws.*:kms:.*:[0-9]{12}:key/.*"
+    },
+    "LambdaResource":{
+      "type":"structure",
+      "members":{
+        "LambdaArn":{"shape":"ResourceARN"},
+        "EventTriggers":{"shape":"EventTriggerDefinitionList"}
+      }
+    },
+    "LambdaResourceList":{
+      "type":"list",
+      "member":{"shape":"LambdaResource"}
+    },
+    "ListClusterJobsRequest":{
+      "type":"structure",
+      "required":["ClusterId"],
+      "members":{
+        "ClusterId":{"shape":"ClusterId"},
+        "MaxResults":{"shape":"ListLimit"},
+        "NextToken":{"shape":"String"}
+      }
+    },
+    "ListClusterJobsResult":{
+      "type":"structure",
+      "members":{
+        "JobListEntries":{"shape":"JobListEntryList"},
+        "NextToken":{"shape":"String"}
+      }
+    },
+    "ListClustersRequest":{
+      "type":"structure",
+      "members":{
+        "MaxResults":{"shape":"ListLimit"},
+        "NextToken":{"shape":"String"}
+      }
+    },
+    "ListClustersResult":{
+      "type":"structure",
+      "members":{
+        "ClusterListEntries":{"shape":"ClusterListEntryList"},
+        "NextToken":{"shape":"String"}
+      }
+    },
+    "ListCompatibleImagesRequest":{
+      "type":"structure",
+      "members":{
+        "MaxResults":{"shape":"ListLimit"},
+        "NextToken":{"shape":"String"}
+      }
+    },
+    "ListCompatibleImagesResult":{
+      "type":"structure",
+      "members":{
+        "CompatibleImages":{"shape":"CompatibleImageList"},
+        "NextToken":{"shape":"String"}
+      }
     },
     "ListJobsRequest":{
       "type":"structure",
@@ -470,13 +856,12 @@
     },
     "ResourceARN":{
       "type":"string",
-      "max":255,
-      "pattern":"arn:(aws|aws-us-gov):s3:::.*"
+      "max":255
     },
     "RoleARN":{
       "type":"string",
       "max":255,
-      "pattern":"arn:(aws|aws-us-gov):iam::[0-9]{12}:role/.*"
+      "pattern":"arn:aws.*:iam::[0-9]{12}:role/.*"
     },
     "S3Resource":{
       "type":"structure",
@@ -518,18 +903,44 @@
       "enum":[
         "T50",
         "T80",
+        "T100",
+        "T42",
+        "T98",
+        "T8",
         "NoPreference"
       ]
+    },
+    "SnowballType":{
+      "type":"string",
+      "enum":[
+        "STANDARD",
+        "EDGE",
+        "EDGE_C",
+        "EDGE_CG",
+        "EDGE_S",
+        "SNC1_HDD"
+      ]
+    },
+    "SnowconeDeviceConfiguration":{
+      "type":"structure",
+      "members":{
+        "WirelessConnection":{"shape":"WirelessConnection"}
+      }
     },
     "SnsTopicARN":{
       "type":"string",
       "max":255,
-      "pattern":"arn:(aws|aws-us-gov):sns:.*:[0-9]{12}:.*"
+      "pattern":"arn:aws.*:sns:.*:[0-9]{12}:.*"
     },
     "String":{
       "type":"string",
-      "max":255,
       "min":1
+    },
+    "TaxDocuments":{
+      "type":"structure",
+      "members":{
+        "IND":{"shape":"INDTaxDocuments"}
+      }
     },
     "Timestamp":{"type":"timestamp"},
     "UnsupportedAddressException":{
@@ -538,6 +949,25 @@
         "Message":{"shape":"String"}
       },
       "exception":true
+    },
+    "UpdateClusterRequest":{
+      "type":"structure",
+      "required":["ClusterId"],
+      "members":{
+        "ClusterId":{"shape":"ClusterId"},
+        "RoleARN":{"shape":"RoleARN"},
+        "Description":{"shape":"String"},
+        "Resources":{"shape":"JobResource"},
+        "AddressId":{"shape":"AddressId"},
+        "ShippingOption":{"shape":"ShippingOption"},
+        "Notification":{"shape":"Notification"},
+        "ForwardingAddressId":{"shape":"AddressId"}
+      }
+    },
+    "UpdateClusterResult":{
+      "type":"structure",
+      "members":{
+      }
     },
     "UpdateJobRequest":{
       "type":"structure",
@@ -550,12 +980,19 @@
         "AddressId":{"shape":"AddressId"},
         "ShippingOption":{"shape":"ShippingOption"},
         "Description":{"shape":"String"},
-        "SnowballCapacityPreference":{"shape":"SnowballCapacity"}
+        "SnowballCapacityPreference":{"shape":"SnowballCapacity"},
+        "ForwardingAddressId":{"shape":"AddressId"}
       }
     },
     "UpdateJobResult":{
       "type":"structure",
       "members":{
+      }
+    },
+    "WirelessConnection":{
+      "type":"structure",
+      "members":{
+        "IsWifiEnabled":{"shape":"Boolean"}
       }
     }
   }
