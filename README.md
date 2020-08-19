@@ -35,3 +35,20 @@ queues:
 - name: test3
   parallel: 3
 ```
+## How to build the gohaqd project:
+```
+  Set GOPATH to the project directory where you generally checkout all your projects
+      export GOPATH=/Users/development/projects
+  Create $GOPATH/src/github.com/Codigami folder structure
+      /Users/development/projects/src/github.com/Codigami
+  Follow below steps
+      cd $GOPATH/src/github.com/Codigami
+      git clone "git@github.com:Codigami/gohaqd.git"
+      cd gohaqd (do your changes in the files) (/Users/development/projects/src/github.com/Codigami/gohaqd)
+      glide install
+      go build
+      glide up
+  
+  Reference:
+      https://github.com/Masterminds/glide
+```
