@@ -1,6 +1,7 @@
 package awstesting
 
 import (
+	"bytes"
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
@@ -8,7 +9,10 @@ import (
 	"reflect"
 	"regexp"
 	"sort"
+	"strings"
 	"testing"
+
+	"github.com/aws/aws-sdk-go/private/protocol/xml/xmlutil"
 )
 
 // Match is a testing helper to test for testing error by comparing expected
@@ -39,6 +43,8 @@ func AssertURL(t *testing.T, expect, actual string, msgAndArgs ...interface{}) b
 	return AssertQuery(t, expectURL.Query().Encode(), actualURL.Query().Encode(), msgAndArgs...)
 }
 
+var queryMapKey = regexp.MustCompile("(.*?)\\.[0-9]+\\.key")
+
 // AssertQuery verifies the expect HTTP query string matches the actual.
 func AssertQuery(t *testing.T, expect, actual string, msgAndArgs ...interface{}) bool {
 	expectQ, err := url.ParseQuery(expect)
@@ -46,7 +52,7 @@ func AssertQuery(t *testing.T, expect, actual string, msgAndArgs ...interface{})
 		t.Errorf(errMsg("unable to parse expected Query", err, msgAndArgs))
 		return false
 	}
-	actualQ, err := url.ParseQuery(expect)
+	actualQ, err := url.ParseQuery(actual)
 	if err != nil {
 		t.Errorf(errMsg("unable to parse actual Query", err, msgAndArgs))
 		return false
@@ -57,11 +63,35 @@ func AssertQuery(t *testing.T, expect, actual string, msgAndArgs ...interface{})
 		return false
 	}
 
+	keys := map[string][]string{}
+	for key, v := range expectQ {
+		if queryMapKey.Match([]byte(key)) {
+			submatch := queryMapKey.FindStringSubmatch(key)
+			keys[submatch[1]] = append(keys[submatch[1]], v...)
+		}
+	}
+
+	for k, v := range keys {
+		// clear all keys that have prefix
+		for key := range expectQ {
+			if strings.HasPrefix(key, k) {
+				delete(expectQ, key)
+			}
+		}
+
+		sort.Strings(v)
+		for i, value := range v {
+			expectQ[fmt.Sprintf("%s.%d.key", k, i+1)] = []string{value}
+		}
+	}
+
 	for k, expectQVals := range expectQ {
 		sort.Strings(expectQVals)
 		actualQVals := actualQ[k]
 		sort.Strings(actualQVals)
-		equal(t, expectQVals, actualQVals, msgAndArgs...)
+		if !equal(t, expectQVals, actualQVals, msgAndArgs...) {
+			return false
+		}
 	}
 
 	return true
@@ -85,17 +115,41 @@ func AssertJSON(t *testing.T, expect, actual string, msgAndArgs ...interface{}) 
 }
 
 // AssertXML verifies that the expect xml string matches the actual.
-func AssertXML(t *testing.T, expect, actual string, container interface{}, msgAndArgs ...interface{}) bool {
-	expectVal := container
-	if err := xml.Unmarshal([]byte(expect), &expectVal); err != nil {
-		t.Errorf(errMsg("unable to parse expected XML", err, msgAndArgs...))
+// Elements in actual must match the order they appear in expect to match equally
+func AssertXML(t *testing.T, expect, actual string, msgAndArgs ...interface{}) bool {
+	buffer := bytes.NewReader([]byte(expect))
+	decoder := xml.NewDecoder(buffer)
+
+	expectVal, err := xmlutil.XMLToStruct(decoder, nil)
+	if err != nil {
+		t.Fatalf("failed to umarshal xml to struct: %v", err)
 	}
 
-	actualVal := container
-	if err := xml.Unmarshal([]byte(actual), &actualVal); err != nil {
-		t.Errorf(errMsg("unable to parse actual XML", err, msgAndArgs...))
+	buffer = bytes.NewReader([]byte(actual))
+	decoder = xml.NewDecoder(buffer)
+
+	actualVal, err := xmlutil.XMLToStruct(decoder, nil)
+	if err != nil {
+		t.Fatalf("failed to umarshal xml to struct: %v", err)
 	}
+
 	return equal(t, expectVal, actualVal, msgAndArgs...)
+}
+
+// DidPanic returns if the function paniced and returns true if the function paniced.
+func DidPanic(fn func()) (bool, interface{}) {
+	var paniced bool
+	var msg interface{}
+	func() {
+		defer func() {
+			if msg = recover(); msg != nil {
+				paniced = true
+			}
+		}()
+		fn()
+	}()
+
+	return paniced, msg
 }
 
 // objectsAreEqual determines if two objects are considered equal.
@@ -122,8 +176,8 @@ func objectsAreEqual(expected, actual interface{}) bool {
 // Copied locally to prevent non-test build dependencies on testify
 func equal(t *testing.T, expected, actual interface{}, msgAndArgs ...interface{}) bool {
 	if !objectsAreEqual(expected, actual) {
-		t.Errorf("Not Equal:\n\t%#v (expected)\n\t%#v (actual), %s",
-			expected, actual, messageFromMsgAndArgs(msgAndArgs))
+		t.Errorf("%s\n%s", messageFromMsgAndArgs(msgAndArgs),
+			SprintExpectActual(expected, actual))
 		return false
 	}
 
@@ -160,4 +214,10 @@ func queryValueKeys(v url.Values) []string {
 	}
 	sort.Strings(keys)
 	return keys
+}
+
+// SprintExpectActual returns a string for test failure cases when the actual
+// value is not the same as the expected.
+func SprintExpectActual(expect, actual interface{}) string {
+	return fmt.Sprintf("expect: %+v\nactual: %+v\n", expect, actual)
 }

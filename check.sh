@@ -5,7 +5,7 @@ set -x
 
 PACKAGE_LIST=$(go list ./... | grep -v /vendor/)
 
-go get -u -v github.com/golang/lint/golint
+go get -u -v golang.org/x/lint/golint
 
 go fmt $PACKAGE_LIST
 go vet -v $PACKAGE_LIST

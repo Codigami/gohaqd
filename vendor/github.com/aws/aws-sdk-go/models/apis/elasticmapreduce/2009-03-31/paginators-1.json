@@ -13,6 +13,11 @@
       "output_token": "Marker",
       "result_key": "Clusters"
     },
+    "ListInstanceFleets": {
+      "input_token": "Marker",
+      "output_token": "Marker",
+      "result_key": "InstanceFleets"
+    },
     "ListInstanceGroups": {
       "input_token": "Marker",
       "output_token": "Marker",
@@ -22,6 +27,11 @@
       "input_token": "Marker",
       "output_token": "Marker",
       "result_key": "Instances"
+    },
+    "ListSecurityConfigurations": {
+      "input_token": "Marker",
+      "output_token": "Marker",
+      "result_key": "SecurityConfigurations"
     },
     "ListSteps": {
       "input_token": "Marker",

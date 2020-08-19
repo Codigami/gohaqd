@@ -81,7 +81,7 @@ func NewCookieSigner(keyID string, privKey *rsa.PrivateKey, opts ...func(*Cookie
 // server's response.
 //
 // Example:
-//    s := NewCookieSigner(keyID, privKey)
+//    s := sign.NewCookieSigner(keyID, privKey)
 //
 //    // Get Signed cookies for a resource that will expire in 1 hour
 //    cookies, err := s.Sign("*", time.Now().Add(1 * time.Hour))
@@ -150,14 +150,14 @@ func cookieURLScheme(u string) (string, error) {
 // server's response.
 //
 // Example:
-//    s := NewCookieSigner(keyID, privKey)
+//    s := sign.NewCookieSigner(keyID, privKey)
 //
 //    policy := &sign.Policy{
 //        Statements: []sign.Statement{
 //            {
 //                // Read the provided documentation on how to set this
 //                // correctly, you'll probably want to use wildcards.
-//                Resource: RawCloudFrontURL,
+//                Resource: rawCloudFrontURL,
 //                Condition: sign.Condition{
 //                    // Optional IP source address range
 //                    IPAddress: &sign.IPAddress{SourceIP: "192.0.2.0/24"},
@@ -179,7 +179,7 @@ func cookieURLScheme(u string) (string, error) {
 //
 //    // Or get Signed cookies for a resource that will expire in 1 hour
 //    // and set path and domain of cookies
-//    cookies, err := s.Sign(policy, func(o *sign.CookieOptions) {
+//    cookies, err := s.SignWithPolicy(policy, func(o *sign.CookieOptions) {
 //        o.Path = "/"
 //        o.Domain = ".example.com"
 //    })
