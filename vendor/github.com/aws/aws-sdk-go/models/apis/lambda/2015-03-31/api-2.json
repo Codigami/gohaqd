@@ -5,9 +5,30 @@
     "endpointPrefix":"lambda",
     "protocol":"rest-json",
     "serviceFullName":"AWS Lambda",
-    "signatureVersion":"v4"
+    "serviceId":"Lambda",
+    "signatureVersion":"v4",
+    "uid":"lambda-2015-03-31"
   },
   "operations":{
+    "AddLayerVersionPermission":{
+      "name":"AddLayerVersionPermission",
+      "http":{
+        "method":"POST",
+        "requestUri":"/2018-10-31/layers/{LayerName}/versions/{VersionNumber}/policy",
+        "responseCode":201
+      },
+      "input":{"shape":"AddLayerVersionPermissionRequest"},
+      "output":{"shape":"AddLayerVersionPermissionResponse"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ResourceConflictException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"PolicyLengthExceededException"},
+        {"shape":"PreconditionFailedException"}
+      ]
+    },
     "AddPermission":{
       "name":"AddPermission",
       "http":{
@@ -23,7 +44,8 @@
         {"shape":"ResourceConflictException"},
         {"shape":"InvalidParameterValueException"},
         {"shape":"PolicyLengthExceededException"},
-        {"shape":"TooManyRequestsException"}
+        {"shape":"TooManyRequestsException"},
+        {"shape":"PreconditionFailedException"}
       ]
     },
     "CreateAlias":{
@@ -89,6 +111,7 @@
       "errors":[
         {"shape":"ServiceException"},
         {"shape":"InvalidParameterValueException"},
+        {"shape":"ResourceConflictException"},
         {"shape":"TooManyRequestsException"}
       ]
     },
@@ -105,7 +128,8 @@
         {"shape":"ServiceException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"InvalidParameterValueException"},
-        {"shape":"TooManyRequestsException"}
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ResourceInUseException"}
       ]
     },
     "DeleteFunction":{
@@ -122,6 +146,80 @@
         {"shape":"TooManyRequestsException"},
         {"shape":"InvalidParameterValueException"},
         {"shape":"ResourceConflictException"}
+      ]
+    },
+    "DeleteFunctionConcurrency":{
+      "name":"DeleteFunctionConcurrency",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/2017-10-31/functions/{FunctionName}/concurrency",
+        "responseCode":204
+      },
+      "input":{"shape":"DeleteFunctionConcurrencyRequest"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"ResourceConflictException"}
+      ]
+    },
+    "DeleteFunctionEventInvokeConfig":{
+      "name":"DeleteFunctionEventInvokeConfig",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/2019-09-25/functions/{FunctionName}/event-invoke-config",
+        "responseCode":204
+      },
+      "input":{"shape":"DeleteFunctionEventInvokeConfigRequest"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "DeleteLayerVersion":{
+      "name":"DeleteLayerVersion",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/2018-10-31/layers/{LayerName}/versions/{VersionNumber}",
+        "responseCode":204
+      },
+      "input":{"shape":"DeleteLayerVersionRequest"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "DeleteProvisionedConcurrencyConfig":{
+      "name":"DeleteProvisionedConcurrencyConfig",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/2019-09-30/functions/{FunctionName}/provisioned-concurrency",
+        "responseCode":204
+      },
+      "input":{"shape":"DeleteProvisionedConcurrencyConfigRequest"},
+      "errors":[
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"ResourceConflictException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "GetAccountSettings":{
+      "name":"GetAccountSettings",
+      "http":{
+        "method":"GET",
+        "requestUri":"/2016-08-19/account-settings/",
+        "responseCode":200
+      },
+      "input":{"shape":"GetAccountSettingsRequest"},
+      "output":{"shape":"GetAccountSettingsResponse"},
+      "errors":[
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ServiceException"}
       ]
     },
     "GetAlias":{
@@ -172,6 +270,22 @@
         {"shape":"InvalidParameterValueException"}
       ]
     },
+    "GetFunctionConcurrency":{
+      "name":"GetFunctionConcurrency",
+      "http":{
+        "method":"GET",
+        "requestUri":"/2019-09-30/functions/{FunctionName}/concurrency",
+        "responseCode":200
+      },
+      "input":{"shape":"GetFunctionConcurrencyRequest"},
+      "output":{"shape":"GetFunctionConcurrencyResponse"},
+      "errors":[
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ServiceException"}
+      ]
+    },
     "GetFunctionConfiguration":{
       "name":"GetFunctionConfiguration",
       "http":{
@@ -181,6 +295,70 @@
       },
       "input":{"shape":"GetFunctionConfigurationRequest"},
       "output":{"shape":"FunctionConfiguration"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"InvalidParameterValueException"}
+      ]
+    },
+    "GetFunctionEventInvokeConfig":{
+      "name":"GetFunctionEventInvokeConfig",
+      "http":{
+        "method":"GET",
+        "requestUri":"/2019-09-25/functions/{FunctionName}/event-invoke-config",
+        "responseCode":200
+      },
+      "input":{"shape":"GetFunctionEventInvokeConfigRequest"},
+      "output":{"shape":"FunctionEventInvokeConfig"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "GetLayerVersion":{
+      "name":"GetLayerVersion",
+      "http":{
+        "method":"GET",
+        "requestUri":"/2018-10-31/layers/{LayerName}/versions/{VersionNumber}",
+        "responseCode":200
+      },
+      "input":{"shape":"GetLayerVersionRequest"},
+      "output":{"shape":"GetLayerVersionResponse"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ResourceNotFoundException"}
+      ]
+    },
+    "GetLayerVersionByArn":{
+      "name":"GetLayerVersionByArn",
+      "http":{
+        "method":"GET",
+        "requestUri":"/2018-10-31/layers?find=LayerVersion",
+        "responseCode":200
+      },
+      "input":{"shape":"GetLayerVersionByArnRequest"},
+      "output":{"shape":"GetLayerVersionResponse"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ResourceNotFoundException"}
+      ]
+    },
+    "GetLayerVersionPolicy":{
+      "name":"GetLayerVersionPolicy",
+      "http":{
+        "method":"GET",
+        "requestUri":"/2018-10-31/layers/{LayerName}/versions/{VersionNumber}/policy",
+        "responseCode":200
+      },
+      "input":{"shape":"GetLayerVersionPolicyRequest"},
+      "output":{"shape":"GetLayerVersionPolicyResponse"},
       "errors":[
         {"shape":"ServiceException"},
         {"shape":"ResourceNotFoundException"},
@@ -204,6 +382,23 @@
         {"shape":"InvalidParameterValueException"}
       ]
     },
+    "GetProvisionedConcurrencyConfig":{
+      "name":"GetProvisionedConcurrencyConfig",
+      "http":{
+        "method":"GET",
+        "requestUri":"/2019-09-30/functions/{FunctionName}/provisioned-concurrency",
+        "responseCode":200
+      },
+      "input":{"shape":"GetProvisionedConcurrencyConfigRequest"},
+      "output":{"shape":"GetProvisionedConcurrencyConfigResponse"},
+      "errors":[
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ServiceException"},
+        {"shape":"ProvisionedConcurrencyConfigNotFoundException"}
+      ]
+    },
     "Invoke":{
       "name":"Invoke",
       "http":{
@@ -223,11 +418,22 @@
         {"shape":"EC2UnexpectedException"},
         {"shape":"SubnetIPAddressLimitReachedException"},
         {"shape":"ENILimitReachedException"},
+        {"shape":"EFSMountConnectivityException"},
+        {"shape":"EFSMountFailureException"},
+        {"shape":"EFSMountTimeoutException"},
+        {"shape":"EFSIOException"},
         {"shape":"EC2ThrottledException"},
         {"shape":"EC2AccessDeniedException"},
         {"shape":"InvalidSubnetIDException"},
         {"shape":"InvalidSecurityGroupIDException"},
-        {"shape":"InvalidZipFileException"}
+        {"shape":"InvalidZipFileException"},
+        {"shape":"KMSDisabledException"},
+        {"shape":"KMSInvalidStateException"},
+        {"shape":"KMSAccessDeniedException"},
+        {"shape":"KMSNotFoundException"},
+        {"shape":"InvalidRuntimeException"},
+        {"shape":"ResourceConflictException"},
+        {"shape":"ResourceNotReadyException"}
       ]
     },
     "InvokeAsync":{
@@ -242,7 +448,9 @@
       "errors":[
         {"shape":"ServiceException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"InvalidRequestContentException"}
+        {"shape":"InvalidRequestContentException"},
+        {"shape":"InvalidRuntimeException"},
+        {"shape":"ResourceConflictException"}
       ],
       "deprecated":true
     },
@@ -278,6 +486,22 @@
         {"shape":"TooManyRequestsException"}
       ]
     },
+    "ListFunctionEventInvokeConfigs":{
+      "name":"ListFunctionEventInvokeConfigs",
+      "http":{
+        "method":"GET",
+        "requestUri":"/2019-09-25/functions/{FunctionName}/event-invoke-config/list",
+        "responseCode":200
+      },
+      "input":{"shape":"ListFunctionEventInvokeConfigsRequest"},
+      "output":{"shape":"ListFunctionEventInvokeConfigsResponse"},
+      "errors":[
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ServiceException"}
+      ]
+    },
     "ListFunctions":{
       "name":"ListFunctions",
       "http":{
@@ -289,6 +513,69 @@
       "output":{"shape":"ListFunctionsResponse"},
       "errors":[
         {"shape":"ServiceException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"InvalidParameterValueException"}
+      ]
+    },
+    "ListLayerVersions":{
+      "name":"ListLayerVersions",
+      "http":{
+        "method":"GET",
+        "requestUri":"/2018-10-31/layers/{LayerName}/versions",
+        "responseCode":200
+      },
+      "input":{"shape":"ListLayerVersionsRequest"},
+      "output":{"shape":"ListLayerVersionsResponse"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "ListLayers":{
+      "name":"ListLayers",
+      "http":{
+        "method":"GET",
+        "requestUri":"/2018-10-31/layers",
+        "responseCode":200
+      },
+      "input":{"shape":"ListLayersRequest"},
+      "output":{"shape":"ListLayersResponse"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "ListProvisionedConcurrencyConfigs":{
+      "name":"ListProvisionedConcurrencyConfigs",
+      "http":{
+        "method":"GET",
+        "requestUri":"/2019-09-30/functions/{FunctionName}/provisioned-concurrency?List=ALL",
+        "responseCode":200
+      },
+      "input":{"shape":"ListProvisionedConcurrencyConfigsRequest"},
+      "output":{"shape":"ListProvisionedConcurrencyConfigsResponse"},
+      "errors":[
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "ListTags":{
+      "name":"ListTags",
+      "http":{
+        "method":"GET",
+        "requestUri":"/2017-03-31/tags/{ARN}"
+      },
+      "input":{"shape":"ListTagsRequest"},
+      "output":{"shape":"ListTagsResponse"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidParameterValueException"},
         {"shape":"TooManyRequestsException"}
       ]
     },
@@ -308,6 +595,23 @@
         {"shape":"TooManyRequestsException"}
       ]
     },
+    "PublishLayerVersion":{
+      "name":"PublishLayerVersion",
+      "http":{
+        "method":"POST",
+        "requestUri":"/2018-10-31/layers/{LayerName}/versions",
+        "responseCode":201
+      },
+      "input":{"shape":"PublishLayerVersionRequest"},
+      "output":{"shape":"PublishLayerVersionResponse"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"CodeStorageExceededException"}
+      ]
+    },
     "PublishVersion":{
       "name":"PublishVersion",
       "http":{
@@ -322,7 +626,75 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"InvalidParameterValueException"},
         {"shape":"TooManyRequestsException"},
-        {"shape":"CodeStorageExceededException"}
+        {"shape":"CodeStorageExceededException"},
+        {"shape":"PreconditionFailedException"},
+        {"shape":"ResourceConflictException"}
+      ]
+    },
+    "PutFunctionConcurrency":{
+      "name":"PutFunctionConcurrency",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/2017-10-31/functions/{FunctionName}/concurrency",
+        "responseCode":200
+      },
+      "input":{"shape":"PutFunctionConcurrencyRequest"},
+      "output":{"shape":"Concurrency"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ResourceConflictException"}
+      ]
+    },
+    "PutFunctionEventInvokeConfig":{
+      "name":"PutFunctionEventInvokeConfig",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/2019-09-25/functions/{FunctionName}/event-invoke-config",
+        "responseCode":200
+      },
+      "input":{"shape":"PutFunctionEventInvokeConfigRequest"},
+      "output":{"shape":"FunctionEventInvokeConfig"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "PutProvisionedConcurrencyConfig":{
+      "name":"PutProvisionedConcurrencyConfig",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/2019-09-30/functions/{FunctionName}/provisioned-concurrency",
+        "responseCode":202
+      },
+      "input":{"shape":"PutProvisionedConcurrencyConfigRequest"},
+      "output":{"shape":"PutProvisionedConcurrencyConfigResponse"},
+      "errors":[
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ResourceConflictException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "RemoveLayerVersionPermission":{
+      "name":"RemoveLayerVersionPermission",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/2018-10-31/layers/{LayerName}/versions/{VersionNumber}/policy/{StatementId}",
+        "responseCode":204
+      },
+      "input":{"shape":"RemoveLayerVersionPermissionRequest"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"PreconditionFailedException"}
       ]
     },
     "RemovePermission":{
@@ -337,7 +709,40 @@
         {"shape":"ServiceException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"InvalidParameterValueException"},
-        {"shape":"TooManyRequestsException"}
+        {"shape":"TooManyRequestsException"},
+        {"shape":"PreconditionFailedException"}
+      ]
+    },
+    "TagResource":{
+      "name":"TagResource",
+      "http":{
+        "method":"POST",
+        "requestUri":"/2017-03-31/tags/{ARN}",
+        "responseCode":204
+      },
+      "input":{"shape":"TagResourceRequest"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ResourceConflictException"}
+      ]
+    },
+    "UntagResource":{
+      "name":"UntagResource",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/2017-03-31/tags/{ARN}",
+        "responseCode":204
+      },
+      "input":{"shape":"UntagResourceRequest"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ResourceConflictException"}
       ]
     },
     "UpdateAlias":{
@@ -353,7 +758,9 @@
         {"shape":"ServiceException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"InvalidParameterValueException"},
-        {"shape":"TooManyRequestsException"}
+        {"shape":"TooManyRequestsException"},
+        {"shape":"PreconditionFailedException"},
+        {"shape":"ResourceConflictException"}
       ]
     },
     "UpdateEventSourceMapping":{
@@ -370,7 +777,8 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"InvalidParameterValueException"},
         {"shape":"TooManyRequestsException"},
-        {"shape":"ResourceConflictException"}
+        {"shape":"ResourceConflictException"},
+        {"shape":"ResourceInUseException"}
       ]
     },
     "UpdateFunctionCode":{
@@ -387,7 +795,9 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"InvalidParameterValueException"},
         {"shape":"TooManyRequestsException"},
-        {"shape":"CodeStorageExceededException"}
+        {"shape":"CodeStorageExceededException"},
+        {"shape":"PreconditionFailedException"},
+        {"shape":"ResourceConflictException"}
       ]
     },
     "UpdateFunctionConfiguration":{
@@ -403,14 +813,87 @@
         {"shape":"ServiceException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"InvalidParameterValueException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ResourceConflictException"},
+        {"shape":"PreconditionFailedException"}
+      ]
+    },
+    "UpdateFunctionEventInvokeConfig":{
+      "name":"UpdateFunctionEventInvokeConfig",
+      "http":{
+        "method":"POST",
+        "requestUri":"/2019-09-25/functions/{FunctionName}/event-invoke-config",
+        "responseCode":200
+      },
+      "input":{"shape":"UpdateFunctionEventInvokeConfigRequest"},
+      "output":{"shape":"FunctionEventInvokeConfig"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidParameterValueException"},
         {"shape":"TooManyRequestsException"}
       ]
     }
   },
   "shapes":{
+    "AccountLimit":{
+      "type":"structure",
+      "members":{
+        "TotalCodeSize":{"shape":"Long"},
+        "CodeSizeUnzipped":{"shape":"Long"},
+        "CodeSizeZipped":{"shape":"Long"},
+        "ConcurrentExecutions":{"shape":"Integer"},
+        "UnreservedConcurrentExecutions":{"shape":"UnreservedConcurrentExecutions"}
+      }
+    },
+    "AccountUsage":{
+      "type":"structure",
+      "members":{
+        "TotalCodeSize":{"shape":"Long"},
+        "FunctionCount":{"shape":"Long"}
+      }
+    },
     "Action":{
       "type":"string",
       "pattern":"(lambda:[*]|lambda:[a-zA-Z]+|[*])"
+    },
+    "AddLayerVersionPermissionRequest":{
+      "type":"structure",
+      "required":[
+        "LayerName",
+        "VersionNumber",
+        "StatementId",
+        "Action",
+        "Principal"
+      ],
+      "members":{
+        "LayerName":{
+          "shape":"LayerName",
+          "location":"uri",
+          "locationName":"LayerName"
+        },
+        "VersionNumber":{
+          "shape":"LayerVersionNumber",
+          "location":"uri",
+          "locationName":"VersionNumber"
+        },
+        "StatementId":{"shape":"StatementId"},
+        "Action":{"shape":"LayerPermissionAllowedAction"},
+        "Principal":{"shape":"LayerPermissionAllowedPrincipal"},
+        "OrganizationId":{"shape":"OrganizationId"},
+        "RevisionId":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"RevisionId"
+        }
+      }
+    },
+    "AddLayerVersionPermissionResponse":{
+      "type":"structure",
+      "members":{
+        "Statement":{"shape":"String"},
+        "RevisionId":{"shape":"String"}
+      }
     },
     "AddPermissionRequest":{
       "type":"structure",
@@ -436,7 +919,8 @@
           "shape":"Qualifier",
           "location":"querystring",
           "locationName":"Qualifier"
-        }
+        },
+        "RevisionId":{"shape":"String"}
       }
     },
     "AddPermissionResponse":{
@@ -444,6 +928,17 @@
       "members":{
         "Statement":{"shape":"String"}
       }
+    },
+    "AdditionalVersion":{
+      "type":"string",
+      "max":1024,
+      "min":1,
+      "pattern":"[0-9]+"
+    },
+    "AdditionalVersionWeights":{
+      "type":"map",
+      "key":{"shape":"AdditionalVersion"},
+      "value":{"shape":"Weight"}
     },
     "Alias":{
       "type":"string",
@@ -457,23 +952,35 @@
         "AliasArn":{"shape":"FunctionArn"},
         "Name":{"shape":"Alias"},
         "FunctionVersion":{"shape":"Version"},
-        "Description":{"shape":"Description"}
+        "Description":{"shape":"Description"},
+        "RoutingConfig":{"shape":"AliasRoutingConfiguration"},
+        "RevisionId":{"shape":"String"}
       }
     },
     "AliasList":{
       "type":"list",
       "member":{"shape":"AliasConfiguration"}
     },
+    "AliasRoutingConfiguration":{
+      "type":"structure",
+      "members":{
+        "AdditionalVersionWeights":{"shape":"AdditionalVersionWeights"}
+      }
+    },
     "Arn":{
       "type":"string",
-      "pattern":"arn:aws:([a-zA-Z0-9\\-])+:([a-z]{2}-[a-z]+-\\d{1})?:(\\d{12})?:(.*)"
+      "pattern":"arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:([a-z]{2}(-gov)?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)"
     },
     "BatchSize":{
       "type":"integer",
       "max":10000,
       "min":1
     },
-    "Blob":{"type":"blob"},
+    "BisectBatchOnFunctionError":{"type":"boolean"},
+    "Blob":{
+      "type":"blob",
+      "sensitive":true
+    },
     "BlobStream":{
       "type":"blob",
       "streaming":true
@@ -487,6 +994,17 @@
       },
       "error":{"httpStatusCode":400},
       "exception":true
+    },
+    "CompatibleRuntimes":{
+      "type":"list",
+      "member":{"shape":"Runtime"},
+      "max":5
+    },
+    "Concurrency":{
+      "type":"structure",
+      "members":{
+        "ReservedConcurrentExecutions":{"shape":"ReservedConcurrentExecutions"}
+      }
     },
     "CreateAliasRequest":{
       "type":"structure",
@@ -503,22 +1021,30 @@
         },
         "Name":{"shape":"Alias"},
         "FunctionVersion":{"shape":"Version"},
-        "Description":{"shape":"Description"}
+        "Description":{"shape":"Description"},
+        "RoutingConfig":{"shape":"AliasRoutingConfiguration"}
       }
     },
     "CreateEventSourceMappingRequest":{
       "type":"structure",
       "required":[
         "EventSourceArn",
-        "FunctionName",
-        "StartingPosition"
+        "FunctionName"
       ],
       "members":{
         "EventSourceArn":{"shape":"Arn"},
         "FunctionName":{"shape":"FunctionName"},
         "Enabled":{"shape":"Enabled"},
         "BatchSize":{"shape":"BatchSize"},
-        "StartingPosition":{"shape":"EventSourcePosition"}
+        "MaximumBatchingWindowInSeconds":{"shape":"MaximumBatchingWindowInSeconds"},
+        "ParallelizationFactor":{"shape":"ParallelizationFactor"},
+        "StartingPosition":{"shape":"EventSourcePosition"},
+        "StartingPositionTimestamp":{"shape":"Date"},
+        "DestinationConfig":{"shape":"DestinationConfig"},
+        "MaximumRecordAgeInSeconds":{"shape":"MaximumRecordAgeInSeconds"},
+        "BisectBatchOnFunctionError":{"shape":"BisectBatchOnFunctionError"},
+        "MaximumRetryAttempts":{"shape":"MaximumRetryAttemptsEventSourceMapping"},
+        "Topics":{"shape":"Topics"}
       }
     },
     "CreateFunctionRequest":{
@@ -540,10 +1066,23 @@
         "Timeout":{"shape":"Timeout"},
         "MemorySize":{"shape":"MemorySize"},
         "Publish":{"shape":"Boolean"},
-        "VpcConfig":{"shape":"VpcConfig"}
+        "VpcConfig":{"shape":"VpcConfig"},
+        "DeadLetterConfig":{"shape":"DeadLetterConfig"},
+        "Environment":{"shape":"Environment"},
+        "KMSKeyArn":{"shape":"KMSKeyArn"},
+        "TracingConfig":{"shape":"TracingConfig"},
+        "Tags":{"shape":"Tags"},
+        "Layers":{"shape":"LayerList"},
+        "FileSystemConfigs":{"shape":"FileSystemConfigList"}
       }
     },
     "Date":{"type":"timestamp"},
+    "DeadLetterConfig":{
+      "type":"structure",
+      "members":{
+        "TargetArn":{"shape":"ResourceArn"}
+      }
+    },
     "DeleteAliasRequest":{
       "type":"structure",
       "required":[
@@ -574,9 +1113,74 @@
         }
       }
     },
+    "DeleteFunctionConcurrencyRequest":{
+      "type":"structure",
+      "required":["FunctionName"],
+      "members":{
+        "FunctionName":{
+          "shape":"FunctionName",
+          "location":"uri",
+          "locationName":"FunctionName"
+        }
+      }
+    },
+    "DeleteFunctionEventInvokeConfigRequest":{
+      "type":"structure",
+      "required":["FunctionName"],
+      "members":{
+        "FunctionName":{
+          "shape":"FunctionName",
+          "location":"uri",
+          "locationName":"FunctionName"
+        },
+        "Qualifier":{
+          "shape":"Qualifier",
+          "location":"querystring",
+          "locationName":"Qualifier"
+        }
+      }
+    },
     "DeleteFunctionRequest":{
       "type":"structure",
       "required":["FunctionName"],
+      "members":{
+        "FunctionName":{
+          "shape":"FunctionName",
+          "location":"uri",
+          "locationName":"FunctionName"
+        },
+        "Qualifier":{
+          "shape":"Qualifier",
+          "location":"querystring",
+          "locationName":"Qualifier"
+        }
+      }
+    },
+    "DeleteLayerVersionRequest":{
+      "type":"structure",
+      "required":[
+        "LayerName",
+        "VersionNumber"
+      ],
+      "members":{
+        "LayerName":{
+          "shape":"LayerName",
+          "location":"uri",
+          "locationName":"LayerName"
+        },
+        "VersionNumber":{
+          "shape":"LayerVersionNumber",
+          "location":"uri",
+          "locationName":"VersionNumber"
+        }
+      }
+    },
+    "DeleteProvisionedConcurrencyConfigRequest":{
+      "type":"structure",
+      "required":[
+        "FunctionName",
+        "Qualifier"
+      ],
       "members":{
         "FunctionName":{
           "shape":"FunctionName",
@@ -594,6 +1198,19 @@
       "type":"string",
       "max":256,
       "min":0
+    },
+    "DestinationArn":{
+      "type":"string",
+      "max":350,
+      "min":0,
+      "pattern":"^$|arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:([a-z]{2}(-gov)?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)"
+    },
+    "DestinationConfig":{
+      "type":"structure",
+      "members":{
+        "OnSuccess":{"shape":"OnSuccess"},
+        "OnFailure":{"shape":"OnFailure"}
+      }
     },
     "EC2AccessDeniedException":{
       "type":"structure",
@@ -623,6 +1240,42 @@
       "error":{"httpStatusCode":502},
       "exception":true
     },
+    "EFSIOException":{
+      "type":"structure",
+      "members":{
+        "Type":{"shape":"String"},
+        "Message":{"shape":"String"}
+      },
+      "error":{"httpStatusCode":410},
+      "exception":true
+    },
+    "EFSMountConnectivityException":{
+      "type":"structure",
+      "members":{
+        "Type":{"shape":"String"},
+        "Message":{"shape":"String"}
+      },
+      "error":{"httpStatusCode":408},
+      "exception":true
+    },
+    "EFSMountFailureException":{
+      "type":"structure",
+      "members":{
+        "Type":{"shape":"String"},
+        "Message":{"shape":"String"}
+      },
+      "error":{"httpStatusCode":403},
+      "exception":true
+    },
+    "EFSMountTimeoutException":{
+      "type":"structure",
+      "members":{
+        "Type":{"shape":"String"},
+        "Message":{"shape":"String"}
+      },
+      "error":{"httpStatusCode":408},
+      "exception":true
+    },
     "ENILimitReachedException":{
       "type":"structure",
       "members":{
@@ -633,17 +1286,59 @@
       "exception":true
     },
     "Enabled":{"type":"boolean"},
+    "Environment":{
+      "type":"structure",
+      "members":{
+        "Variables":{"shape":"EnvironmentVariables"}
+      }
+    },
+    "EnvironmentError":{
+      "type":"structure",
+      "members":{
+        "ErrorCode":{"shape":"String"},
+        "Message":{"shape":"SensitiveString"}
+      }
+    },
+    "EnvironmentResponse":{
+      "type":"structure",
+      "members":{
+        "Variables":{"shape":"EnvironmentVariables"},
+        "Error":{"shape":"EnvironmentError"}
+      }
+    },
+    "EnvironmentVariableName":{
+      "type":"string",
+      "pattern":"[a-zA-Z]([a-zA-Z0-9_])+",
+      "sensitive":true
+    },
+    "EnvironmentVariableValue":{
+      "type":"string",
+      "sensitive":true
+    },
+    "EnvironmentVariables":{
+      "type":"map",
+      "key":{"shape":"EnvironmentVariableName"},
+      "value":{"shape":"EnvironmentVariableValue"},
+      "sensitive":true
+    },
     "EventSourceMappingConfiguration":{
       "type":"structure",
       "members":{
         "UUID":{"shape":"String"},
         "BatchSize":{"shape":"BatchSize"},
+        "MaximumBatchingWindowInSeconds":{"shape":"MaximumBatchingWindowInSeconds"},
+        "ParallelizationFactor":{"shape":"ParallelizationFactor"},
         "EventSourceArn":{"shape":"Arn"},
         "FunctionArn":{"shape":"FunctionArn"},
         "LastModified":{"shape":"Date"},
         "LastProcessingResult":{"shape":"String"},
         "State":{"shape":"String"},
-        "StateTransitionReason":{"shape":"String"}
+        "StateTransitionReason":{"shape":"String"},
+        "DestinationConfig":{"shape":"DestinationConfig"},
+        "Topics":{"shape":"Topics"},
+        "MaximumRecordAgeInSeconds":{"shape":"MaximumRecordAgeInSeconds"},
+        "BisectBatchOnFunctionError":{"shape":"BisectBatchOnFunctionError"},
+        "MaximumRetryAttempts":{"shape":"MaximumRetryAttemptsEventSourceMapping"}
       }
     },
     "EventSourceMappingsList":{
@@ -654,7 +1349,8 @@
       "type":"string",
       "enum":[
         "TRIM_HORIZON",
-        "LATEST"
+        "LATEST",
+        "AT_TIMESTAMP"
       ]
     },
     "EventSourceToken":{
@@ -663,9 +1359,30 @@
       "min":0,
       "pattern":"[a-zA-Z0-9._\\-]+"
     },
+    "FileSystemArn":{
+      "type":"string",
+      "max":200,
+      "pattern":"arn:aws[a-zA-Z-]*:elasticfilesystem:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:\\d{12}:access-point/fsap-[a-f0-9]{17}"
+    },
+    "FileSystemConfig":{
+      "type":"structure",
+      "required":[
+        "Arn",
+        "LocalMountPath"
+      ],
+      "members":{
+        "Arn":{"shape":"FileSystemArn"},
+        "LocalMountPath":{"shape":"LocalMountPath"}
+      }
+    },
+    "FileSystemConfigList":{
+      "type":"list",
+      "member":{"shape":"FileSystemConfig"},
+      "max":1
+    },
     "FunctionArn":{
       "type":"string",
-      "pattern":"arn:aws:lambda:[a-z]{2}-[a-z]+-\\d{1}:\\d{12}:function:[a-zA-Z0-9-_]+(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+      "pattern":"arn:(aws[a-zA-Z-]*)?:lambda:[a-z]{2}(-gov)?-[a-z]+-\\d{1}:\\d{12}:function:[a-zA-Z0-9-_]+(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
     },
     "FunctionCode":{
       "type":"structure",
@@ -686,8 +1403,8 @@
     "FunctionConfiguration":{
       "type":"structure",
       "members":{
-        "FunctionName":{"shape":"FunctionName"},
-        "FunctionArn":{"shape":"FunctionArn"},
+        "FunctionName":{"shape":"NamespacedFunctionName"},
+        "FunctionArn":{"shape":"NameSpacedFunctionArn"},
         "Runtime":{"shape":"Runtime"},
         "Role":{"shape":"RoleArn"},
         "Handler":{"shape":"Handler"},
@@ -698,8 +1415,36 @@
         "LastModified":{"shape":"Timestamp"},
         "CodeSha256":{"shape":"String"},
         "Version":{"shape":"Version"},
-        "VpcConfig":{"shape":"VpcConfigResponse"}
+        "VpcConfig":{"shape":"VpcConfigResponse"},
+        "DeadLetterConfig":{"shape":"DeadLetterConfig"},
+        "Environment":{"shape":"EnvironmentResponse"},
+        "KMSKeyArn":{"shape":"KMSKeyArn"},
+        "TracingConfig":{"shape":"TracingConfigResponse"},
+        "MasterArn":{"shape":"FunctionArn"},
+        "RevisionId":{"shape":"String"},
+        "Layers":{"shape":"LayersReferenceList"},
+        "State":{"shape":"State"},
+        "StateReason":{"shape":"StateReason"},
+        "StateReasonCode":{"shape":"StateReasonCode"},
+        "LastUpdateStatus":{"shape":"LastUpdateStatus"},
+        "LastUpdateStatusReason":{"shape":"LastUpdateStatusReason"},
+        "LastUpdateStatusReasonCode":{"shape":"LastUpdateStatusReasonCode"},
+        "FileSystemConfigs":{"shape":"FileSystemConfigList"}
       }
+    },
+    "FunctionEventInvokeConfig":{
+      "type":"structure",
+      "members":{
+        "LastModified":{"shape":"Date"},
+        "FunctionArn":{"shape":"FunctionArn"},
+        "MaximumRetryAttempts":{"shape":"MaximumRetryAttempts"},
+        "MaximumEventAgeInSeconds":{"shape":"MaximumEventAgeInSeconds"},
+        "DestinationConfig":{"shape":"DestinationConfig"}
+      }
+    },
+    "FunctionEventInvokeConfigList":{
+      "type":"list",
+      "member":{"shape":"FunctionEventInvokeConfig"}
     },
     "FunctionList":{
       "type":"list",
@@ -709,7 +1454,23 @@
       "type":"string",
       "max":140,
       "min":1,
-      "pattern":"(arn:aws:lambda:)?([a-z]{2}-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+      "pattern":"(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}(-gov)?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+    },
+    "FunctionVersion":{
+      "type":"string",
+      "enum":["ALL"]
+    },
+    "GetAccountSettingsRequest":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "GetAccountSettingsResponse":{
+      "type":"structure",
+      "members":{
+        "AccountLimit":{"shape":"AccountLimit"},
+        "AccountUsage":{"shape":"AccountUsage"}
+      }
     },
     "GetAliasRequest":{
       "type":"structure",
@@ -741,7 +1502,40 @@
         }
       }
     },
+    "GetFunctionConcurrencyRequest":{
+      "type":"structure",
+      "required":["FunctionName"],
+      "members":{
+        "FunctionName":{
+          "shape":"FunctionName",
+          "location":"uri",
+          "locationName":"FunctionName"
+        }
+      }
+    },
+    "GetFunctionConcurrencyResponse":{
+      "type":"structure",
+      "members":{
+        "ReservedConcurrentExecutions":{"shape":"ReservedConcurrentExecutions"}
+      }
+    },
     "GetFunctionConfigurationRequest":{
+      "type":"structure",
+      "required":["FunctionName"],
+      "members":{
+        "FunctionName":{
+          "shape":"NamespacedFunctionName",
+          "location":"uri",
+          "locationName":"FunctionName"
+        },
+        "Qualifier":{
+          "shape":"Qualifier",
+          "location":"querystring",
+          "locationName":"Qualifier"
+        }
+      }
+    },
+    "GetFunctionEventInvokeConfigRequest":{
       "type":"structure",
       "required":["FunctionName"],
       "members":{
@@ -762,7 +1556,7 @@
       "required":["FunctionName"],
       "members":{
         "FunctionName":{
-          "shape":"FunctionName",
+          "shape":"NamespacedFunctionName",
           "location":"uri",
           "locationName":"FunctionName"
         },
@@ -777,7 +1571,78 @@
       "type":"structure",
       "members":{
         "Configuration":{"shape":"FunctionConfiguration"},
-        "Code":{"shape":"FunctionCodeLocation"}
+        "Code":{"shape":"FunctionCodeLocation"},
+        "Tags":{"shape":"Tags"},
+        "Concurrency":{"shape":"Concurrency"}
+      }
+    },
+    "GetLayerVersionByArnRequest":{
+      "type":"structure",
+      "required":["Arn"],
+      "members":{
+        "Arn":{
+          "shape":"LayerVersionArn",
+          "location":"querystring",
+          "locationName":"Arn"
+        }
+      }
+    },
+    "GetLayerVersionPolicyRequest":{
+      "type":"structure",
+      "required":[
+        "LayerName",
+        "VersionNumber"
+      ],
+      "members":{
+        "LayerName":{
+          "shape":"LayerName",
+          "location":"uri",
+          "locationName":"LayerName"
+        },
+        "VersionNumber":{
+          "shape":"LayerVersionNumber",
+          "location":"uri",
+          "locationName":"VersionNumber"
+        }
+      }
+    },
+    "GetLayerVersionPolicyResponse":{
+      "type":"structure",
+      "members":{
+        "Policy":{"shape":"String"},
+        "RevisionId":{"shape":"String"}
+      }
+    },
+    "GetLayerVersionRequest":{
+      "type":"structure",
+      "required":[
+        "LayerName",
+        "VersionNumber"
+      ],
+      "members":{
+        "LayerName":{
+          "shape":"LayerName",
+          "location":"uri",
+          "locationName":"LayerName"
+        },
+        "VersionNumber":{
+          "shape":"LayerVersionNumber",
+          "location":"uri",
+          "locationName":"VersionNumber"
+        }
+      }
+    },
+    "GetLayerVersionResponse":{
+      "type":"structure",
+      "members":{
+        "Content":{"shape":"LayerVersionContentOutput"},
+        "LayerArn":{"shape":"LayerArn"},
+        "LayerVersionArn":{"shape":"LayerVersionArn"},
+        "Description":{"shape":"Description"},
+        "CreatedDate":{"shape":"Timestamp"},
+        "Version":{"shape":"LayerVersionNumber"},
+        "CompatibleRuntimes":{"shape":"CompatibleRuntimes"},
+        "LicenseInfo":{"shape":"LicenseInfo"}
       }
     },
     "GetPolicyRequest":{
@@ -785,7 +1650,7 @@
       "required":["FunctionName"],
       "members":{
         "FunctionName":{
-          "shape":"FunctionName",
+          "shape":"NamespacedFunctionName",
           "location":"uri",
           "locationName":"FunctionName"
         },
@@ -799,7 +1664,38 @@
     "GetPolicyResponse":{
       "type":"structure",
       "members":{
-        "Policy":{"shape":"String"}
+        "Policy":{"shape":"String"},
+        "RevisionId":{"shape":"String"}
+      }
+    },
+    "GetProvisionedConcurrencyConfigRequest":{
+      "type":"structure",
+      "required":[
+        "FunctionName",
+        "Qualifier"
+      ],
+      "members":{
+        "FunctionName":{
+          "shape":"FunctionName",
+          "location":"uri",
+          "locationName":"FunctionName"
+        },
+        "Qualifier":{
+          "shape":"Qualifier",
+          "location":"querystring",
+          "locationName":"Qualifier"
+        }
+      }
+    },
+    "GetProvisionedConcurrencyConfigResponse":{
+      "type":"structure",
+      "members":{
+        "RequestedProvisionedConcurrentExecutions":{"shape":"PositiveInteger"},
+        "AvailableProvisionedConcurrentExecutions":{"shape":"NonNegativeInteger"},
+        "AllocatedProvisionedConcurrentExecutions":{"shape":"NonNegativeInteger"},
+        "Status":{"shape":"ProvisionedConcurrencyStatusEnum"},
+        "StatusReason":{"shape":"String"},
+        "LastModified":{"shape":"Timestamp"}
       }
     },
     "Handler":{
@@ -825,6 +1721,15 @@
         "message":{"shape":"String"}
       },
       "error":{"httpStatusCode":400},
+      "exception":true
+    },
+    "InvalidRuntimeException":{
+      "type":"structure",
+      "members":{
+        "Type":{"shape":"String"},
+        "Message":{"shape":"String"}
+      },
+      "error":{"httpStatusCode":502},
       "exception":true
     },
     "InvalidSecurityGroupIDException":{
@@ -859,7 +1764,7 @@
       "required":["FunctionName"],
       "members":{
         "FunctionName":{
-          "shape":"FunctionName",
+          "shape":"NamespacedFunctionName",
           "location":"uri",
           "locationName":"FunctionName"
         },
@@ -904,7 +1809,12 @@
           "location":"header",
           "locationName":"X-Amz-Log-Result"
         },
-        "Payload":{"shape":"Blob"}
+        "Payload":{"shape":"Blob"},
+        "ExecutedVersion":{
+          "shape":"Version",
+          "location":"header",
+          "locationName":"X-Amz-Executed-Version"
+        }
       },
       "payload":"Payload"
     },
@@ -924,7 +1834,7 @@
       ],
       "members":{
         "FunctionName":{
-          "shape":"FunctionName",
+          "shape":"NamespacedFunctionName",
           "location":"uri",
           "locationName":"FunctionName"
         },
@@ -942,6 +1852,157 @@
         }
       },
       "deprecated":true
+    },
+    "KMSAccessDeniedException":{
+      "type":"structure",
+      "members":{
+        "Type":{"shape":"String"},
+        "Message":{"shape":"String"}
+      },
+      "error":{"httpStatusCode":502},
+      "exception":true
+    },
+    "KMSDisabledException":{
+      "type":"structure",
+      "members":{
+        "Type":{"shape":"String"},
+        "Message":{"shape":"String"}
+      },
+      "error":{"httpStatusCode":502},
+      "exception":true
+    },
+    "KMSInvalidStateException":{
+      "type":"structure",
+      "members":{
+        "Type":{"shape":"String"},
+        "Message":{"shape":"String"}
+      },
+      "error":{"httpStatusCode":502},
+      "exception":true
+    },
+    "KMSKeyArn":{
+      "type":"string",
+      "pattern":"(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()"
+    },
+    "KMSNotFoundException":{
+      "type":"structure",
+      "members":{
+        "Type":{"shape":"String"},
+        "Message":{"shape":"String"}
+      },
+      "error":{"httpStatusCode":502},
+      "exception":true
+    },
+    "LastUpdateStatus":{
+      "type":"string",
+      "enum":[
+        "Successful",
+        "Failed",
+        "InProgress"
+      ]
+    },
+    "LastUpdateStatusReason":{"type":"string"},
+    "LastUpdateStatusReasonCode":{
+      "type":"string",
+      "enum":[
+        "EniLimitExceeded",
+        "InsufficientRolePermissions",
+        "InvalidConfiguration",
+        "InternalError",
+        "SubnetOutOfIPAddresses",
+        "InvalidSubnet",
+        "InvalidSecurityGroup"
+      ]
+    },
+    "Layer":{
+      "type":"structure",
+      "members":{
+        "Arn":{"shape":"LayerVersionArn"},
+        "CodeSize":{"shape":"Long"}
+      }
+    },
+    "LayerArn":{
+      "type":"string",
+      "max":140,
+      "min":1,
+      "pattern":"arn:[a-zA-Z0-9-]+:lambda:[a-zA-Z0-9-]+:\\d{12}:layer:[a-zA-Z0-9-_]+"
+    },
+    "LayerList":{
+      "type":"list",
+      "member":{"shape":"LayerVersionArn"}
+    },
+    "LayerName":{
+      "type":"string",
+      "max":140,
+      "min":1,
+      "pattern":"(arn:[a-zA-Z0-9-]+:lambda:[a-zA-Z0-9-]+:\\d{12}:layer:[a-zA-Z0-9-_]+)|[a-zA-Z0-9-_]+"
+    },
+    "LayerPermissionAllowedAction":{
+      "type":"string",
+      "pattern":"lambda:GetLayerVersion"
+    },
+    "LayerPermissionAllowedPrincipal":{
+      "type":"string",
+      "pattern":"\\d{12}|\\*|arn:(aws[a-zA-Z-]*):iam::\\d{12}:root"
+    },
+    "LayerVersionArn":{
+      "type":"string",
+      "max":140,
+      "min":1,
+      "pattern":"arn:[a-zA-Z0-9-]+:lambda:[a-zA-Z0-9-]+:\\d{12}:layer:[a-zA-Z0-9-_]+:[0-9]+"
+    },
+    "LayerVersionContentInput":{
+      "type":"structure",
+      "members":{
+        "S3Bucket":{"shape":"S3Bucket"},
+        "S3Key":{"shape":"S3Key"},
+        "S3ObjectVersion":{"shape":"S3ObjectVersion"},
+        "ZipFile":{"shape":"Blob"}
+      }
+    },
+    "LayerVersionContentOutput":{
+      "type":"structure",
+      "members":{
+        "Location":{"shape":"String"},
+        "CodeSha256":{"shape":"String"},
+        "CodeSize":{"shape":"Long"}
+      }
+    },
+    "LayerVersionNumber":{"type":"long"},
+    "LayerVersionsList":{
+      "type":"list",
+      "member":{"shape":"LayerVersionsListItem"}
+    },
+    "LayerVersionsListItem":{
+      "type":"structure",
+      "members":{
+        "LayerVersionArn":{"shape":"LayerVersionArn"},
+        "Version":{"shape":"LayerVersionNumber"},
+        "Description":{"shape":"Description"},
+        "CreatedDate":{"shape":"Timestamp"},
+        "CompatibleRuntimes":{"shape":"CompatibleRuntimes"},
+        "LicenseInfo":{"shape":"LicenseInfo"}
+      }
+    },
+    "LayersList":{
+      "type":"list",
+      "member":{"shape":"LayersListItem"}
+    },
+    "LayersListItem":{
+      "type":"structure",
+      "members":{
+        "LayerName":{"shape":"LayerName"},
+        "LayerArn":{"shape":"LayerArn"},
+        "LatestMatchingVersion":{"shape":"LayerVersionsListItem"}
+      }
+    },
+    "LayersReferenceList":{
+      "type":"list",
+      "member":{"shape":"Layer"}
+    },
+    "LicenseInfo":{
+      "type":"string",
+      "max":512
     },
     "ListAliasesRequest":{
       "type":"structure",
@@ -1008,9 +2069,47 @@
         "EventSourceMappings":{"shape":"EventSourceMappingsList"}
       }
     },
+    "ListFunctionEventInvokeConfigsRequest":{
+      "type":"structure",
+      "required":["FunctionName"],
+      "members":{
+        "FunctionName":{
+          "shape":"FunctionName",
+          "location":"uri",
+          "locationName":"FunctionName"
+        },
+        "Marker":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"Marker"
+        },
+        "MaxItems":{
+          "shape":"MaxFunctionEventInvokeConfigListItems",
+          "location":"querystring",
+          "locationName":"MaxItems"
+        }
+      }
+    },
+    "ListFunctionEventInvokeConfigsResponse":{
+      "type":"structure",
+      "members":{
+        "FunctionEventInvokeConfigs":{"shape":"FunctionEventInvokeConfigList"},
+        "NextMarker":{"shape":"String"}
+      }
+    },
     "ListFunctionsRequest":{
       "type":"structure",
       "members":{
+        "MasterRegion":{
+          "shape":"MasterRegion",
+          "location":"querystring",
+          "locationName":"MasterRegion"
+        },
+        "FunctionVersion":{
+          "shape":"FunctionVersion",
+          "location":"querystring",
+          "locationName":"FunctionVersion"
+        },
         "Marker":{
           "shape":"String",
           "location":"querystring",
@@ -1030,12 +2129,117 @@
         "Functions":{"shape":"FunctionList"}
       }
     },
-    "ListVersionsByFunctionRequest":{
+    "ListLayerVersionsRequest":{
+      "type":"structure",
+      "required":["LayerName"],
+      "members":{
+        "CompatibleRuntime":{
+          "shape":"Runtime",
+          "location":"querystring",
+          "locationName":"CompatibleRuntime"
+        },
+        "LayerName":{
+          "shape":"LayerName",
+          "location":"uri",
+          "locationName":"LayerName"
+        },
+        "Marker":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"Marker"
+        },
+        "MaxItems":{
+          "shape":"MaxLayerListItems",
+          "location":"querystring",
+          "locationName":"MaxItems"
+        }
+      }
+    },
+    "ListLayerVersionsResponse":{
+      "type":"structure",
+      "members":{
+        "NextMarker":{"shape":"String"},
+        "LayerVersions":{"shape":"LayerVersionsList"}
+      }
+    },
+    "ListLayersRequest":{
+      "type":"structure",
+      "members":{
+        "CompatibleRuntime":{
+          "shape":"Runtime",
+          "location":"querystring",
+          "locationName":"CompatibleRuntime"
+        },
+        "Marker":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"Marker"
+        },
+        "MaxItems":{
+          "shape":"MaxLayerListItems",
+          "location":"querystring",
+          "locationName":"MaxItems"
+        }
+      }
+    },
+    "ListLayersResponse":{
+      "type":"structure",
+      "members":{
+        "NextMarker":{"shape":"String"},
+        "Layers":{"shape":"LayersList"}
+      }
+    },
+    "ListProvisionedConcurrencyConfigsRequest":{
       "type":"structure",
       "required":["FunctionName"],
       "members":{
         "FunctionName":{
           "shape":"FunctionName",
+          "location":"uri",
+          "locationName":"FunctionName"
+        },
+        "Marker":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"Marker"
+        },
+        "MaxItems":{
+          "shape":"MaxProvisionedConcurrencyConfigListItems",
+          "location":"querystring",
+          "locationName":"MaxItems"
+        }
+      }
+    },
+    "ListProvisionedConcurrencyConfigsResponse":{
+      "type":"structure",
+      "members":{
+        "ProvisionedConcurrencyConfigs":{"shape":"ProvisionedConcurrencyConfigList"},
+        "NextMarker":{"shape":"String"}
+      }
+    },
+    "ListTagsRequest":{
+      "type":"structure",
+      "required":["Resource"],
+      "members":{
+        "Resource":{
+          "shape":"FunctionArn",
+          "location":"uri",
+          "locationName":"ARN"
+        }
+      }
+    },
+    "ListTagsResponse":{
+      "type":"structure",
+      "members":{
+        "Tags":{"shape":"Tags"}
+      }
+    },
+    "ListVersionsByFunctionRequest":{
+      "type":"structure",
+      "required":["FunctionName"],
+      "members":{
+        "FunctionName":{
+          "shape":"NamespacedFunctionName",
           "location":"uri",
           "locationName":"FunctionName"
         },
@@ -1058,6 +2262,11 @@
         "Versions":{"shape":"FunctionList"}
       }
     },
+    "LocalMountPath":{
+      "type":"string",
+      "max":160,
+      "pattern":"^/mnt/[a-zA-Z0-9-_.]+$"
+    },
     "LogType":{
       "type":"string",
       "enum":[
@@ -1066,15 +2275,100 @@
       ]
     },
     "Long":{"type":"long"},
+    "MasterRegion":{
+      "type":"string",
+      "pattern":"ALL|[a-z]{2}(-gov)?-[a-z]+-\\d{1}"
+    },
+    "MaxFunctionEventInvokeConfigListItems":{
+      "type":"integer",
+      "max":50,
+      "min":1
+    },
+    "MaxLayerListItems":{
+      "type":"integer",
+      "max":50,
+      "min":1
+    },
     "MaxListItems":{
       "type":"integer",
       "max":10000,
       "min":1
     },
+    "MaxProvisionedConcurrencyConfigListItems":{
+      "type":"integer",
+      "max":50,
+      "min":1
+    },
+    "MaximumBatchingWindowInSeconds":{
+      "type":"integer",
+      "max":300,
+      "min":0
+    },
+    "MaximumEventAgeInSeconds":{
+      "type":"integer",
+      "max":21600,
+      "min":60
+    },
+    "MaximumRecordAgeInSeconds":{
+      "type":"integer",
+      "max":604800,
+      "min":-1
+    },
+    "MaximumRetryAttempts":{
+      "type":"integer",
+      "max":2,
+      "min":0
+    },
+    "MaximumRetryAttemptsEventSourceMapping":{
+      "type":"integer",
+      "max":10000,
+      "min":-1
+    },
     "MemorySize":{
       "type":"integer",
-      "max":1536,
+      "max":3008,
       "min":128
+    },
+    "NameSpacedFunctionArn":{
+      "type":"string",
+      "pattern":"arn:(aws[a-zA-Z-]*)?:lambda:[a-z]{2}(-gov)?-[a-z]+-\\d{1}:\\d{12}:function:[a-zA-Z0-9-_\\.]+(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+    },
+    "NamespacedFunctionName":{
+      "type":"string",
+      "max":170,
+      "min":1,
+      "pattern":"(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}(-gov)?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_\\.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+    },
+    "NamespacedStatementId":{
+      "type":"string",
+      "max":100,
+      "min":1,
+      "pattern":"([a-zA-Z0-9-_.]+)"
+    },
+    "NonNegativeInteger":{
+      "type":"integer",
+      "min":0
+    },
+    "OnFailure":{
+      "type":"structure",
+      "members":{
+        "Destination":{"shape":"DestinationArn"}
+      }
+    },
+    "OnSuccess":{
+      "type":"structure",
+      "members":{
+        "Destination":{"shape":"DestinationArn"}
+      }
+    },
+    "OrganizationId":{
+      "type":"string",
+      "pattern":"o-[a-z0-9]{10,32}"
+    },
+    "ParallelizationFactor":{
+      "type":"integer",
+      "max":10,
+      "min":1
     },
     "PolicyLengthExceededException":{
       "type":"structure",
@@ -1085,9 +2379,86 @@
       "error":{"httpStatusCode":400},
       "exception":true
     },
+    "PositiveInteger":{
+      "type":"integer",
+      "min":1
+    },
+    "PreconditionFailedException":{
+      "type":"structure",
+      "members":{
+        "Type":{"shape":"String"},
+        "message":{"shape":"String"}
+      },
+      "error":{"httpStatusCode":412},
+      "exception":true
+    },
     "Principal":{
       "type":"string",
       "pattern":".*"
+    },
+    "ProvisionedConcurrencyConfigList":{
+      "type":"list",
+      "member":{"shape":"ProvisionedConcurrencyConfigListItem"}
+    },
+    "ProvisionedConcurrencyConfigListItem":{
+      "type":"structure",
+      "members":{
+        "FunctionArn":{"shape":"FunctionArn"},
+        "RequestedProvisionedConcurrentExecutions":{"shape":"PositiveInteger"},
+        "AvailableProvisionedConcurrentExecutions":{"shape":"NonNegativeInteger"},
+        "AllocatedProvisionedConcurrentExecutions":{"shape":"NonNegativeInteger"},
+        "Status":{"shape":"ProvisionedConcurrencyStatusEnum"},
+        "StatusReason":{"shape":"String"},
+        "LastModified":{"shape":"Timestamp"}
+      }
+    },
+    "ProvisionedConcurrencyConfigNotFoundException":{
+      "type":"structure",
+      "members":{
+        "Type":{"shape":"String"},
+        "message":{"shape":"String"}
+      },
+      "error":{"httpStatusCode":404},
+      "exception":true
+    },
+    "ProvisionedConcurrencyStatusEnum":{
+      "type":"string",
+      "enum":[
+        "IN_PROGRESS",
+        "READY",
+        "FAILED"
+      ]
+    },
+    "PublishLayerVersionRequest":{
+      "type":"structure",
+      "required":[
+        "LayerName",
+        "Content"
+      ],
+      "members":{
+        "LayerName":{
+          "shape":"LayerName",
+          "location":"uri",
+          "locationName":"LayerName"
+        },
+        "Description":{"shape":"Description"},
+        "Content":{"shape":"LayerVersionContentInput"},
+        "CompatibleRuntimes":{"shape":"CompatibleRuntimes"},
+        "LicenseInfo":{"shape":"LicenseInfo"}
+      }
+    },
+    "PublishLayerVersionResponse":{
+      "type":"structure",
+      "members":{
+        "Content":{"shape":"LayerVersionContentOutput"},
+        "LayerArn":{"shape":"LayerArn"},
+        "LayerVersionArn":{"shape":"LayerVersionArn"},
+        "Description":{"shape":"Description"},
+        "CreatedDate":{"shape":"Timestamp"},
+        "Version":{"shape":"LayerVersionNumber"},
+        "CompatibleRuntimes":{"shape":"CompatibleRuntimes"},
+        "LicenseInfo":{"shape":"LicenseInfo"}
+      }
     },
     "PublishVersionRequest":{
       "type":"structure",
@@ -1099,7 +2470,74 @@
           "locationName":"FunctionName"
         },
         "CodeSha256":{"shape":"String"},
-        "Description":{"shape":"Description"}
+        "Description":{"shape":"Description"},
+        "RevisionId":{"shape":"String"}
+      }
+    },
+    "PutFunctionConcurrencyRequest":{
+      "type":"structure",
+      "required":[
+        "FunctionName",
+        "ReservedConcurrentExecutions"
+      ],
+      "members":{
+        "FunctionName":{
+          "shape":"FunctionName",
+          "location":"uri",
+          "locationName":"FunctionName"
+        },
+        "ReservedConcurrentExecutions":{"shape":"ReservedConcurrentExecutions"}
+      }
+    },
+    "PutFunctionEventInvokeConfigRequest":{
+      "type":"structure",
+      "required":["FunctionName"],
+      "members":{
+        "FunctionName":{
+          "shape":"FunctionName",
+          "location":"uri",
+          "locationName":"FunctionName"
+        },
+        "Qualifier":{
+          "shape":"Qualifier",
+          "location":"querystring",
+          "locationName":"Qualifier"
+        },
+        "MaximumRetryAttempts":{"shape":"MaximumRetryAttempts"},
+        "MaximumEventAgeInSeconds":{"shape":"MaximumEventAgeInSeconds"},
+        "DestinationConfig":{"shape":"DestinationConfig"}
+      }
+    },
+    "PutProvisionedConcurrencyConfigRequest":{
+      "type":"structure",
+      "required":[
+        "FunctionName",
+        "Qualifier",
+        "ProvisionedConcurrentExecutions"
+      ],
+      "members":{
+        "FunctionName":{
+          "shape":"FunctionName",
+          "location":"uri",
+          "locationName":"FunctionName"
+        },
+        "Qualifier":{
+          "shape":"Qualifier",
+          "location":"querystring",
+          "locationName":"Qualifier"
+        },
+        "ProvisionedConcurrentExecutions":{"shape":"PositiveInteger"}
+      }
+    },
+    "PutProvisionedConcurrencyConfigResponse":{
+      "type":"structure",
+      "members":{
+        "RequestedProvisionedConcurrentExecutions":{"shape":"PositiveInteger"},
+        "AvailableProvisionedConcurrentExecutions":{"shape":"NonNegativeInteger"},
+        "AllocatedProvisionedConcurrentExecutions":{"shape":"NonNegativeInteger"},
+        "Status":{"shape":"ProvisionedConcurrencyStatusEnum"},
+        "StatusReason":{"shape":"String"},
+        "LastModified":{"shape":"Timestamp"}
       }
     },
     "Qualifier":{
@@ -1107,6 +2545,36 @@
       "max":128,
       "min":1,
       "pattern":"(|[a-zA-Z0-9$_-]+)"
+    },
+    "RemoveLayerVersionPermissionRequest":{
+      "type":"structure",
+      "required":[
+        "LayerName",
+        "VersionNumber",
+        "StatementId"
+      ],
+      "members":{
+        "LayerName":{
+          "shape":"LayerName",
+          "location":"uri",
+          "locationName":"LayerName"
+        },
+        "VersionNumber":{
+          "shape":"LayerVersionNumber",
+          "location":"uri",
+          "locationName":"VersionNumber"
+        },
+        "StatementId":{
+          "shape":"StatementId",
+          "location":"uri",
+          "locationName":"StatementId"
+        },
+        "RevisionId":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"RevisionId"
+        }
+      }
     },
     "RemovePermissionRequest":{
       "type":"structure",
@@ -1121,7 +2589,7 @@
           "locationName":"FunctionName"
         },
         "StatementId":{
-          "shape":"StatementId",
+          "shape":"NamespacedStatementId",
           "location":"uri",
           "locationName":"StatementId"
         },
@@ -1129,6 +2597,11 @@
           "shape":"Qualifier",
           "location":"querystring",
           "locationName":"Qualifier"
+        },
+        "RevisionId":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"RevisionId"
         }
       }
     },
@@ -1141,6 +2614,14 @@
       "error":{"httpStatusCode":413},
       "exception":true
     },
+    "ReservedConcurrentExecutions":{
+      "type":"integer",
+      "min":0
+    },
+    "ResourceArn":{
+      "type":"string",
+      "pattern":"(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()"
+    },
     "ResourceConflictException":{
       "type":"structure",
       "members":{
@@ -1148,6 +2629,15 @@
         "message":{"shape":"String"}
       },
       "error":{"httpStatusCode":409},
+      "exception":true
+    },
+    "ResourceInUseException":{
+      "type":"structure",
+      "members":{
+        "Type":{"shape":"String"},
+        "Message":{"shape":"String"}
+      },
+      "error":{"httpStatusCode":400},
       "exception":true
     },
     "ResourceNotFoundException":{
@@ -1159,17 +2649,45 @@
       "error":{"httpStatusCode":404},
       "exception":true
     },
+    "ResourceNotReadyException":{
+      "type":"structure",
+      "members":{
+        "Type":{"shape":"String"},
+        "message":{"shape":"String"}
+      },
+      "error":{"httpStatusCode":502},
+      "exception":true
+    },
     "RoleArn":{
       "type":"string",
-      "pattern":"arn:aws:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+"
+      "pattern":"arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+"
     },
     "Runtime":{
       "type":"string",
       "enum":[
         "nodejs",
         "nodejs4.3",
+        "nodejs6.10",
+        "nodejs8.10",
+        "nodejs10.x",
+        "nodejs12.x",
         "java8",
-        "python2.7"
+        "java8.al2",
+        "java11",
+        "python2.7",
+        "python3.6",
+        "python3.7",
+        "python3.8",
+        "dotnetcore1.0",
+        "dotnetcore2.0",
+        "dotnetcore2.1",
+        "dotnetcore3.1",
+        "nodejs4.3-edge",
+        "go1.x",
+        "ruby2.5",
+        "ruby2.7",
+        "provided",
+        "provided.al2"
       ]
     },
     "S3Bucket":{
@@ -1194,6 +2712,10 @@
       "member":{"shape":"SecurityGroupId"},
       "max":5
     },
+    "SensitiveString":{
+      "type":"string",
+      "sensitive":true
+    },
     "ServiceException":{
       "type":"structure",
       "members":{
@@ -1206,6 +2728,31 @@
     "SourceOwner":{
       "type":"string",
       "pattern":"\\d{12}"
+    },
+    "State":{
+      "type":"string",
+      "enum":[
+        "Pending",
+        "Active",
+        "Inactive",
+        "Failed"
+      ]
+    },
+    "StateReason":{"type":"string"},
+    "StateReasonCode":{
+      "type":"string",
+      "enum":[
+        "Idle",
+        "Creating",
+        "Restoring",
+        "EniLimitExceeded",
+        "InsufficientRolePermissions",
+        "InvalidConfiguration",
+        "InternalError",
+        "SubnetOutOfIPAddresses",
+        "InvalidSubnet",
+        "InvalidSecurityGroup"
+      ]
     },
     "StatementId":{
       "type":"string",
@@ -1229,11 +2776,39 @@
       "member":{"shape":"SubnetId"},
       "max":16
     },
+    "TagKey":{"type":"string"},
+    "TagKeyList":{
+      "type":"list",
+      "member":{"shape":"TagKey"}
+    },
+    "TagResourceRequest":{
+      "type":"structure",
+      "required":[
+        "Resource",
+        "Tags"
+      ],
+      "members":{
+        "Resource":{
+          "shape":"FunctionArn",
+          "location":"uri",
+          "locationName":"ARN"
+        },
+        "Tags":{"shape":"Tags"}
+      }
+    },
+    "TagValue":{"type":"string"},
+    "Tags":{
+      "type":"map",
+      "key":{"shape":"TagKey"},
+      "value":{"shape":"TagValue"}
+    },
     "ThrottleReason":{
       "type":"string",
       "enum":[
         "ConcurrentInvocationLimitExceeded",
         "FunctionInvocationRateLimitExceeded",
+        "ReservedFunctionConcurrentInvocationLimitExceeded",
+        "ReservedFunctionInvocationRateLimitExceeded",
         "CallerRateLimitExceeded"
       ]
     },
@@ -1257,6 +2832,41 @@
       "error":{"httpStatusCode":429},
       "exception":true
     },
+    "Topic":{
+      "type":"string",
+      "max":249,
+      "min":1,
+      "pattern":"^[^.]([a-zA-Z0-9\\-_.]+)"
+    },
+    "Topics":{
+      "type":"list",
+      "member":{"shape":"Topic"},
+      "max":1,
+      "min":1
+    },
+    "TracingConfig":{
+      "type":"structure",
+      "members":{
+        "Mode":{"shape":"TracingMode"}
+      }
+    },
+    "TracingConfigResponse":{
+      "type":"structure",
+      "members":{
+        "Mode":{"shape":"TracingMode"}
+      }
+    },
+    "TracingMode":{
+      "type":"string",
+      "enum":[
+        "Active",
+        "PassThrough"
+      ]
+    },
+    "UnreservedConcurrentExecutions":{
+      "type":"integer",
+      "min":0
+    },
     "UnsupportedMediaTypeException":{
       "type":"structure",
       "members":{
@@ -1265,6 +2875,25 @@
       },
       "error":{"httpStatusCode":415},
       "exception":true
+    },
+    "UntagResourceRequest":{
+      "type":"structure",
+      "required":[
+        "Resource",
+        "TagKeys"
+      ],
+      "members":{
+        "Resource":{
+          "shape":"FunctionArn",
+          "location":"uri",
+          "locationName":"ARN"
+        },
+        "TagKeys":{
+          "shape":"TagKeyList",
+          "location":"querystring",
+          "locationName":"tagKeys"
+        }
+      }
     },
     "UpdateAliasRequest":{
       "type":"structure",
@@ -1284,7 +2913,9 @@
           "locationName":"Name"
         },
         "FunctionVersion":{"shape":"Version"},
-        "Description":{"shape":"Description"}
+        "Description":{"shape":"Description"},
+        "RoutingConfig":{"shape":"AliasRoutingConfiguration"},
+        "RevisionId":{"shape":"String"}
       }
     },
     "UpdateEventSourceMappingRequest":{
@@ -1298,7 +2929,13 @@
         },
         "FunctionName":{"shape":"FunctionName"},
         "Enabled":{"shape":"Enabled"},
-        "BatchSize":{"shape":"BatchSize"}
+        "BatchSize":{"shape":"BatchSize"},
+        "MaximumBatchingWindowInSeconds":{"shape":"MaximumBatchingWindowInSeconds"},
+        "DestinationConfig":{"shape":"DestinationConfig"},
+        "MaximumRecordAgeInSeconds":{"shape":"MaximumRecordAgeInSeconds"},
+        "BisectBatchOnFunctionError":{"shape":"BisectBatchOnFunctionError"},
+        "MaximumRetryAttempts":{"shape":"MaximumRetryAttemptsEventSourceMapping"},
+        "ParallelizationFactor":{"shape":"ParallelizationFactor"}
       }
     },
     "UpdateFunctionCodeRequest":{
@@ -1314,7 +2951,9 @@
         "S3Bucket":{"shape":"S3Bucket"},
         "S3Key":{"shape":"S3Key"},
         "S3ObjectVersion":{"shape":"S3ObjectVersion"},
-        "Publish":{"shape":"Boolean"}
+        "Publish":{"shape":"Boolean"},
+        "DryRun":{"shape":"Boolean"},
+        "RevisionId":{"shape":"String"}
       }
     },
     "UpdateFunctionConfigurationRequest":{
@@ -1332,7 +2971,33 @@
         "Timeout":{"shape":"Timeout"},
         "MemorySize":{"shape":"MemorySize"},
         "VpcConfig":{"shape":"VpcConfig"},
-        "Runtime":{"shape":"Runtime"}
+        "Environment":{"shape":"Environment"},
+        "Runtime":{"shape":"Runtime"},
+        "DeadLetterConfig":{"shape":"DeadLetterConfig"},
+        "KMSKeyArn":{"shape":"KMSKeyArn"},
+        "TracingConfig":{"shape":"TracingConfig"},
+        "RevisionId":{"shape":"String"},
+        "Layers":{"shape":"LayerList"},
+        "FileSystemConfigs":{"shape":"FileSystemConfigList"}
+      }
+    },
+    "UpdateFunctionEventInvokeConfigRequest":{
+      "type":"structure",
+      "required":["FunctionName"],
+      "members":{
+        "FunctionName":{
+          "shape":"FunctionName",
+          "location":"uri",
+          "locationName":"FunctionName"
+        },
+        "Qualifier":{
+          "shape":"Qualifier",
+          "location":"querystring",
+          "locationName":"Qualifier"
+        },
+        "MaximumRetryAttempts":{"shape":"MaximumRetryAttempts"},
+        "MaximumEventAgeInSeconds":{"shape":"MaximumEventAgeInSeconds"},
+        "DestinationConfig":{"shape":"DestinationConfig"}
       }
     },
     "Version":{
@@ -1356,6 +3021,11 @@
         "VpcId":{"shape":"VpcId"}
       }
     },
-    "VpcId":{"type":"string"}
+    "VpcId":{"type":"string"},
+    "Weight":{
+      "type":"double",
+      "max":1.0,
+      "min":0.0
+    }
   }
 }

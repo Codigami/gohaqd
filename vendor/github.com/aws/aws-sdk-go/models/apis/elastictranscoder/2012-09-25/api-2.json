@@ -5,7 +5,9 @@
     "endpointPrefix":"elastictranscoder",
     "protocol":"rest-json",
     "serviceFullName":"Amazon Elastic Transcoder",
-    "signatureVersion":"v4"
+    "serviceId":"Elastic Transcoder",
+    "signatureVersion":"v4",
+    "uid":"elastictranscoder-2012-09-25"
   },
   "operations":{
     "CancelJob":{
@@ -239,7 +241,8 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"AccessDeniedException"},
         {"shape":"InternalServiceException"}
-      ]
+      ],
+      "deprecated":true
     },
     "UpdatePipeline":{
       "name":"UpdatePipeline",
@@ -458,8 +461,14 @@
     "Captions":{
       "type":"structure",
       "members":{
-        "MergePolicy":{"shape":"CaptionMergePolicy"},
-        "CaptionSources":{"shape":"CaptionSources"},
+        "MergePolicy":{
+          "shape":"CaptionMergePolicy",
+          "deprecated":true
+        },
+        "CaptionSources":{
+          "shape":"CaptionSources",
+          "deprecated":true
+        },
         "CaptionFormats":{"shape":"CaptionFormats"}
       }
     },
@@ -467,7 +476,8 @@
       "type":"structure",
       "members":{
         "TimeSpan":{"shape":"TimeSpan"}
-      }
+      },
+      "deprecated":true
     },
     "CodecOption":{
       "type":"string",
@@ -482,7 +492,8 @@
     },
     "Composition":{
       "type":"list",
-      "member":{"shape":"Clip"}
+      "member":{"shape":"Clip"},
+      "deprecated":true
     },
     "CreateJobOutput":{
       "type":"structure",
@@ -495,7 +506,10 @@
         "SegmentDuration":{"shape":"FloatString"},
         "Watermarks":{"shape":"JobWatermarks"},
         "AlbumArt":{"shape":"JobAlbumArt"},
-        "Composition":{"shape":"Composition"},
+        "Composition":{
+          "shape":"Composition",
+          "deprecated":true
+        },
         "Captions":{"shape":"Captions"},
         "Encryption":{"shape":"Encryption"}
       }
@@ -522,13 +536,11 @@
     },
     "CreateJobRequest":{
       "type":"structure",
-      "required":[
-        "PipelineId",
-        "Input"
-      ],
+      "required":["PipelineId"],
       "members":{
         "PipelineId":{"shape":"Id"},
         "Input":{"shape":"JobInput"},
+        "Inputs":{"shape":"JobInputs"},
         "Output":{"shape":"CreateJobOutput"},
         "Outputs":{"shape":"CreateJobOutputs"},
         "OutputKeyPrefix":{"shape":"Key"},
@@ -717,6 +729,13 @@
       "error":{"httpStatusCode":400},
       "exception":true
     },
+    "InputCaptions":{
+      "type":"structure",
+      "members":{
+        "MergePolicy":{"shape":"CaptionMergePolicy"},
+        "CaptionSources":{"shape":"CaptionSources"}
+      }
+    },
     "Interlaced":{
       "type":"string",
       "pattern":"(^auto$)|(^true$)|(^false$)"
@@ -735,6 +754,7 @@
         "Arn":{"shape":"String"},
         "PipelineId":{"shape":"Id"},
         "Input":{"shape":"JobInput"},
+        "Inputs":{"shape":"JobInputs"},
         "Output":{"shape":"JobOutput"},
         "Outputs":{"shape":"JobOutputs"},
         "OutputKeyPrefix":{"shape":"Key"},
@@ -765,8 +785,15 @@
         "Interlaced":{"shape":"Interlaced"},
         "Container":{"shape":"JobContainer"},
         "Encryption":{"shape":"Encryption"},
+        "TimeSpan":{"shape":"TimeSpan"},
+        "InputCaptions":{"shape":"InputCaptions"},
         "DetectedProperties":{"shape":"DetectedProperties"}
       }
+    },
+    "JobInputs":{
+      "type":"list",
+      "member":{"shape":"JobInput"},
+      "max":200
     },
     "JobOutput":{
       "type":"structure",
@@ -788,7 +815,10 @@
         "DurationMillis":{"shape":"NullableLong"},
         "Watermarks":{"shape":"JobWatermarks"},
         "AlbumArt":{"shape":"JobAlbumArt"},
-        "Composition":{"shape":"Composition"},
+        "Composition":{
+          "shape":"Composition",
+          "deprecated":true
+        },
         "Captions":{"shape":"Captions"},
         "Encryption":{"shape":"Encryption"},
         "AppliedColorSpaceConversion":{"shape":"String"}
@@ -1102,7 +1132,7 @@
     },
     "PresetContainer":{
       "type":"string",
-      "pattern":"(^mp4$)|(^ts$)|(^webm$)|(^mp3$)|(^flac$)|(^oga$)|(^ogg$)|(^fmp4$)|(^mpg$)|(^flv$)|(^gif$)|(^mxf$)|(^wav$)"
+      "pattern":"(^mp4$)|(^ts$)|(^webm$)|(^mp3$)|(^flac$)|(^oga$)|(^ogg$)|(^fmp4$)|(^mpg$)|(^flv$)|(^gif$)|(^mxf$)|(^wav$)|(^mp2$)"
     },
     "PresetType":{
       "type":"string",
@@ -1253,14 +1283,16 @@
         "InputBucket":{"shape":"BucketName"},
         "OutputBucket":{"shape":"BucketName"},
         "Topics":{"shape":"SnsTopics"}
-      }
+      },
+      "deprecated":true
     },
     "TestRoleResponse":{
       "type":"structure",
       "members":{
         "Success":{"shape":"Success"},
         "Messages":{"shape":"ExceptionMessages"}
-      }
+      },
+      "deprecated":true
     },
     "ThumbnailPattern":{
       "type":"string",

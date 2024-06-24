@@ -6,11 +6,31 @@
     "jsonVersion":"1.1",
     "protocol":"json",
     "serviceFullName":"AWSMarketplace Metering",
+    "serviceId":"Marketplace Metering",
     "signatureVersion":"v4",
     "signingName":"aws-marketplace",
-    "targetPrefix":"AWSMPMeteringService"
+    "targetPrefix":"AWSMPMeteringService",
+    "uid":"meteringmarketplace-2016-01-14"
   },
   "operations":{
+    "BatchMeterUsage":{
+      "name":"BatchMeterUsage",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"BatchMeterUsageRequest"},
+      "output":{"shape":"BatchMeterUsageResult"},
+      "errors":[
+        {"shape":"InternalServiceErrorException"},
+        {"shape":"InvalidProductCodeException"},
+        {"shape":"InvalidUsageDimensionException"},
+        {"shape":"InvalidCustomerIdentifierException"},
+        {"shape":"TimestampOutOfBoundsException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"DisabledApiException"}
+      ]
+    },
     "MeterUsage":{
       "name":"MeterUsage",
       "http":{
@@ -26,13 +46,93 @@
         {"shape":"InvalidEndpointRegionException"},
         {"shape":"TimestampOutOfBoundsException"},
         {"shape":"DuplicateRequestException"},
-        {"shape":"ThrottlingException"}
+        {"shape":"ThrottlingException"},
+        {"shape":"CustomerNotEntitledException"}
+      ]
+    },
+    "RegisterUsage":{
+      "name":"RegisterUsage",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"RegisterUsageRequest"},
+      "output":{"shape":"RegisterUsageResult"},
+      "errors":[
+        {"shape":"InvalidProductCodeException"},
+        {"shape":"InvalidRegionException"},
+        {"shape":"InvalidPublicKeyVersionException"},
+        {"shape":"PlatformNotSupportedException"},
+        {"shape":"CustomerNotEntitledException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"InternalServiceErrorException"},
+        {"shape":"DisabledApiException"}
+      ]
+    },
+    "ResolveCustomer":{
+      "name":"ResolveCustomer",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ResolveCustomerRequest"},
+      "output":{"shape":"ResolveCustomerResult"},
+      "errors":[
+        {"shape":"InvalidTokenException"},
+        {"shape":"ExpiredTokenException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"InternalServiceErrorException"},
+        {"shape":"DisabledApiException"}
       ]
     }
   },
   "shapes":{
+    "BatchMeterUsageRequest":{
+      "type":"structure",
+      "required":[
+        "UsageRecords",
+        "ProductCode"
+      ],
+      "members":{
+        "UsageRecords":{"shape":"UsageRecordList"},
+        "ProductCode":{"shape":"ProductCode"}
+      }
+    },
+    "BatchMeterUsageResult":{
+      "type":"structure",
+      "members":{
+        "Results":{"shape":"UsageRecordResultList"},
+        "UnprocessedRecords":{"shape":"UsageRecordList"}
+      }
+    },
     "Boolean":{"type":"boolean"},
+    "CustomerIdentifier":{
+      "type":"string",
+      "max":255,
+      "min":1
+    },
+    "CustomerNotEntitledException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"errorMessage"}
+      },
+      "exception":true
+    },
+    "DisabledApiException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"errorMessage"}
+      },
+      "exception":true
+    },
     "DuplicateRequestException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"errorMessage"}
+      },
+      "exception":true
+    },
+    "ExpiredTokenException":{
       "type":"structure",
       "members":{
         "message":{"shape":"errorMessage"}
@@ -47,6 +147,13 @@
       "exception":true,
       "fault":true
     },
+    "InvalidCustomerIdentifierException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"errorMessage"}
+      },
+      "exception":true
+    },
     "InvalidEndpointRegionException":{
       "type":"structure",
       "members":{
@@ -55,6 +162,27 @@
       "exception":true
     },
     "InvalidProductCodeException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"errorMessage"}
+      },
+      "exception":true
+    },
+    "InvalidPublicKeyVersionException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"errorMessage"}
+      },
+      "exception":true
+    },
+    "InvalidRegionException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"errorMessage"}
+      },
+      "exception":true
+    },
+    "InvalidTokenException":{
       "type":"structure",
       "members":{
         "message":{"shape":"errorMessage"}
@@ -73,9 +201,7 @@
       "required":[
         "ProductCode",
         "Timestamp",
-        "UsageDimension",
-        "UsageQuantity",
-        "DryRun"
+        "UsageDimension"
       ],
       "members":{
         "ProductCode":{"shape":"ProductCode"},
@@ -91,10 +217,58 @@
         "MeteringRecordId":{"shape":"String"}
       }
     },
+    "NonEmptyString":{
+      "type":"string",
+      "pattern":"\\S+"
+    },
+    "Nonce":{
+      "type":"string",
+      "max":255
+    },
+    "PlatformNotSupportedException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"errorMessage"}
+      },
+      "exception":true
+    },
     "ProductCode":{
       "type":"string",
       "max":255,
       "min":1
+    },
+    "RegisterUsageRequest":{
+      "type":"structure",
+      "required":[
+        "ProductCode",
+        "PublicKeyVersion"
+      ],
+      "members":{
+        "ProductCode":{"shape":"ProductCode"},
+        "PublicKeyVersion":{"shape":"VersionInteger"},
+        "Nonce":{"shape":"Nonce"}
+      }
+    },
+    "RegisterUsageResult":{
+      "type":"structure",
+      "members":{
+        "PublicKeyRotationTimestamp":{"shape":"Timestamp"},
+        "Signature":{"shape":"NonEmptyString"}
+      }
+    },
+    "ResolveCustomerRequest":{
+      "type":"structure",
+      "required":["RegistrationToken"],
+      "members":{
+        "RegistrationToken":{"shape":"NonEmptyString"}
+      }
+    },
+    "ResolveCustomerResult":{
+      "type":"structure",
+      "members":{
+        "CustomerIdentifier":{"shape":"CustomerIdentifier"},
+        "ProductCode":{"shape":"ProductCode"}
+      }
     },
     "String":{"type":"string"},
     "ThrottlingException":{
@@ -119,8 +293,52 @@
     },
     "UsageQuantity":{
       "type":"integer",
-      "max":1000000,
+      "max":2147483647,
       "min":0
+    },
+    "UsageRecord":{
+      "type":"structure",
+      "required":[
+        "Timestamp",
+        "CustomerIdentifier",
+        "Dimension"
+      ],
+      "members":{
+        "Timestamp":{"shape":"Timestamp"},
+        "CustomerIdentifier":{"shape":"CustomerIdentifier"},
+        "Dimension":{"shape":"UsageDimension"},
+        "Quantity":{"shape":"UsageQuantity"}
+      }
+    },
+    "UsageRecordList":{
+      "type":"list",
+      "member":{"shape":"UsageRecord"},
+      "max":25,
+      "min":0
+    },
+    "UsageRecordResult":{
+      "type":"structure",
+      "members":{
+        "UsageRecord":{"shape":"UsageRecord"},
+        "MeteringRecordId":{"shape":"String"},
+        "Status":{"shape":"UsageRecordResultStatus"}
+      }
+    },
+    "UsageRecordResultList":{
+      "type":"list",
+      "member":{"shape":"UsageRecordResult"}
+    },
+    "UsageRecordResultStatus":{
+      "type":"string",
+      "enum":[
+        "Success",
+        "CustomerNotSubscribed",
+        "DuplicateRecord"
+      ]
+    },
+    "VersionInteger":{
+      "type":"integer",
+      "min":1
     },
     "errorMessage":{"type":"string"}
   }

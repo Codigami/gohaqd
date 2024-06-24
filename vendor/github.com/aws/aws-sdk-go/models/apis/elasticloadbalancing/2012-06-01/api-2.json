@@ -5,7 +5,9 @@
     "endpointPrefix":"elasticloadbalancing",
     "protocol":"query",
     "serviceFullName":"Elastic Load Balancing",
+    "serviceId":"Elastic Load Balancing",
     "signatureVersion":"v4",
+    "uid":"elasticloadbalancing-2012-06-01",
     "xmlNamespace":"http://elasticloadbalancing.amazonaws.com/doc/2012-06-01/"
   },
   "operations":{
@@ -134,7 +136,8 @@
         {"shape":"InvalidSchemeException"},
         {"shape":"TooManyTagsException"},
         {"shape":"DuplicateTagKeysException"},
-        {"shape":"UnsupportedProtocolException"}
+        {"shape":"UnsupportedProtocolException"},
+        {"shape":"OperationNotPermittedException"}
       ]
     },
     "CreateLoadBalancerListeners":{
@@ -233,6 +236,18 @@
         {"shape":"AccessPointNotFoundException"},
         {"shape":"InvalidEndPointException"}
       ]
+    },
+    "DescribeAccountLimits":{
+      "name":"DescribeAccountLimits",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeAccountLimitsInput"},
+      "output":{
+        "shape":"DescribeAccountLimitsOutput",
+        "resultWrapper":"DescribeAccountLimitsResult"
+      }
     },
     "DescribeInstanceHealth":{
       "name":"DescribeInstanceHealth",
@@ -862,6 +877,20 @@
         "NextMarker":{"shape":"Marker"}
       }
     },
+    "DescribeAccountLimitsInput":{
+      "type":"structure",
+      "members":{
+        "Marker":{"shape":"Marker"},
+        "PageSize":{"shape":"PageSize"}
+      }
+    },
+    "DescribeAccountLimitsOutput":{
+      "type":"structure",
+      "members":{
+        "Limits":{"shape":"Limits"},
+        "NextMarker":{"shape":"Marker"}
+      }
+    },
     "DescribeEndPointStateInput":{
       "type":"structure",
       "required":["LoadBalancerName"],
@@ -1123,6 +1152,17 @@
         "CookieExpirationPeriod":{"shape":"CookieExpirationPeriod"}
       }
     },
+    "Limit":{
+      "type":"structure",
+      "members":{
+        "Name":{"shape":"Name"},
+        "Max":{"shape":"Max"}
+      }
+    },
+    "Limits":{
+      "type":"list",
+      "member":{"shape":"Limit"}
+    },
     "Listener":{
       "type":"structure",
       "required":[
@@ -1222,6 +1262,7 @@
     },
     "LoadBalancerScheme":{"type":"string"},
     "Marker":{"type":"string"},
+    "Max":{"type":"string"},
     "ModifyLoadBalancerAttributesInput":{
       "type":"structure",
       "required":[
@@ -1239,6 +1280,18 @@
         "LoadBalancerName":{"shape":"AccessPointName"},
         "LoadBalancerAttributes":{"shape":"LoadBalancerAttributes"}
       }
+    },
+    "Name":{"type":"string"},
+    "OperationNotPermittedException":{
+      "type":"structure",
+      "members":{
+      },
+      "error":{
+        "code":"OperationNotPermitted",
+        "httpStatusCode":400,
+        "senderFault":true
+      },
+      "exception":true
     },
     "PageSize":{
       "type":"integer",

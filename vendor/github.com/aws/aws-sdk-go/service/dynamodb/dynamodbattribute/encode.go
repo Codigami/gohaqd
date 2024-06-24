@@ -6,8 +6,49 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 )
+
+// An UnixTime provides aliasing of time.Time into a type that when marshaled
+// and unmarshaled with DynamoDB AttributeValues it will be done so as number
+// instead of string in seconds since January 1, 1970 UTC.
+//
+// This type is useful as an alternative to the struct tag `unixtime` when you
+// want to have your time value marshaled as Unix time in seconds intead of
+// the default time.RFC3339.
+//
+// Important to note that zero value time as unixtime is not 0 seconds
+// from January 1, 1970 UTC, but -62135596800. Which is seconds between
+// January 1, 0001 UTC, and January 1, 0001 UTC.
+type UnixTime time.Time
+
+// MarshalDynamoDBAttributeValue implements the Marshaler interface so that
+// the UnixTime can be marshaled from to a DynamoDB AttributeValue number
+// value encoded in the number of seconds since January 1, 1970 UTC.
+func (e UnixTime) MarshalDynamoDBAttributeValue(av *dynamodb.AttributeValue) error {
+	t := time.Time(e)
+	s := strconv.FormatInt(t.Unix(), 10)
+	av.N = &s
+
+	return nil
+}
+
+// UnmarshalDynamoDBAttributeValue implements the Unmarshaler interface so that
+// the UnixTime can be unmarshaled from a DynamoDB AttributeValue number representing
+// the number of seconds since January 1, 1970 UTC.
+//
+// If an error parsing the AttributeValue number occurs UnmarshalError will be
+// returned.
+func (e *UnixTime) UnmarshalDynamoDBAttributeValue(av *dynamodb.AttributeValue) error {
+	t, err := decodeUnixTime(aws.StringValue(av.N))
+	if err != nil {
+		return err
+	}
+
+	*e = UnixTime(t)
+	return nil
+}
 
 // A Marshaler is an interface to provide custom marshaling of Go value types
 // to AttributeValues. Use this to provide custom logic determining how a
@@ -16,10 +57,9 @@ import (
 //		type ExampleMarshaler struct {
 //			Value int
 //		}
-//		type (m *ExampleMarshaler) 	MarshalDynamoDBAttributeValue(av *dynamodb.AttributeValue) error {
+//		func (m *ExampleMarshaler) 	MarshalDynamoDBAttributeValue(av *dynamodb.AttributeValue) error {
 //			n := fmt.Sprintf("%v", m.Value)
 //			av.N = &n
-//
 //			return nil
 //		}
 //
@@ -75,6 +115,13 @@ type Marshaler interface {
 //		// Field will be marshaled as a string set
 //		Field []string `dynamodbav:",stringset"`
 //
+//		// Field will be marshaled as Unix time number in seconds.
+//		// This tag is only valid with time.Time typed struct fields.
+//		// Important to note that zero value time as unixtime is not 0 seconds
+//		// from January 1, 1970 UTC, but -62135596800. Which is seconds between
+//		// January 1, 0001 UTC, and January 1, 0001 UTC.
+//		Field time.Time `dynamodbav:",unixtime"`
+//
 // The omitempty tag is only used during Marshaling and is ignored for
 // Unmarshal. Any zero value or a value when marshaled results in a
 // AttributeValue NULL will be added to AttributeValue Maps during struct
@@ -111,6 +158,8 @@ func Marshal(in interface{}) (*dynamodb.AttributeValue, error) {
 
 // MarshalMap is an alias for Marshal func which marshals Go value
 // type to a map of AttributeValues.
+//
+// This is useful for DynamoDB APIs such as PutItem.
 func MarshalMap(in interface{}) (map[string]*dynamodb.AttributeValue, error) {
 	av, err := NewEncoder().Encode(in)
 	if err != nil || av == nil || av.M == nil {
@@ -140,6 +189,18 @@ type MarshalOptions struct {
 	//
 	// Enabled by default.
 	SupportJSONTags bool
+
+	// Support other custom struct tag keys, such as `yaml` or `toml`.
+	// Note that values provided with a custom TagKey must also be supported
+	// by the (un)marshalers in this package.
+	TagKey string
+
+	// EnableEmptyCollections modifies how structures, maps, and slices are (un)marshalled.
+	// When set to true empty collection values will be preserved as their respective
+	// empty DynamoDB AttributeValue type when set to true.
+	//
+	// Disabled by default.
+	EnableEmptyCollections bool
 }
 
 // An Encoder provides marshaling Go value types to AttributeValues.
@@ -147,12 +208,18 @@ type Encoder struct {
 	MarshalOptions
 
 	// Empty strings, "", will be marked as NULL AttributeValue types.
-	// Empty strings are not valid values for DynamoDB. Will not apply
-	// to lists, sets, or maps. Use the struct tag `omitemptyelem`
+	// Will not apply to lists, sets, or maps. Use the struct tag `omitemptyelem`
 	// to skip empty (zero) values in lists, sets and maps.
 	//
 	// Enabled by default.
 	NullEmptyString bool
+
+	// Empty byte slices, len([]byte{}) == 0, will be marked as NULL AttributeValue types.
+	// Will not apply to lists, sets, or maps. Use the struct tag `omitemptyelem`
+	// to skip empty (zero) values in lists, sets and maps.
+	//
+	// Enabled by default.
+	NullEmptyByteSlice bool
 }
 
 // NewEncoder creates a new Encoder with default configuration. Use
@@ -162,7 +229,8 @@ func NewEncoder(opts ...func(*Encoder)) *Encoder {
 		MarshalOptions: MarshalOptions{
 			SupportJSONTags: true,
 		},
-		NullEmptyString: true,
+		NullEmptyString:    true,
+		NullEmptyByteSlice: true,
 	}
 	for _, o := range opts {
 		o(e)
@@ -182,26 +250,9 @@ func (e *Encoder) Encode(in interface{}) (*dynamodb.AttributeValue, error) {
 	return av, nil
 }
 
-func fieldByIndex(v reflect.Value, index []int,
-	OnEmbeddedNilStruct func(*reflect.Value) bool) reflect.Value {
-	fv := v
-	for i, x := range index {
-		if i > 0 {
-			if fv.Kind() == reflect.Ptr && fv.Type().Elem().Kind() == reflect.Struct {
-				if fv.IsNil() && !OnEmbeddedNilStruct(&fv) {
-					break
-				}
-				fv = fv.Elem()
-			}
-		}
-		fv = fv.Field(x)
-	}
-	return fv
-}
-
 func (e *Encoder) encode(av *dynamodb.AttributeValue, v reflect.Value, fieldTag tag) error {
 	// We should check for omitted values first before dereferencing.
-	if fieldTag.OmitEmpty && emptyValue(v) {
+	if fieldTag.OmitEmpty && emptyValue(v, e.EnableEmptyCollections) {
 		encodeNull(av)
 		return nil
 	}
@@ -219,7 +270,7 @@ func (e *Encoder) encode(av *dynamodb.AttributeValue, v reflect.Value, fieldTag 
 	case reflect.Invalid:
 		encodeNull(av)
 	case reflect.Struct:
-		return e.encodeStruct(av, v)
+		return e.encodeStruct(av, v, fieldTag)
 	case reflect.Map:
 		return e.encodeMap(av, v, fieldTag)
 	case reflect.Slice, reflect.Array:
@@ -233,11 +284,15 @@ func (e *Encoder) encode(av *dynamodb.AttributeValue, v reflect.Value, fieldTag 
 	return nil
 }
 
-func (e *Encoder) encodeStruct(av *dynamodb.AttributeValue, v reflect.Value) error {
-
+func (e *Encoder) encodeStruct(av *dynamodb.AttributeValue, v reflect.Value, fieldTag tag) error {
 	// To maintain backwards compatibility with ConvertTo family of methods which
 	// converted time.Time structs to strings
-	if t, ok := v.Interface().(time.Time); ok {
+	if v.Type().ConvertibleTo(timeType) {
+		var t time.Time
+		t = v.Convert(timeType).Interface().(time.Time)
+		if fieldTag.AsUnixTime {
+			return UnixTime(t).MarshalDynamoDBAttributeValue(av)
+		}
 		s := t.Format(time.RFC3339Nano)
 		av.S = &s
 		return nil
@@ -245,16 +300,12 @@ func (e *Encoder) encodeStruct(av *dynamodb.AttributeValue, v reflect.Value) err
 
 	av.M = map[string]*dynamodb.AttributeValue{}
 	fields := unionStructFields(v.Type(), e.MarshalOptions)
-	for _, f := range fields {
+	for _, f := range fields.All() {
 		if f.Name == "" {
 			return &InvalidMarshalError{msg: "map key cannot be empty"}
 		}
 
-		found := true
-		fv := fieldByIndex(v, f.Index, func(v *reflect.Value) bool {
-			found = false
-			return false // to break the loop.
-		})
+		fv, found := encoderFieldByIndex(v, f.Index)
 		if !found {
 			continue
 		}
@@ -272,7 +323,7 @@ func (e *Encoder) encodeStruct(av *dynamodb.AttributeValue, v reflect.Value) err
 
 		av.M[f.Name] = elem
 	}
-	if len(av.M) == 0 {
+	if len(av.M) == 0 && !e.EnableEmptyCollections {
 		encodeNull(av)
 	}
 
@@ -299,7 +350,8 @@ func (e *Encoder) encodeMap(av *dynamodb.AttributeValue, v reflect.Value, fieldT
 
 		av.M[keyName] = elem
 	}
-	if len(av.M) == 0 {
+
+	if v.IsNil() || (len(av.M) == 0 && !e.EnableEmptyCollections) {
 		encodeNull(av)
 	}
 
@@ -307,10 +359,18 @@ func (e *Encoder) encodeMap(av *dynamodb.AttributeValue, v reflect.Value, fieldT
 }
 
 func (e *Encoder) encodeSlice(av *dynamodb.AttributeValue, v reflect.Value, fieldTag tag) error {
+	if v.Kind() == reflect.Array && v.Len() == 0 && e.EnableEmptyCollections && fieldTag.OmitEmpty {
+		encodeNull(av)
+		return nil
+	}
+
 	switch v.Type().Elem().Kind() {
 	case reflect.Uint8:
-		b := v.Bytes()
-		if len(b) == 0 {
+		slice := reflect.MakeSlice(byteSliceType, v.Len(), v.Len())
+		reflect.Copy(slice, v)
+
+		b := slice.Bytes()
+		if (v.Kind() == reflect.Slice && v.IsNil()) || (len(b) == 0 && !e.EnableEmptyCollections && e.NullEmptyByteSlice) {
 			encodeNull(av)
 			return nil
 		}
@@ -355,7 +415,7 @@ func (e *Encoder) encodeSlice(av *dynamodb.AttributeValue, v reflect.Value, fiel
 
 		if n, err := e.encodeList(v, fieldTag, elemFn); err != nil {
 			return err
-		} else if n == 0 {
+		} else if (v.Kind() == reflect.Slice && v.IsNil()) || (n == 0 && !e.EnableEmptyCollections) {
 			encodeNull(av)
 		}
 	}
@@ -428,8 +488,10 @@ func (e *Encoder) encodeNumber(av *dynamodb.AttributeValue, v reflect.Value) err
 		out = encodeInt(v.Int())
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 		out = encodeUint(v.Uint())
-	case reflect.Float32, reflect.Float64:
-		out = encodeFloat(v.Float())
+	case reflect.Float32:
+		out = encodeFloat(v.Float(), 32)
+	case reflect.Float64:
+		out = encodeFloat(v.Float(), 64)
 	default:
 		return &unsupportedMarshalTypeError{Type: v.Type()}
 	}
@@ -465,12 +527,26 @@ func encodeInt(i int64) string {
 func encodeUint(u uint64) string {
 	return strconv.FormatUint(u, 10)
 }
-func encodeFloat(f float64) string {
-	return strconv.FormatFloat(f, 'f', -1, 64)
+func encodeFloat(f float64, bitSize int) string {
+	return strconv.FormatFloat(f, 'f', -1, bitSize)
 }
 func encodeNull(av *dynamodb.AttributeValue) {
 	t := true
 	*av = dynamodb.AttributeValue{NULL: &t}
+}
+
+// encoderFieldByIndex finds the field with the provided nested index
+func encoderFieldByIndex(v reflect.Value, index []int) (reflect.Value, bool) {
+	for i, x := range index {
+		if i > 0 && v.Kind() == reflect.Ptr && v.Type().Elem().Kind() == reflect.Struct {
+			if v.IsNil() {
+				return reflect.Value{}, false
+			}
+			v = v.Elem()
+		}
+		v = v.Field(x)
+	}
+	return v, true
 }
 
 func valueElem(v reflect.Value) reflect.Value {
@@ -484,9 +560,13 @@ func valueElem(v reflect.Value) reflect.Value {
 	return v
 }
 
-func emptyValue(v reflect.Value) bool {
+func emptyValue(v reflect.Value, emptyCollections bool) bool {
 	switch v.Kind() {
-	case reflect.Array, reflect.Map, reflect.Slice, reflect.String:
+	case reflect.Array:
+		return v.Len() == 0 && !emptyCollections
+	case reflect.Map, reflect.Slice:
+		return v.IsNil() || (v.Len() == 0 && !emptyCollections)
+	case reflect.String:
 		return v.Len() == 0
 	case reflect.Bool:
 		return !v.Bool()
