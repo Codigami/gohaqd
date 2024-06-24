@@ -40,11 +40,12 @@ import (
 
 // Queue holds information about each queue from where the messages are consumed
 type Queue struct {
-	Name      string
-	URL       string
-	Parallel  int
-	sem       chan *sqs.Message
-	msgparams *sqs.ReceiveMessageInput
+	Name         string
+	AwsAccountID string `yaml:"awsAccountId"`
+	URL          string
+	Parallel     int
+	sem          chan *sqs.Message
+	msgparams    *sqs.ReceiveMessageInput
 }
 
 // Config stores the parsed yaml config file
@@ -62,6 +63,7 @@ var parallelRequests int
 var svc *sqs.SQS
 var httpClient *http.Client
 var port int
+var awsAccountID string
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -87,6 +89,7 @@ func init() {
 	RootCmd.PersistentFlags().StringVarP(&url, "url", "u", "", "HTTP endpoint. Takes the URL from the message by default. (Used only when --config is not set and default config doesn't exist)")
 
 	RootCmd.PersistentFlags().StringVar(&healthcheckURL, "healthcheck-url", "", "HTTP endpoint for checking if consumer server is up")
+	RootCmd.PersistentFlags().StringVar(&awsAccountID, "aws-account-id", "", "AWS Account ID for the SQS queue")
 	RootCmd.PersistentFlags().StringVar(&awsRegion, "aws-region", "us-east-1", "AWS Region for the SQS queue")
 	RootCmd.PersistentFlags().StringVar(&sqsEndpoint, "sqs-endpoint", "", "SQS Endpoint for using with fake_sqs")
 	RootCmd.PersistentFlags().IntVar(&parallelRequests, "parallel", 1, "Number of messages to be consumed in parallel")
@@ -104,9 +107,10 @@ func startGohaqd(cmd *cobra.Command, args []string) {
 			log.Println("config file doesn't exist so using queueName from flag")
 
 			config.Queues = append(config.Queues, Queue{
-				Name:     queueName,
-				URL:      url,
-				Parallel: parallelRequests,
+				AwsAccountID: awsAccountID,
+				Name:         queueName,
+				URL:          url,
+				Parallel:     parallelRequests,
 			})
 		} else {
 			os.Exit(1)
@@ -125,7 +129,10 @@ func startGohaqd(cmd *cobra.Command, args []string) {
 	} else {
 		awsConfig = aws.NewConfig().WithRegion(awsRegion)
 	}
-	sess := session.New(awsConfig)
+	sess, err := session.NewSession(awsConfig)
+	if err != nil {
+		log.Fatalln("Error while creating AWS session: " + err.Error())
+	}
 	svc = sqs.New(sess)
 
 	if healthcheckURL != "" {
@@ -155,6 +162,9 @@ func startGohaqd(cmd *cobra.Command, args []string) {
 func initializeQueue(queue Queue) {
 	qparams := &sqs.GetQueueUrlInput{
 		QueueName: aws.String(queue.Name),
+	}
+	if queue.AwsAccountID != "" {
+		qparams.QueueOwnerAWSAccountId = aws.String(queue.AwsAccountID)
 	}
 
 	q, err := svc.GetQueueUrl(qparams)

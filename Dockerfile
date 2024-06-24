@@ -1,6 +1,6 @@
-FROM golang:1.8 AS buildimage
+FROM golang:1.15.8-alpine3.13 AS buildimage
 
-RUN apt-get update && apt-get install -y ca-certificates
+RUN apk update && apk add ca-certificates bash
 COPY . /go/src/github.com/Codigami/gohaqd/
 WORKDIR /go/src/github.com/Codigami/gohaqd
 RUN CGO_ENABLED=0 GOOS=linux /bin/bash -c "bash check.sh && go build -a -v -ldflags '-w'"

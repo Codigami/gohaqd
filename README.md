@@ -15,6 +15,7 @@ It pulls data off a queue, inserts it into the message body, and sends an HTTP P
 ## Flags:
 ```
       --aws-region string        AWS Region for the SQS queue (default "us-east-1")
+      --aws-account-id string    AWS Account ID for the SQS queue (default "")
   -c, --config string            config file path (default "./gohaqd.yaml")
       --healthcheck-url string   HTTP endpoint for checking if consumer server is up
   -h, --help                     help for gohaqd
@@ -31,6 +32,7 @@ It pulls data off a queue, inserts it into the message body, and sends an HTTP P
 queues:
 - name: test
   url: http://localhost:8080/consume
+  awsAccountId: 23494933939
 - name: test2
 - name: test3
   parallel: 3
